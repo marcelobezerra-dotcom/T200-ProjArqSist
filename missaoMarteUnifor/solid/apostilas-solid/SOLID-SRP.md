@@ -10,6 +10,28 @@ SRP (Single Responsibility Principle) afirma que uma classe deve ter apenas um m
 
 Em termos práticos, isso significa que uma classe não deve misturar regra de negócio, apresentação e persistência em um único lugar. Se ela faz tudo ao mesmo tempo, qualquer mudança em qualquer parte do sistema pode exigir mexer nela.
 
+## O problema no Exercício 10
+
+No código original, `Main` concentra o menu, a entrada do usuário, a criação da missão, o loop da partida, a renderização do mapa e o arquivo de ranking. Por exemplo, o mesmo método coordena a partida e decide como persistir a pontuação:
+
+```java
+private static void jogarPartida(Scanner scanner, Random random,
+        List<RankingEntry> ranking) {
+    // lê nome, dificuldade e tamanho do mapa
+    Missao missao = criarNovaMissao(random, minX, maxX, minY, maxY, dificuldade);
+    // move a nave, embarca passageiros e verifica colisões
+    desenharMapa(missao, minX, maxX, minY, maxY, score, pilotoNome);
+    // ao vencer, monta RankingEntry e grava diretamente no arquivo
+    saveRanking(RANKING_PATH, rankingFiltrado);
+}
+```
+
+Esse método funciona, mas tem vários motivos para mudar: uma regra do jogo, o layout do console ou o formato de persistência. Esse é o erro de design que o SRP identifica; não é um erro de compilação.
+
+### O que a refatoração separa
+
+No tutorial, o fluxo é distribuído entre `JogoService`, `MapaRenderer` e `RankingService`. A pergunta não é “qual classe deve receber cada linha?”, e sim “qual responsabilidade muda por qual motivo?”.
+
 ## Exemplo no tutorial de Missão Marte
 
 No projeto, a separação é clara:

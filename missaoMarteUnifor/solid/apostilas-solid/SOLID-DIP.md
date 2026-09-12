@@ -10,6 +10,33 @@ DIP (Dependency Inversion Principle) afirma que módulos de alto nível não dev
 
 Em prática, a regra de negócio deve depender de um contrato, e não de um detalhe de infraestrutura. Isso reduz acoplamento e permite trocar implementações sem mexer no comportamento principal da aplicação.
 
+## O problema no Exercício 10
+
+No código original, `Main` cria os detalhes concretos e também chama diretamente a API de arquivos:
+
+```java
+private static final Path RANKING_PATH = Paths.get("ranking.json");
+
+private static List<RankingEntry> loadRanking(Path path) {
+    String json = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+    return parseRankingJson(json);
+}
+```
+
+O fluxo da aplicação fica ligado ao formato JSON, a `Path` e a `Files`. Se o ranking passar para banco de dados, memória ou outro formato, a classe que coordena o jogo precisa ser alterada. Esse é o acoplamento que o DIP identifica.
+
+### Direção da refatoração
+
+O tutorial extrai `RankingRepository` como contrato e injeta a implementação em `JogoService`:
+
+```java
+public JogoService(RankingRepository rankingRepository) {
+    this.rankingRepository = rankingRepository;
+}
+```
+
+Assim, `JogoService` depende do que precisa fazer, e não de como o arquivo é gravado. O DIP orienta a direção da dependência; a escolha entre arquivo, banco ou memória continua sendo uma decisão de arquitetura.
+
 ## Exemplo problemático
 
 ```java

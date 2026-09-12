@@ -22,6 +22,36 @@ A parte importante para a arquitetura é a seguinte:
 
 Isso deixa a regra de negócio desacoplada de detalhes de infraestrutura, que é exatamente o tipo de decisão que o SOLID ajuda a formalizar.
 
+## O problema antes da refatoração
+
+Antes de separar as classes, é comum o projeto funcionar com uma classe central que concentra o fluxo da missão, a apresentação e a persistência:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        // lê comandos, move a nave e aplica as regras da missão
+        // desenha o mapa no console
+        // calcula a pontuação
+        // grava o ranking diretamente em arquivo
+    }
+}
+```
+
+Esse código pode compilar e até funcionar. O problema aparece quando uma decisão muda: trocar o desenho do mapa, alterar uma regra da missão ou mudar o formato do ranking exige editar a mesma classe. Esse é o código problemático que será usado como ponto de partida nas apostilas, e não um exemplo artificial que simplesmente não compila.
+
+## O que SOLID orienta, e o que ele não decide
+
+SOLID não fornece uma receita única para dizer exatamente em quantas classes o código deve ser dividido. Ele indica propriedades desejáveis e perguntas para avaliar o design:
+
+- **SRP:** quais motivos diferentes fazem essa classe mudar?
+- **OCP:** uma nova variação exige editar um código estável?
+- **LSP:** uma implementação substituta preserva o contrato da base?
+- **ISP:** o cliente depende de operações que não utiliza?
+- **DIP:** a regra de negócio conhece detalhes concretos de infraestrutura?
+
+Depois de identificar o problema, a solução pode usar composição, polimorfismo, interfaces ou uma classe auxiliar. A escolha concreta depende do domínio da Missão Marte e deve ser justificada pelo ganho de coesão, baixo acoplamento e facilidade de evolução.
+
 ## Os princípios e seus arquivos
 
 - SRP – Single Responsibility Principle: Responsabilidade Única (arquivo: SOLID-SRP.md)
@@ -37,6 +67,8 @@ Isso deixa a regra de negócio desacoplada de detalhes de infraestrutura, que é
 3. Depois, estude LSP para confirmar que subclasses podem substituir a classe base.
 4. Continue com ISP para evitar interfaces inchadas.
 5. Finalize com DIP para reduzir acoplamento e facilitar a troca de infraestrutura.
+
+Em cada arquivo, leia primeiro o **anti-exemplo** ou o **exemplo problemático**, depois a análise do princípio e por fim uma refatoração possível. A intenção não é decorar uma estrutura de pastas, mas aprender a reconhecer o problema que justifica a separação.
 
 ## Reflexão geral
 

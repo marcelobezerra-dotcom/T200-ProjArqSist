@@ -10,6 +10,33 @@ LSP (Liskov Substitution Principle) afirma que qualquer objeto de uma subclasse 
 
 A ideia principal é que uma subclasse não deve “enganar” o cliente ao mudar o contrato da superclasse. Ela deve apenas especializar o comportamento esperado, sem quebrar o uso normal.
 
+## O ponto de atenção no Exercício 10
+
+O exercício possui `Passageiro` e subclasses como `Professor`, `Engenheiro` e `Astronauta`. Um cliente pode trabalhar com o tipo base:
+
+```java
+private static int pontuar(Passageiro passageiro) {
+    return passageiro.getPontuacao();
+}
+```
+
+Isso só é seguro se toda nova subclasse continuar devolvendo uma pontuação válida. Uma implementação como esta compila, mas quebra o contrato esperado:
+
+```java
+public class PassageiroInvalido extends Passageiro {
+    @Override
+    public int getPontuacao() {
+        throw new IllegalStateException("Passageiro inválido");
+    }
+}
+```
+
+O código original não contém essa violação explícita. O problema que ele revela é outro sinal de risco: `Main.desenharMapa` precisa testar `instanceof` para descobrir o tipo concreto do passageiro. Quando cada nova subclasse exige alterar o cliente, fica mais fácil criar um subtipo que não respeita as expectativas dos pontos onde `Passageiro` é usado.
+
+### Direção da refatoração
+
+A hierarquia deve definir um contrato que todos os passageiros possam cumprir. O cliente usa `Passageiro`, enquanto cada subtipo implementa apenas sua variação de pontuação. O LSP valida a substituição; ele não decide sozinho se a solução deve ser herança ou composição.
+
 ## Exemplo no tutorial
 
 No jogo, `Professor`, `Engenheiro` e `Astronauta` são variações de `Passageiro`.

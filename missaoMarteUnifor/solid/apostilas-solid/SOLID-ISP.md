@@ -10,6 +10,26 @@ ISP (Interface Segregation Principle) diz que uma classe não deve depender de m
 
 Quando a interface cresce demais, ela obriga implementações a fornecer operações que não fazem sentido para o cliente. Isso gera acoplamento desnecessário, classes mais difíceis de manter e código “vazio” para cumprir um contrato que não era necessário.
 
+## O problema no Exercício 10
+
+O código original nem sequer possui interfaces para os papéis do jogo. `Main` conhece diretamente `Nave`, `Passageiro`, `Asteroide` e `Inimigo`, além de decidir como cada um deve ser desenhado:
+
+```java
+if (p instanceof Engenheiro) {
+    symbol = 'E';
+} else if (p instanceof Astronauta) {
+    symbol = 'T';
+} else {
+    symbol = 'P';
+}
+```
+
+Esse código não viola ISP por ter uma interface grande; ele mostra a situação anterior à criação de contratos. O problema é que o cliente depende de detalhes que não precisa conhecer. Se uma classe só precisa ser posicionável, não deveria depender também de movimento, pontuação ou persistência.
+
+### Direção da refatoração
+
+Na versão SOLID, contratos como `Posicionavel` e `Movel` são separados por necessidade. Uma classe usa apenas a interface que corresponde ao seu papel. O ISP orienta o tamanho dos contratos, mas não diz automaticamente quais interfaces criar: isso depende dos clientes reais do exercício.
+
 ## Exemplo no tutorial
 
 No projeto, a abstração `RankingRepository` define apenas o que o sistema precisa para manipular o ranking:

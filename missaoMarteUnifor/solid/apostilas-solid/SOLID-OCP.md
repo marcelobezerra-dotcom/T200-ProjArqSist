@@ -10,6 +10,38 @@ OCP (Open-Closed Principle) diz que um módulo deve estar aberto para extensão 
 
 Em outras palavras, quando surge uma nova regra ou um novo tipo de entidade, o sistema deve aceitar essa variação sem exigir reescrever o que já funciona. O ideal é adicionar comportamento por extensão, não por alteração do código base.
 
+## O problema no Exercício 10
+
+O código original concentra variações de dificuldade em condicionais dentro de `Main`:
+
+```java
+private static int definirPontuacaoInicial(Dificuldade dificuldade) {
+    switch (dificuldade) {
+        case FACIL: return 30;
+        case DIFICIL: return 15;
+        default: return 20;
+    }
+}
+```
+
+O mesmo acontece ao criar passageiros:
+
+```java
+private static Passageiro criarPassageiroPolimorfico(int indice, int x, int y) {
+    switch (indice % 5) {
+        case 0: return new Professor("Dr. Silva", x, y);
+        case 1: return new Engenheiro("Eng. Rosa", x, y);
+        default: return new Astronauta("Ast. Maria", x, y);
+    }
+}
+```
+
+Adicionar uma nova regra ou um novo tipo exige editar métodos centrais e revalidar o que já funcionava. Esse é o problema do OCP: o sistema está dependente de modificações em vez de permitir extensão.
+
+### Direção da refatoração
+
+O tutorial usa polimorfismo para que cada tipo de passageiro forneça sua própria pontuação. A classe que calcula o total recebe `Passageiro` e não precisa conhecer cada subclasse. O princípio orienta a estabilidade do código existente; ele não obriga a escolher herança se composição for mais adequada.
+
 ## Exemplo com Passageiro no tutorial
 
 No jogo, o tipo base `Passageiro` representa o contrato principal. Subclasses como `Professor`, `Engenheiro` ou `Astronauta` representam variações específicas.
