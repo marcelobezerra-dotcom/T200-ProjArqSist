@@ -118,14 +118,13 @@ Princípios estudados nesta apostila:
 
 1. [Information Expert](info-expert.md)
 2. [Creator](creator.md)
-3. 
-4. [Controller](controller.md)
-5. [Low Coupling](low-coupling.md)
-6. [High Cohesion](high-cohesion.md)
-7. [Polymorphism](polymorphism.md)
-8. [Pure Fabrication](pure-fabrication.md)
-9. [Indirection](indirection.md)
-10. [Protected Variations](protected-variations.md)
+3. [Controller](controller.md)
+4. [Low Coupling](low-coupling.md)
+5. [High Cohesion](high-cohesion.md)
+6. [Polymorphism](polymorphism.md)
+7. [Pure Fabrication](pure-fabrication.md)
+8. [Indirection](indirection.md)
+9. [Protected Variations](protected-variations.md)
 
 ## Agrupamento dos padrões GRASP
 
