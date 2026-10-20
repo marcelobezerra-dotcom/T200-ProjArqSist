@@ -1,172 +1,90 @@
-# Guia Didático dos Princípios GRASP: Atribuição de Responsabilidades em Design de Software
+# Introdução ao GRASP
 
-> Contexto: **Missão Marte Unifor** — jogo de console em Java onde o jogador pilota uma `Nave` numa grade 2D, resgata `Passageiros` e evita `Perigos`.
+GRASP significa *General Responsibility Assignment Software Patterns*. É um
+conjunto de nove princípios de projeto para decidir qual objeto deve conhecer
+uma informação, executar uma ação, criar outro objeto ou coordenar um caso de uso.
 
-Este guia destina-se a docentes e estudantes de Engenharia de Software, servindo como base para a transposição didática dos conceitos de Design Orientado a Objetos (OOD). O acrônimo GRASP significa General Responsibility Assignment Software Patterns (ou Princípios). É fundamental que o educador enfatize que o GRASP não é uma tecnologia, framework ou uma notação UML, mas sim um "conjunto de ferramentas mentais" e um auxílio à aprendizagem.
+A referência conceitual é a obra *Applying UML and Patterns*, de Craig Larman.
+As decisões discutidas aqui são aplicadas à Missão Marte deste repositório.
 
-Como afirma Craig Larman:
+## Responsabilidades de conhecer e de fazer
 
-"*A ferramenta crucial de projeto para desenvolvimento de software é uma mente bem educada em princípios de projeto. Não é UML ou qualquer outra tecnologia*."
+Uma responsabilidade de conhecer envolve informações que o objeto possui ou
+consegue derivar. Uma responsabilidade de fazer envolve executar uma operação
+ou colaborar com outros objetos.
 
-O foco, portanto, reside no raciocínio crítico para decidir qual objeto deve assumir qual tarefa no ecossistema de software.
+| Objeto | Conhece | Faz |
+| --- | --- | --- |
+| `ElementoMapa` | Coordenadas `x` e `y` | Verifica posição e declara o contrato de símbolo |
+| `Nave` | Capacidade, vidas e passageiros a bordo | Move, embarca e perde vida |
+| `Passageiro` | Nome e descrição | Define pontuação e símbolo nas subclasses |
+| `Missao` | Nave, base, passageiros e perigos | Verifica ocupação, colisão e embarque |
+| `Dificuldade` | Parâmetros de cada nível | Informa pontos iniciais e quantidades |
+| `JogoService` | Estado do conjunto da partida | Aplica turnos e encerra a partida |
+| `GameController` | Serviços de jogo e ranking | Coordena as operações da aplicação |
 
-## Contexto Histórico e Fundamentos Teóricos
+O domínio contém comportamento. `Missao` e `Nave` não são apenas recipientes
+de dados controlados integralmente por um serviço.
 
-O design de software não nasceu de teorias abstratas, mas da prática iterativa de desenvolvedores que identificaram soluções eficazes para problemas recorrentes. Os padrões GRASP não "inventaram" novas metodologias; eles documentaram, padronizaram e deram nomes a princípios antigos e amplamente testados pela comunidade de engenharia.
-
-A sistematização definitiva desses princípios foi conduzida por **Craig Larman** em sua obra seminal **Applying UML and Patterns**, com edições fundamentais em 1997, 2001 e a consolidada versão de 2004/2005. No repertório do designer, o GRASP atua como o fundamento para a **atribuição de responsabilidades**, sendo perfeitamente complementar aos padrões GoF (Gang of Four) — que focam em estruturas e comportamentos específicos — e aos princípios SOLID. Enquanto o **SOLID** oferece métricas de **qualidade**, o **GRASP** fornece o **guia mental** para a distribuição inicial de lógica entre os objetos.
-
-## O Conceito de Responsabilidade no Design Orientado a Objetos (DOO)
-
-O Projeto Guiado por Responsabilidades (PGR) visualiza o software como uma comunidade de objetos que colaboram entre si. Segundo a UML, uma **responsabilidade** é **"um contrato ou obrigação de um classificador"**. Para fins didáticos, devemos expandir essa definição em três pilares fundamentais, conforme o material de base:
-
-1. **Responsabilidades de Conhecer (Knowing):** O que um objeto sabe sobre seus dados encapsulados, sobre os objetos com os quais se relaciona e sobre as informações que ele pode derivar ou calcular.
-2. **Responsabilidades de Fazer (Doing):** O que um objeto executa, como criar instâncias, realizar cálculos complexos ou coordenar e iniciar atividades em outros objetos.
-3. **Decisões de Projeto:** As escolhas tomadas por objetos que afetam diretamente o comportamento de seus pares no sistema.
-
-## Linha do Tempo dos Princípios de Projeto
-
-Com base em fontes históricas e publicações-chave, é possível traçar uma linha do tempo que mostra a evolução e a consolidação dos princípios GRASP e sua relação com outros marcos do design orientado a objetos:
-
-- **1987–1988: Origens de Princípios Individuais (SOLID)**
-
-  - Embora o acrônimo SOLID tenha se popularizado depois, princípios individuais como o de Barbara Liskov (LSP — Liskov Substitution Principle) foram introduzidos nessa época, servindo de base para o que hoje entendemos como design robusto.
-- **1994–1995: Padrões Gang-of-Four (GoF)**
-
-  - A publicação do livro "Design Patterns: Elements of Reusable Object-Oriented Software" por Gamma, Helm, Johnson e Vlissides (o "Gang of Four") estabeleceu a referência dos patterns, focando em soluções reutilizáveis para problemas recorrentes de design.
-- **1997: O Surgimento do GRASP**
-
-  - Craig Larman publica a primeira edição de "Applying UML and Patterns", onde introduz formalmente o GRASP (General Responsibility Assignment Software Patterns). Larman apresenta os padrões como forma de documentar e padronizar práticas de atribuição de responsabilidades já testadas.
-- **Início dos anos 2000: Popularização do SOLID**
-
-  - Os princípios SOLID tornam-se amplamente reconhecidos como diretrizes de alto nível para qualidade de software, frequentemente ensinados e aplicados em conjunto com o GRASP para reduzir acoplamento e aumentar coesão.
-- **2001–2005: Refinamento e Novas Edições**
-
-  - Novas edições do livro de Craig Larman (2ª edição em 2001 e 3ª edição em 2004/2005) refinam os nove padrões GRASP, consolidando-os como um conjunto de ferramentas mentais essenciais para desenvolvedores.
-- **2016–2019: Aplicações e Artigos Contemporâneos**
-
-  - Especialistas e artigos continuam a detalhar padrões específicos e boas práticas (por exemplo, estudos e exemplos práticos sobre Controller e Creator), mostrando a relevância contínua desses conceitos na indústria.
-- **2024: Ensino Acadêmico Atual**
-
-  - O GRASP permanece como um pilar no ensino de Projeto e Arquitetura de Sistemas em universidades, servindo de base para o aprendizado de design guiado por responsabilidades.
-
-## Exemplo prático
-
-Cada princípio tem uma explicação, exemplos e dicas para aplicação prática.
-
-### Diagrama de classes (visão rápida)
-
-Mostramos aqui os diagramas de classes principais do domínio da **Missão Marte**. Para detalhes e evolução passo a passo, veja as seções "Exemplo evolutivo" em cada arquivo de padrão.
-
-Versão 1 — modelo de domínio simples
+## A abstração do mapa
 
 ```mermaid
 classDiagram
-  class Nave {
-    - x: int
-    - y: int
-    + mover(dx, dy)
-  }
-
-  class Missao {
-    - largura: int
-    - altura: int
-    - dificuldade: Dificuldade
-    - passageiros: List~Passageiro~
-    - perigos: List~Perigo~
-  }
-
-  class Passageiro {
-    <<abstract>>
-    + getPontosValor() int
-  }
-
-  class Perigo {
-    <<interface>>
-    + getPenalidadePontos() int
-  }
-
-  Missao "1" -- "*" Passageiro
-  Missao "1" -- "*" Perigo
+    ElementoMapa <|-- Nave
+    ElementoMapa <|-- Base
+    ElementoMapa <|-- Passageiro
+    ElementoMapa <|-- Perigo
+    Passageiro <|-- Professor
+    Passageiro <|-- Engenheiro
+    Passageiro <|-- Astronauta
+    Perigo <|-- Asteroide
+    Perigo <|-- Inimigo
+    class ElementoMapa {
+        <<abstract>>
+        -int x
+        -int y
+        +getX() int
+        +getY() int
+        +getSimbolo()* char
+        +ocupa(x, y) boolean
+    }
 ```
 
-Arquivos externos para edição: `diagrams/class-v1-fixed.mmd`.
+O símbolo é uma operação abstrata do modelo. O renderer usa o resultado
+polimórfico copiado para o snapshot; não mantém uma seleção de classes concretas.
 
-Versão 2 — incluir ranking e separação de camadas (indirection / protected variations)
+Diagrama editável: [modelo de domínio](diagrams/class-v1.mmd).
 
-```mermaid
-classDiagram
-  class JogoService
-  class GameController
-  class IRankingRepository {
-    <<interface>>
-  }
-  class RankingEntry {
-    + nome: String
-    + pontuacao: int
-  }
-  class RankingRepositoryArquivo
+## Os nove princípios
 
-  JogoService --> IRankingRepository : usa
-  IRankingRepository <|.. RankingRepositoryArquivo
-  IRankingRepository --> RankingEntry
-```
+| Princípio | Critério de decisão |
+| --- | --- |
+| [Information Expert](info-expert.md) | Colocar a decisão onde estão as informações necessárias |
+| [Creator](creator.md) | Usar relações de composição, uso e dados de inicialização para atribuir criação |
+| [Controller](controller.md) | Atribuir os eventos de aplicação a um objeto que represente o sistema ou o caso de uso |
+| [Low Coupling](low-coupling.md) | Reduzir dependências que dificultem entender, testar e modificar o projeto |
+| [High Cohesion](high-cohesion.md) | Agrupar responsabilidades relacionadas |
+| [Polymorphism](polymorphism.md) | Distribuir comportamentos que variam por tipo |
+| [Pure Fabrication](pure-fabrication.md) | Criar objetos de software que favoreçam coesão e baixo acoplamento |
+| [Indirection](indirection.md) | Introduzir um intermediário para desacoplar colaboradores |
+| [Protected Variations](protected-variations.md) | Proteger variações previstas com contratos estáveis |
 
-## Os 9 Princípios GRASP:
+Uma decisão pode aplicar vários princípios. `ElementoMapa` reúne informações
+de posição e permite variar o símbolo. `RankingRepository` é uma fabricação
+que intermedeia o acesso ao arquivo.
 
-Princípios estudados nesta apostila:
+## Relação com SOLID
 
-1. [Information Expert](info-expert.md)
-2. [Creator](creator.md)
-3. [Controller](controller.md)
-4. [Low Coupling](low-coupling.md)
-5. [High Cohesion](high-cohesion.md)
-6. [Polymorphism](polymorphism.md)
-7. [Pure Fabrication](pure-fabrication.md)
-8. [Indirection](indirection.md)
-9. [Protected Variations](protected-variations.md)
+GRASP orienta a atribuição de responsabilidades; SOLID ajuda a avaliar aspectos
+do projeto, como extensão, substituição e dependência de abstrações. Há relações
+entre os conjuntos, mas não uma equivalência obrigatória entre cada princípio.
 
-## Agrupamento dos padrões GRASP
+Por exemplo, acrescentar um passageiro que implementa `getSimbolo()` e
+`getPontuacao()` favorece o aberto/fechado nos consumidores existentes.
+Isso não elimina a necessidade de escolher sua criação na fábrica.
 
-Aqui proponho um agrupamento prático dos princípios GRASP para facilitar o estudo e a aplicação. Os agrupamentos não são exclusivos — servem como guia mental para escolher quais padrões considerar juntos.
+## Prática inicial
 
-- **Atribuição de Responsabilidades**
-
-  - Information Expert: colocar comportamento onde estão os dados.
-  - Creator: quem deve criar instâncias quando há relação óbvia.
-  - Controller: objeto que representa um caso de uso e coordena operações.
-- **Organização estrutural / design para mudança**
-
-  - Low Coupling: reduzir dependências entre classes.
-  - High Cohesion: manter responsabilidades relacionadas dentro da mesma classe.
-  - Protected Variations: isolar pontos que podem variar atrás de abstrações.
-  - Indirection: inserir intermediários para reduzir acoplamento direto.
-- **Técnicas de implementação / apoio ao design**
-
-  - Polymorphism: usar polimorfismo para variar comportamento sem condicionais.
-  - Pure Fabrication: criar classes que não pertencem ao domínio para reduzir acoplamento (ex.: repositórios, adaptadores).
-
-Sugestões de estudo prático
-
-- Ao analisar um caso de uso: comece pensando em `Controller` (quem orquestra), aplique `Information Expert` para localizar lógica (ex.: cálculo), e então verifique `Creator` para responsabilidades de criação.
-- Ao refatorar: use `Low Coupling` e `High Cohesion` como objetivos, e recorra a `Pure Fabrication` ou `Indirection` para isolar dependências.
-
-Referência rápida: ver `tutorial-grasp-missao-marte.md` para o exemplo evolutivo completo da Missão Marte onde estes agrupamentos aparecem em prática.
-
-Mapeamento rápido para SOLID
-
-- **Atribuição de Responsabilidades:** ligado principalmente a `SRP` (definir responsabilidades claras) e `OCP` (organizar para extensão).
-- **Organização estrutural / design para mudança:** fortemente relacionado a `DIP` e `ISP` para reduzir acoplamento e criar abstrações estáveis.
-- **Técnicas de implementação / apoio:** `Polymorphism` mapeia para `OCP`/`LSP`; `Pure Fabrication` apoia `SRP` e `DIP`.
-
-## **Tabela Comparativa: GRASP vs. SOLID**
-
-Os princípios GRASP formam a base lógica que o SOLID refina. É imperativo que o aluno distinga essas conexões:
-
-| Princípio GRASP     | Equivalente ou Relacionado no SOLID / OO                      |
-| -------------------- | ------------------------------------------------------------- |
-| Information Expert   | Single Responsibility Principle (SRP) / Encapsulamento        |
-| Protected Variations | Open/Closed Principle (OCP)                                   |
-| Polymorphism         | Liskov Substitution Principle (LSP) / OCP                     |
-| Pure Fabrication     | Single Responsibility Principle (SRP) / DDD Service           |
-| Controller           | Interface Segregation Principle (ISP) / Camada de Aplicação |
+Siga uma ação desde `ConsoleJogo` até `Nave.mover`. Para cada objeto,
+anote a informação que ele possui e a decisão que toma. Depois compare seu
+percurso com o [tutorial](tutorial-grasp-missao-marte.md).

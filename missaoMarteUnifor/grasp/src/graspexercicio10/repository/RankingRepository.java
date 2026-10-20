@@ -3,26 +3,24 @@ package graspexercicio10.repository;
 import graspexercicio10.model.Dificuldade;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * GRASP Pure Fabrication: não representa nenhum conceito do domínio do jogo —
  * existe exclusivamente para isolar toda a lógica de I/O de ranking.
  *
- * GRASP Indirection: intermediário entre JogoService e o sistema de arquivos,
+ * GRASP Indirection: intermediário entre RankingService e o sistema de arquivos,
  * reduzindo o acoplamento direto entre serviço e infraestrutura de I/O.
  *
  * GRASP High Cohesion: responsabilidade única — persistir e recuperar rankings.
  */
 public class RankingRepository implements IRankingRepository {
 
-    private static final int MAX_ENTRADAS = 5;
     private final Path caminho;
 
     public RankingRepository(Path caminho) {
@@ -36,20 +34,15 @@ public class RankingRepository implements IRankingRepository {
             String json = new String(Files.readAllBytes(caminho), StandardCharsets.UTF_8).trim();
             return parseJson(json);
         } catch (IOException e) {
-            return new ArrayList<>();
+            throw new UncheckedIOException("Não foi possível carregar o ranking.", e);
         }
     }
 
     @Override
     public void salvar(List<RankingEntry> ranking) {
-        List<RankingEntry> top = ranking.stream()
-                .sorted(Comparator.comparingInt((RankingEntry e) -> e.score).reversed())
-                .limit(MAX_ENTRADAS)
-                .collect(Collectors.toList());
-
         StringBuilder sb = new StringBuilder("[");
-        for (int i = 0; i < top.size(); i++) {
-            RankingEntry e = top.get(i);
+        for (int i = 0; i < ranking.size(); i++) {
+            RankingEntry e = ranking.get(i);
             sb.append("{\"nome\":\"").append(e.nome.replace("\"", "\\\""))
               .append("\",\"score\":").append(e.score)
               .append(",\"dificuldade\":\"").append(e.dificuldade.name())
@@ -57,13 +50,13 @@ public class RankingRepository implements IRankingRepository {
               .append(",\"dataHora\":\"").append(e.dataHora)
               .append("\",\"tempoJogo\":").append(e.tempoJogo)
               .append("}");
-            if (i < top.size() - 1) sb.append(",");
+            if (i < ranking.size() - 1) sb.append(",");
         }
         sb.append("]");
         try {
             Files.write(caminho, sb.toString().getBytes(StandardCharsets.UTF_8));
         } catch (IOException ex) {
-            System.out.println("Não foi possível salvar o ranking: " + ex.getMessage());
+            throw new UncheckedIOException("Não foi possível salvar o ranking.", ex);
         }
     }
 
@@ -72,14 +65,8 @@ public class RankingRepository implements IRankingRepository {
         try {
             Files.deleteIfExists(caminho);
         } catch (IOException e) {
-            System.out.println("Erro ao resetar ranking: " + e.getMessage());
+            throw new UncheckedIOException("Não foi possível resetar o ranking.", e);
         }
-    }
-
-    @Override
-    public boolean ehTopScore(List<RankingEntry> ranking, int score) {
-        if (ranking.size() < MAX_ENTRADAS) return true;
-        return score > ranking.get(ranking.size() - 1).score;
     }
 
     // ── Parser JSON manual (sem bibliotecas externas) ─────────────────────────
@@ -125,7 +112,6 @@ public class RankingRepository implements IRankingRepository {
             }
             idx = end + 1;
         }
-        resultado.sort(Comparator.comparingInt((RankingEntry e) -> e.score).reversed());
         return resultado;
     }
 

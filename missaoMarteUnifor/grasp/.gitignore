@@ -1,0 +1,19 @@
+# Compilados Java, independentemente do diretório de saída.
+*.class
+
+# Diretórios de compilação e exemplos gerados para validação das apostilas.
+/build-grasp/
+out/
+bin/
+
+# Lista temporária de fontes usada por instruções antigas de compilação.
+/apostilas-grasp/sources.txt
+
+# Dados locais dos jogadores, gerados no diretório de execução.
+ranking.json
+ranking-grasp.json
+
+# Metadados locais do sistema operacional.
+.DS_Store
+Thumbs.db
+Desktop.ini

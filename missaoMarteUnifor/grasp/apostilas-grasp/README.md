@@ -1,347 +1,56 @@
 # GRASP na Missão Marte
 
-O GRASP é a parte prática do design: ele responde quem deve ficar com cada responsabilidade.
+Estas apostilas estudam a atribuição de responsabilidades usando o código de
+[`src/graspexercicio10`](../src/graspexercicio10/README.md). O exercício original
+está em [`src/exercicio10`](../src/exercicio10/Main.java), para comparação.
 
-## Visão rápida
+O jogo continua executável no console e está organizado para receber uma
+interface gráfica. Os exemplos e diagramas destas páginas descrevem as classes
+e os métodos presentes no código atual.
 
-No projeto, a separação é simples:
+## Roteiro de estudo
 
-- `Missao`: domínio do jogo
-- `Nave`: comportamento da nave
-- `JogoService`: regras e fluxo da partida
-- `MapaRenderer`: apresentação no console
-- `RankingRepository`: persistência do ranking
+1. Leia a [introdução](introducao.md) e o [agrupamento dos princípios](grasp-grouping.md).
+2. Acompanhe o [tutorial da refatoração](tutorial-grasp-missao-marte.md).
+3. Explore os nove princípios na tabela abaixo.
+4. [Compile, execute e teste](RUNNING.md) antes de realizar os exercícios.
 
-## Pergunta central
+| Princípio | Pergunta no jogo | Classes e métodos |
+| --- | --- | --- |
+| [Information Expert](info-expert.md) | Quem tem os dados para decidir? | `ElementoMapa.ocupa`, `Nave.embarcar`, `Missao.verificaColisao` |
+| [Creator](creator.md) | Quem possui os dados de criação? | `FabricaMissao.criar`, criação de `RankingEntry` por `RankingService` |
+| [Controller](controller.md) | Quem recebe os eventos da aplicação? | `GameController.executar` |
+| [Low Coupling](low-coupling.md) | Quais dependências limitam a evolução? | Controller sem console; jogo sem persistência |
+| [High Cohesion](high-cohesion.md) | Quais responsabilidades pertencem juntas? | Domínio, turnos, classificação, apresentação e armazenamento |
+| [Polymorphism](polymorphism.md) | Qual comportamento varia por elemento? | `getSimbolo`, `getPontuacao`, `Perigo.atualizar` |
+| [Pure Fabrication](pure-fabrication.md) | Que objeto de software ajuda a organizar o projeto? | `MapaRenderer`, `FabricaMissao`, `RankingRepository` |
+| [Indirection](indirection.md) | Quem intermedeia a colaboração? | `GameController`, `IRankingRepository` |
+| [Protected Variations](protected-variations.md) | Que contrato protege uma mudança prevista? | `ElementoMapa`, ações/eventos, snapshots e repositório |
 
-Em vez de perguntar só como o código funciona, o GRASP pergunta:
+## Modelo compartilhado
 
-- quem conhece essa informação?
-- quem executa essa ação?
-- quem cria esse objeto?
-- quem coordena esse fluxo?
+`ElementoMapa` é uma classe abstrata com coordenadas `x` e `y` encapsuladas
+e o método abstrato `char getSimbolo()`. `Nave`, `Base`, `Passageiro` e
+`Perigo` herdam dela. Cada elemento define seu próprio símbolo.
 
-## Por que isso importa?
+`Missao.getElementos()` reúne os elementos pelo contrato comum.
+`EntidadeEstado` copia símbolo, descrição, nome, coordenadas e a característica
+resgatável. `EstadoJogo` reúne essas cópias com os indicadores da partida.
 
-Se tudo estivesse junto, a classe ficaria grande, acoplada e difícil de evoluir.
+## Fluxo da aplicação
 
-O GRASP ajuda a organizar o projeto em camadas com responsabilidades bem definidas:
+```text
+ConsoleJogo → GameController → JogoService → Missao / ElementoMapa
+                    ↓
+              RankingService → IRankingRepository → RankingRepository
 
-- `model`: domínio
-- `service`: regras e fluxo
-- `presentation`: visualização
-- `repository`: persistência
-
-## Importante
-
-Este README é só uma porta de entrada. O estudo detalhado do GRASP está no tutorial e nas demais páginas do material.
-
-        return nome;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public abstract int getPontuacao();
-}
+GameController.consultarEstado() → EstadoJogo → MapaRenderer
 ```
 
-Crie os arquivos model/Professor.java, model/Engenheiro.java e model/Astronauta.java com o conteúdo abaixo:
+`ConsoleJogo` lê e traduz teclas; `GameController` coordena casos de uso;
+`JogoService` executa turnos; `RankingService` decide a classificação;
+`RankingRepository` armazena os registros. O símbolo pertence ao modelo e
+o desenho do console pertence à apresentação.
 
-```java
-package solidexercicio10.model;
-
-public class Professor extends Passageiro {
-    public Professor(String nome, int x, int y) {
-        super(nome, "Professor", x, y);
-    }
-
-    @Override
-    public int getPontuacao() {
-        return 15;
-    }
-
-    @Override
-    public String getSimbolo() {
-        return "P";
-    }
-}
-```
-
-```java
-package solidexercicio10.model;
-
-public class Engenheiro extends Passageiro {
-    public Engenheiro(String nome, int x, int y) {
-        super(nome, "Engenheiro", x, y);
-    }
-
-    @Override
-    public int getPontuacao() {
-        return 20;
-    }
-
-    @Override
-    public String getSimbolo() {
-        return "E";
-    }
-}
-```
-
-```java
-package solidexercicio10.model;
-
-public class Astronauta extends Passageiro {
-    public Astronauta(String nome, int x, int y) {
-        super(nome, "Astronauta", x, y);
-    }
-
-    @Override
-    public int getPontuacao() {
-        return 10;
-    }
-
-    @Override
-    public String getSimbolo() {
-        return "T";
-    }
-}
-```
-
-Crie o arquivo model/Asteroide.java com o conteúdo abaixo:
-
-```java
-package solidexercicio10.model;
-
-public class Asteroide extends EntidadeMapa {
-    public Asteroide(int x, int y) {
-        super(x, y);
-    }
-
-    @Override
-    public String getSimbolo() {
-        return "A";
-    }
-}
-```
-
-Crie o arquivo model/Inimigo.java com o conteúdo abaixo:
-
-```java
-package solidexercicio10.model;
-
-public class Inimigo extends EntidadeMapa implements Movel {
-    public Inimigo(int x, int y) {
-        super(x, y);
-    }
-
-    @Override
-    public void mover(int dx, int dy) {
-        this.x += dx;
-        this.y += dy;
-    }
-
-    @Override
-    public String getSimbolo() {
-        return "X";
-    }
-}
-```
-
-Crie o arquivo model/Nave.java com o conteúdo abaixo:
-
-```java
-package solidexercicio10.model;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class Nave extends EntidadeMapa implements Movel {
-    private final String nome;
-    private final List<Passageiro> passageiros;
-    private final int capacidade;
-    private int vidas;
-
-    public Nave(String nome, int x, int y) {
-        this(nome, x, y, 3);
-    }
-
-    public Nave(String nome, int x, int y, int capacidade) {
-        super(x, y);
-        this.nome = nome;
-        this.passageiros = new ArrayList<>();
-        this.capacidade = capacidade;
-        this.vidas = 3;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void embarcar(Passageiro passageiro) {
-        if (passageiros.size() < capacidade) {
-            passageiros.add(passageiro);
-        }
-    }
-
-    public void moverComLimites(char comando, int minX, int maxX, int minY, int maxY) {
-        int dx = 0;
-        int dy = 0;
-
-        switch (comando) {
-            case 'w' -> dy = 1;
-            case 's' -> dy = -1;
-            case 'a' -> dx = -1;
-            case 'd' -> dx = 1;
-        }
-
-        int novoX = this.x + dx;
-        int novoY = this.y + dy;
-        if (novoX >= minX && novoX <= maxX && novoY >= minY && novoY <= maxY) {
-            this.x = novoX;
-            this.y = novoY;
-        }
-    }
-
-    public void perderVida() {
-        this.vidas = Math.max(0, this.vidas - 1);
-    }
-
-    public int getVidas() {
-        return vidas;
-    }
-
-    public int getCapacidade() {
-        return capacidade;
-    }
-
-    public List<Passageiro> getPassageiros() {
-        return passageiros;
-    }
-
-    @Override
-    public void mover(int dx, int dy) {
-        this.x += dx;
-        this.y += dy;
-    }
-
-    @Override
-    public String getSimbolo() {
-        return "N";
-    }
-}
-```
-
-Crie o arquivo model/Missao.java com o conteúdo abaixo:
-
-```java
-package solidexercicio10.model;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class Missao {
-    private final Nave nave;
-    private final List<Passageiro> passageiros;
-    private final List<Asteroide> asteroides;
-    private final List<Inimigo> inimigos;
-
-    public Missao(Nave nave) {
-        this.nave = nave;
-        this.passageiros = new ArrayList<>();
-        this.asteroides = new ArrayList<>();
-        this.inimigos = new ArrayList<>();
-    }
-
-    public void adicionarPassageiro(Passageiro passageiro) {
-        passageiros.add(passageiro);
-    }
-
-    public void adicionarAsteroide(Asteroide asteroide) {
-        asteroides.add(asteroide);
-    }
-
-    public void adicionarInimigo(Inimigo inimigo) {
-        inimigos.add(inimigo);
-    }
-
-    public Passageiro passagemNaPosicao() {
-        for (Passageiro passageiro : passageiros) {
-            if (passageiro.getX() == nave.getX() && passageiro.getY() == nave.getY()) {
-                return passageiro;
-            }
-        }
-        return null;
-    }
-
-    public boolean embarcarPassageiroNaPosicao() {
-        Passageiro passageiro = passagemNaPosicao();
-        if (passageiro == null || nave.getPassageiros().size() >= nave.getCapacidade()) {
-            return false;
-        }
-        nave.embarcar(passageiro);
-        passageiros.remove(passageiro);
-        return true;
-    }
-
-    public void moverInimigos() {
-        for (Inimigo inimigo : inimigos) {
-            int dx = (int) (Math.random() * 3) - 1;
-            int dy = (int) (Math.random() * 3) - 1;
-            inimigo.mover(dx, dy);
-        }
-    }
-
-    public boolean verificaColisao() {
-        for (Asteroide asteroide : asteroides) {
-            if (asteroide.getX() == nave.getX() && asteroide.getY() == nave.getY()) {
-                return true;
-            }
-        }
-        for (Inimigo inimigo : inimigos) {
-            if (inimigo.getX() == nave.getX() && inimigo.getY() == nave.getY()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean todosEmbarcados() {
-        return passageiros.isEmpty();
-    }
-
-    public Nave getNave() {
-        return nave;
-    }
-
-    public List<Passageiro> getPassageiros() {
-        return passageiros;
-    }
-
-    public List<Asteroide> getAsteroides() {
-        return asteroides;
-    }
-
-    public List<Inimigo> getInimigos() {
-        return inimigos;
-    }
-}
-```
-
-## Compilação e execução
-
-Execute os comandos abaixo na raiz do projeto:
-
-```bash
-mkdir missaoMarteUnifor\solid\src\tutorial-exercicio10\out -Force | Out-Null
-javac -d missaoMarteUnifor\solid\src\tutorial-exercicio10\out -sourcepath missaoMarteUnifor\solid\src\tutorial-exercicio10\src missaoMarteUnifor\solid\src\tutorial-exercicio10\src\solidexercicio10\Main.java
-java -cp missaoMarteUnifor\solid\src\tutorial-exercicio10\out solidexercicio10.Main
-```
-
-## Reflexão final
-
-- Qual princípio do SOLID você achou mais importante nesta atividade?
-- Em que parte da refatoração você percebeu melhor a diferença entre um código acoplado e um código mais organizado?
-- O que você aprendeu sobre manutenção e evolução do software?
-- Se fosse adicionar uma nova funcionalidade, qual parte do código você alteraria com mais segurança?
+Consulte o [índice de diagramas](diagrams/README.md) e o
+[guia do código](../src/graspexercicio10/README.md) para navegar pela implementação.

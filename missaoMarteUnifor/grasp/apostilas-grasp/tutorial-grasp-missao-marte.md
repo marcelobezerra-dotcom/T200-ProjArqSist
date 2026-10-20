@@ -1,831 +1,324 @@
-# Tutorial: Migrando o Exercício 10 para GRASP — Passo a Passo
+# Tutorial: aplicar GRASP à Missão Marte
 
-> **Contexto:** Este tutorial parte do código **completo e funcional** do Exercício 10
-> (`exercicio10/Main.java` + demais classes) e mostra, **passo a passo**, como migrá-lo
-> para o pacote `graspexercicio10`, aplicando cada um dos **9 padrões GRASP**.
->
-> Cada seção mostra o **código original** que está sendo substituído e o **código novo**
-> que o substitui, com a explicação de qual padrão foi aplicado e por quê.
+Este tutorial acompanha o código atual de
+[`src/graspexercicio10`](../src/graspexercicio10/README.md).
+O ponto de comparação é o [exercício original](../src/exercicio10/Main.java),
+cujo `Main` reúne menu, leitura, criação do cenário, desenho e persistência.
 
----
+O objetivo é distribuir as responsabilidades e preparar o jogo para uma
+interface gráfica. A aplicação disponível continua sendo um jogo por turnos
+no console.
 
-## Objetivos de Aprendizagem
+Os trechos de métodos pertencem às classes indicadas. Exemplos completos
+adicionais são identificados como exercícios; as demais classes já estão no repositório.
 
-Ao concluir este tutorial, o aluno será capaz de:
+## 1. Identificar as responsabilidades
 
-- Identificar violações de responsabilidade em código existente (a *"classe deus"*).
-- Aplicar os 9 padrões GRASP: Information Expert, Creator, Controller, High Cohesion,
-  Low Coupling, Polymorphism, Pure Fabrication, Indirection e Protected Variations.
-- Descrever a diferença entre GRASP e SOLID.
-- Ler um diagrama de classes e relacioná-lo às decisões de design.
+| Responsabilidade | Destino atual |
+| --- | --- |
+| Montar as dependências da aplicação | `Main` |
+| Ler menu e traduzir teclas | `ConsoleJogo` |
+| Receber eventos da aplicação | `GameController` |
+| Coordenar turnos, pontos, tempo e encerramento | `JogoService` |
+| Montar o cenário inicial | `FabricaMissao` |
+| Representar posição e símbolo no mapa | `ElementoMapa` e suas subclasses |
+| Embarcar respeitando a capacidade | `Nave` |
+| Conhecer elementos e verificar colisão | `Missao` |
+| Desenhar o mapa e as mensagens | `MapaRenderer` |
+| Transportar uma cópia do estado para leitura | `EstadoJogo` e `EntidadeEstado` |
+| Classificar e limitar os resultados | `RankingService` |
+| Armazenar os registros | `IRankingRepository` / `RankingRepository` |
 
----
+A escolha vem dos dados e das colaborações necessárias. Separar pacotes é uma
+consequência dessa distribuição, não a definição de GRASP.
 
-## O que é GRASP?
+## 2. Modelar o elemento comum do mapa
 
-**GRASP** é um conjunto de 9 padrões criado por **Craig Larman** (livro *Applying UML and
-Patterns*, 1997). Cada padrão responde a uma pergunta fundamental sobre **onde** colocar
-responsabilidades no design orientado a objetos.
-
-> **GRASP ≠ SOLID**  
-> SOLID define *princípios* de como classes devem ser estruturadas.  
-> GRASP define *heurísticas* para decidir *quem* deve fazer *o quê*.  
-> Os dois se complementam: aplicar GRASP geralmente satisfaz SOLID também.
-
-| Padrão GRASP | Pergunta central |
-|---|---|
-| **Information Expert** | Quem tem os dados necessários para realizar esta operação? |
-| **Creator** | Quem deve criar instâncias de determinada classe? |
-| **Controller** | Quem deve tratar eventos de entrada do sistema? |
-| **High Cohesion** | Esta classe tem responsabilidades muito diversas? |
-| **Low Coupling** | Quantas outras classes esta classe conhece? |
-| **Polymorphism** | Como evitar condicionais baseados em tipo? |
-| **Pure Fabrication** | Quem deve fazer algo que nenhuma classe do domínio deveria? |
-| **Indirection** | Como evitar acoplamento direto entre dois componentes? |
-| **Protected Variations** | Como isolar partes que mudam de partes que não mudam? |
-
----
-
-## Diagnóstico: O Problema do Exercício 10
-
-O Exercício 10 funciona, mas o arquivo `Main.java` é uma **"classe deus"** (God Class):
-tem ~550 linhas e é responsável por absolutamente tudo.
-
-```
-Main.java (exercício 10) — responsabilidades misturadas:
-  ├── Exibir menu e ler input do usuário          → apresentação
-  ├── Criar Missao, Nave, Passageiros...           → criação de objetos
-  ├── Gerenciar loop de partida                   → controle de fluxo
-  ├── Calcular pontuação inicial por dificuldade  → regra de negócio
-  ├── Verificar posições ocupadas no mapa         → consulta ao domínio
-  ├── Desenhar o mapa (com instanceof)            → renderização
-  ├── Ler e gravar ranking em JSON                → persistência
-  └── Exibir estatísticas                         → apresentação
-```
-
-**Consequências práticas:**
-- Difícil de testar (tudo misturado).
-- Qualquer mudança (ex.: novo formato de mapa) obriga alterar a mesma classe gigante.
-- Alto acoplamento: Main conhece Missao, Nave, Passageiro, Asteroide, Inimigo, etc.
-
-A migração GRASP resolve isso distribuindo cada responsabilidade para o lugar certo.
-
----
-
-## Estrutura Final do Projeto GRASP
-
-```
-src/graspexercicio10/
-│
-├── Main.java                          ← 20 linhas (só monta dependências)
-│
-├── model/                             ← Domínio do jogo
-│   ├── Perigo.java                    ← NOVO (Polymorphism)
-│   ├── Passageiro.java                ← + getSimbolo()
-│   ├── Professor.java                 ← + getSimbolo()
-│   ├── Engenheiro.java                ← + getSimbolo()
-│   ├── Astronauta.java                ← + getSimbolo()
-│   ├── Nave.java
-│   ├── Asteroide.java                 ← implementa Perigo
-│   ├── Inimigo.java                   ← implementa Perigo
-│   ├── Missao.java                    ← + posicaoOcupada() + getPerigos()
-│   └── Dificuldade.java               ← + getPontuacaoInicial()
-│
-├── controller/
-│   └── GameController.java            ← NOVO (Controller)
-│
-├── presentation/
-│   └── MapaRenderer.java              ← NOVO (Pure Fabrication)
-│
-├── repository/
-│   ├── IRankingRepository.java        ← NOVO (Protected Variations)
-│   ├── RankingEntry.java              ← extraída de Main
-│   └── RankingRepository.java         ← NOVO (Indirection + Pure Fabrication)
-│
-└── service/
-    ├── FabricaMissao.java             ← NOVO (Creator + Pure Fabrication)
-    └── JogoService.java               ← NOVO (High Cohesion + Low Coupling)
-```
-
-### Diagrama de Classes
+`ElementoMapa` é abstrata. Ela encapsula as coordenadas e declara
+`char getSimbolo()`. Nave, passageiros, perigos e base são elementos.
 
 ```mermaid
 classDiagram
-    direction TB
-
-    class Main {
-        +main(args)
-    }
-
-    class GameController {
-        -JogoService jogo
-        -MapaRenderer renderer
-        -IRankingRepository ranking
-        -Scanner scanner
-        +iniciar()
-        -jogarPartida()
-        -resetarRanking()
-    }
-
-    class JogoService {
-        -IRankingRepository rankingRepo
-        -FabricaMissao fabrica
-        -Missao missao
-        -int score
-        -int movimentos
-        +iniciarPartida(nome, dif, tam)
-        +mover(char) String
-        +embarcar() String
-        +isPartidaAtiva() bool
-    }
-
-    class MapaRenderer {
-        +exibirMenu()
-        +desenharMapa(Missao, ...)
-        +exibirRanking(List)
-        +exibirEstatisticas(...)
-    }
-
-    class FabricaMissao {
-        +criar(Dificuldade, ...) Missao
-        -criarPassageiro(int, x, y) Passageiro
-    }
-
-    class IRankingRepository {
-        <<interface>>
-        +carregar() List
-        +salvar(List)
-        +resetar()
-        +ehTopScore(List, int) bool
-    }
-
-    class RankingRepository {
-        -Path caminho
-        +carregar() List
-        +salvar(List)
-        +resetar()
-    }
-
-    class Missao {
-        -Nave nave
-        -List~Passageiro~ passageiros
-        -List~Asteroide~ asteroides
-        -List~Inimigo~ inimigos
-        +posicaoOcupada(x, y) bool
-        +getPerigos() List~Perigo~
-        +verificaColisao() bool
-    }
-
-    class Perigo {
-        <<interface>>
+    class ElementoMapa {
+        <<abstract>>
+        -int x
+        -int y
         +getX() int
         +getY() int
-        +colideCom(Nave) bool
-        +getSimbolo() char
+        +getSimbolo()* char
+        +getDescricao() String
+        +getNome() String
+        +isResgatavel() boolean
+        +ocupa(x, y) boolean
+        +mesmaPosicao(outro) boolean
     }
-
     class Passageiro {
-        +getPontuacao() int
-        +getSimbolo() char
+        <<abstract>>
+        +getPontuacao()* int
     }
-
-    Main --> GameController
-    GameController --> JogoService
-    GameController --> MapaRenderer
-    GameController --> IRankingRepository
-    JogoService --> IRankingRepository
-    JogoService --> FabricaMissao
-    JogoService --> Missao
-    RankingRepository ..|> IRankingRepository
-    Asteroide ..|> Perigo
-    Inimigo ..|> Perigo
-    Professor --|> Passageiro
-    Engenheiro --|> Passageiro
-    Astronauta --|> Passageiro
-    Missao --> Nave
-    Missao --> Passageiro
-    Missao --> Perigo
-```
-
----
-
-## Parte 1 — Information Expert
-
-### Definição
-
-> Atribua a responsabilidade à classe que possui a informação necessária para cumpri-la.
-
-### Problema no Exercício 10
-
-`Main.java` calcula coisas que só existem porque outras classes têm os dados:
-
-```java
-// Em Main.java — linha ~240
-private static int definirPontuacaoInicial(Dificuldade dificuldade) {
-    switch (dificuldade) {
-        case FACIL: return 30;
-        case DIFICIL: return 15;
-        default: return 20;
+    class Perigo {
+        <<abstract>>
+        +colideCom(nave) boolean
+        +atualizar(random, minX, maxX, minY, maxY)*
     }
-}
-
-// Em Main.java — linha ~300
-private static boolean posicaoOcupada(Missao missao, int x, int y) {
-    if (missao.getNave().getX() == x && missao.getNave().getY() == y) return true;
-    for (Passageiro p : missao.getPassageiros()) { ... }
-    for (Asteroide a : missao.getAsteroides())   { ... }
-    for (Inimigo   i : missao.getInimigos())     { ... }
-    return false;
-}
-```
-
-**Diagnóstico:**
-- Quem sabe qual é a pontuação de cada dificuldade? → `Dificuldade`.
-- Quem tem todos os elementos do mapa para checar posições? → `Missao`.
-
-### Solução GRASP
-
-**`Dificuldade.java`** — o enum agora carrega sua própria regra:
-
-```java
-public enum Dificuldade {
-    FACIL, MEDIO, DIFICIL;
-
-    // Information Expert: a própria Dificuldade sabe sua pontuação inicial
-    public int getPontuacaoInicial() {
-        switch (this) {
-            case FACIL:   return 30;
-            case DIFICIL: return 15;
-            default:      return 20;
-        }
+    class Nave {
+        +mover(direcao, minX, maxX, minY, maxY) boolean
+        +embarcar(passageiro) boolean
+        +perderVida()
     }
-}
-```
-
-**`Missao.java`** — a missão sabe quem ocupa cada posição:
-
-```java
-// Information Expert: Missao tem todos os dados necessários
-public boolean posicaoOcupada(int x, int y) {
-    if (nave.getX() == x && nave.getY() == y) return true;
-    for (Passageiro p : passageiros) {
-        if (p.getX() == x && p.getY() == y) return true;
+    class Base
+    class Professor
+    class Engenheiro
+    class Astronauta
+    class Asteroide
+    class Inimigo
+    class Missao {
+        +getElementos() List~ElementoMapa~
+        +verificaColisao() boolean
+        +embarcarPassageiroNaPosicao() boolean
     }
-    for (Perigo p : getPerigos()) {
-        if (p.getX() == x && p.getY() == y) return true;
-    }
-    return false;
+    ElementoMapa <|-- Nave
+    ElementoMapa <|-- Base
+    ElementoMapa <|-- Passageiro
+    ElementoMapa <|-- Perigo
+    Passageiro <|-- Professor
+    Passageiro <|-- Engenheiro
+    Passageiro <|-- Astronauta
+    Perigo <|-- Asteroide
+    Perigo <|-- Inimigo
+    Missao "1" --> "1" Nave
+    Missao "1" *-- "1" Base
+    Missao "1" --> "*" Passageiro
+    Missao "1" --> "*" Perigo
+```
+
+O modelo evita repetir coordenadas e comparações em cada classe.
+Os campos ficam privados e o movimento com limites é protegido:
+subclasses móveis podem reutilizá-lo sem expor setters de posição.
+
+Trecho de [ElementoMapa](../src/graspexercicio10/model/ElementoMapa.java):
+
+```java
+public final int getX() { return x; }
+public final int getY() { return y; }
+public abstract char getSimbolo();
+
+public final boolean ocupa(int x, int y) {
+    return this.x == x && this.y == y;
+}
+
+public final boolean mesmaPosicao(ElementoMapa outro) {
+    return ocupa(outro.getX(), outro.getY());
 }
 ```
 
-**Antes vs. Depois:**
+Isso aplica [Information Expert](info-expert.md) para a posição e
+[Polymorphism](polymorphism.md) para o símbolo.
 
-| | Antes | Depois |
-|---|---|---|
-| Onde fica a pontuação inicial? | `Main.definirPontuacaoInicial()` | `Dificuldade.getPontuacaoInicial()` |
-| Onde fica a verificação de posição ocupada? | `Main.posicaoOcupada()` | `Missao.posicaoOcupada()` |
-| Quem verifica colisão? | `Main` chamava `missao.verificaColisao()` (já estava certo) | `JogoService.mover()` chama `missao.verificaColisao()` |
+## 3. Distribuir as decisões do domínio
 
----
+`Nave.embarcar(Passageiro)` conhece capacidade e ocupação.
+`Missao.embarcarPassageiroNaPosicao()` localiza o passageiro, pede o embarque
+e o remove da superfície somente quando a nave aceita.
 
-## Parte 2 — Creator
+`Perigo` é uma classe abstrata que estende `ElementoMapa`.
+Ela compartilha a colisão por posição e declara `atualizar(...)`:
+o asteroide fica imóvel; o inimigo tenta mover uma casa por turno.
 
-### Definição
+`Passageiro` também estende `ElementoMapa`. Cada subclasse fornece símbolo
+e pontuação. Professor vale 10, engenheiro 15 e astronauta 20.
 
-> Atribua a responsabilidade de criar um objeto **B** à classe **A** quando:
-> - A **contém** ou **agrega** instâncias de B; ou
-> - A tem os **dados de inicialização** de B; ou
-> - A **usa** B de forma estreita.
+`Missao.getElementos()` reúne nave, passageiros, perigos e base em uma
+lista pelo contrato comum. A nave vem primeiro, definindo sua prioridade
+de desenho quando há mais de um elemento na célula.
 
-### Problema no Exercício 10
+## 4. Criar uma missão — Creator e Pure Fabrication
 
-`Main.criarNovaMissao()` cria `Nave`, `Missao`, `Passageiro`, `Asteroide` e `Inimigo`.
-`Main` não deveria criar objetos de domínio — é papel da camada de serviço.
+A fábrica recebe dificuldade, limites e uma instância de `Random`.
+Em `JogoService.iniciarPartida`, a chamada é:
 
 ```java
-// Em Main.java — ~50 linhas de criação de objetos
-private static Missao criarNovaMissao(Random random, int minX, int maxX,
-                                       int minY, int maxY, Dificuldade dificuldade) {
-    Nave nave = new Nave("A-1", 5);
-    Missao missao = new Missao(nave);
-    // ... adiciona passageiros, asteroides, inimigos
-    return missao;
+Missao nova = fabrica.criar(dificuldade, -raioMapa, raioMapa, -raioMapa, raioMapa, random);
+```
+
+A [FabricaMissao](../src/graspexercicio10/service/FabricaMissao.java):
+
+1. Valida os limites, que precisam conter a base e ficar entre -20 e 20.
+2. Enumera as posições livres, reservando `(0,0)`.
+3. Consulta as quantidades em `Dificuldade`.
+4. Verifica se há espaço e embaralha as posições.
+5. Cria nave, missão, passageiros e perigos.
+
+| Dificuldade | Pontos iniciais | Passageiros | Asteroides | Inimigos |
+| --- | --- | --- | --- | --- |
+| Fácil | 15 | 4 | 1 | 1 |
+| Médio | 20 | 5 | 2 | 2 |
+| Difícil | 30 | 5 | 3 | 3 |
+
+O serviço valida um raio de 2 a 20; raio 5 corresponde a 11 × 11 células.
+A fábrica escolhe as classes concretas do cenário. Chamar os comportamentos
+desses objetos posteriormente é a parte polimórfica.
+
+Veja [Creator](creator.md) e seu [diagrama](diagrams/creator.mmd).
+
+## 5. Coordenar os eventos — Controller
+
+`ConsoleJogo` lê teclas e traduz uma entrada como `d` para
+`AcaoJogo.DIREITA`. A interface envia a ação ao controller:
+
+```java
+EventoJogo evento = controller.executar(AcaoJogo.DIREITA);
+EstadoJogo estado = controller.consultarEstado();
+```
+
+O [GameController](../src/graspexercicio10/controller/GameController.java)
+delega ao serviço e coordena o registro da vitória:
+
+```java
+public EventoJogo executar(AcaoJogo acao) {
+    EventoJogo evento = jogo.executar(acao);
+    if (evento == EventoJogo.VITORIA) ranking.registrarVitoria(consultarEstado());
+    return evento;
 }
 ```
 
-### Solução GRASP
+O laço do console está em `ConsoleJogo`. O controller oferece as mesmas
+operações para uma futura interface gráfica. Ele não contém `Scanner`
+ou `MapaRenderer`.
 
-**`FabricaMissao.java`** — classe criada para concentrar toda a lógica de montagem:
+Veja [Controller](controller.md) e a [sequência de uma ação](diagrams/controller.mmd).
+
+## 6. Executar um turno — High Cohesion
+
+O [JogoService](../src/graspexercicio10/service/JogoService.java) controla o
+ciclo da partida e delega as operações locais ao domínio.
+
+Para um movimento válido:
+
+1. A nave move usando os limites da classe base.
+2. O serviço desconta um ponto e incrementa os movimentos.
+3. A missão atualiza seus perigos.
+4. Havendo colisão, a nave perde uma vida.
+5. O serviço verifica vidas, combustível e objetivo.
+
+Tentar ultrapassar o limite devolve `LIMITE_MAPA` sem consumir turno.
+O embarque soma a pontuação polimórfica do passageiro e também verifica o objetivo.
+
+Vencer exige todos embarcados e nave na base, com vidas e pontos restantes.
+Os estados de encerramento são `VITORIA`, `DERROTA` e `ABORTADA`.
+Comandos posteriores são ignorados com `PARTIDA_INATIVA`, e o tempo final
+fica congelado.
+
+Essa distribuição preserva [High Cohesion](high-cohesion.md): entidades decidem
+sobre seus dados, e o serviço decide sobre o conjunto da partida.
+
+## 7. Expor uma cópia para leitura
+
+O serviço percorre os elementos:
 
 ```java
-public class FabricaMissao {
-
-    public Missao criar(Dificuldade dif, int minX, int maxX, int minY, int maxY, Random random) {
-        Nave nave = new Nave("A-1", 5);
-        Missao missao = new Missao(nave);
-
-        int[] qtds = quantidades(dif);
-
-        while (missao.getPassageiros().size() < qtds[0]) {
-            int x = rand(random, minX, maxX);
-            int y = rand(random, minY, maxY);
-            if (missao.posicaoOcupada(x, y)) continue;    // Information Expert!
-            missao.addPassageiro(criarPassageiro(missao.getPassageiros().size(), x, y));
-        }
-        // ... idem para asteroides e inimigos
-        return missao;
-    }
+for (ElementoMapa elemento : missao.getElementos()) {
+    entidades.add(new EntidadeEstado(elemento));
 }
 ```
 
-> **Observação:** `FabricaMissao` usa `Missao.posicaoOcupada()` (Information Expert)
-> em vez de replicar a lógica de posição. Os padrões GRASP se complementam naturalmente.
+[EntidadeEstado](../src/graspexercicio10/service/EntidadeEstado.java) copia:
 
----
+| Campo | Origem no modelo |
+| --- | --- |
+| `simbolo` | `getSimbolo()` |
+| `descricao` | `getDescricao()` |
+| `nome` | `getNome()` |
+| `x`, `y` | `getX()`, `getY()` |
+| `resgatavel` | `isResgatavel()` |
 
-## Parte 3 — Controller
+`EstadoJogo` reúne essas cópias com piloto, dificuldade, status, pontos,
+vidas, capacidade, contagens, movimentos e tempo. Seus campos são finais,
+os elementos são imutáveis e a lista é protegida contra alterações.
 
-### Definição
+A apresentação recebe dados de leitura. Mover a nave não altera um snapshot
+obtido antes da ação. Isso favorece [Low Coupling](low-coupling.md) e
+[Protected Variations](protected-variations.md).
 
-> Atribua a responsabilidade de tratar um evento de sistema a uma classe que:
-> - Representa o **sistema como um todo** (*facade controller*); ou
-> - Representa um **caso de uso** específico (*session controller*).
+## 8. Desenhar o estado — Pure Fabrication e Polymorphism
 
-### Problema no Exercício 10
-
-`Main.jogarPartida()` faz tudo: lê input, executa lógica e exibe resultado — tudo no
-mesmo método de ~120 linhas.
+`MapaRenderer.desenharMapa(EstadoJogo)` lê os campos do snapshot.
+Seu método de resolução da célula usa:
 
 ```java
-// Em Main.java — mistura de input + lógica + display
-private static void jogarPartida(Scanner scanner, Random random, ...) {
-    // lê nome, dificuldade...
-    // cria missao...
-    // while (partidaAtiva) {
-    //     desenharMapa(...)          ← exibição
-    //     String cmd = scanner...    ← input
-    //     if (cmd == 'c') { ... }    ← lógica
-    //     missao.moverInimigos(...)  ← lógica de domínio
-    //     if (missao.verificaColisao()) { ... }  ← lógica
-    // }
+for (EntidadeEstado e : estado.entidades) {
+    if (e.x == x && e.y == y) return e.simbolo;
 }
+return '.';
 ```
 
-### Solução GRASP
-
-**`GameController.java`** — separa a *orquestração* da *lógica* e da *exibição*:
-
-```java
-public class GameController {
-
-    private final JogoService        jogo;      // lógica
-    private final MapaRenderer       renderer;  // exibição
-    private final IRankingRepository ranking;   // persistência
-    private final Scanner            scanner;   // input
-
-    public void iniciar() {
-        renderer.exibirBoasVindas();
-        boolean rodando = true;
-        while (rodando) {
-            renderer.exibirMenu();
-            switch (lerLinha("Escolha uma opção: ", "1")) {
-                case "1": jogarPartida(); break;
-                case "2": renderer.exibirRanking(ranking.carregar()); break;
-                case "3": resetarRanking(); break;
-                case "4": rodando = false; break;
-            }
-        }
-    }
-
-    private void jogarPartida() {
-        // ...configura e inicia via jogo.iniciarPartida(...)
-        while (jogo.isPartidaAtiva()) {
-            renderer.desenharMapa(...);                // exibição → MapaRenderer
-            String resultado = jogo.mover(cmd);       // lógica → JogoService
-            if (!resultado.isEmpty()) System.out.println(resultado);
-        }
-    }
-}
-```
+O símbolo já foi fornecido pelo objeto do modelo. A legenda usa símbolo e
+descrição dos elementos presentes. A listagem de passageiros usa a característica
+`resgatavel`.
 
-### Diagrama de Sequência
+A organização segue a abstração de `ElementoMapa`: cada nova subclasse
+fornece seu comportamento, e os consumidores percorrem o contrato comum.
 
-```mermaid
-sequenceDiagram
-    participant Usuario
-    participant GameController
-    participant JogoService
-    participant Missao
-    participant MapaRenderer
-
-    Usuario->>GameController: tecla 'w'
-    GameController->>JogoService: mover('w')
-    JogoService->>Missao: getNave().moverComLimites('w', ...)
-    JogoService->>Missao: moverInimigos(...)
-    JogoService->>Missao: verificaColisao()
-    Missao-->>JogoService: false
-    JogoService-->>GameController: "" (sem mensagem)
-    GameController->>MapaRenderer: desenharMapa(...)
-    MapaRenderer-->>Usuario: mapa atualizado
-```
-
----
-
-## Parte 4 — High Cohesion
-
-### Definição
-
-> Uma classe deve ter responsabilidades **relacionadas** entre si e **limitadas** em quantidade.
-> Classes com alta coesão são mais fáceis de entender, manter e reusar.
-
-### Problema no Exercício 10
-
-`Main.java` (~550 linhas) tem responsabilidades completamente diferentes:
-
-| Responsabilidade | Deveria estar em... |
-|---|---|
-| Loop de menu e navegação | `GameController` |
-| Loop de partida e comandos | `GameController` |
-| Regras de vitória/derrota | `JogoService` |
-| Renderização do mapa | `MapaRenderer` |
-| Criação de objetos de missão | `FabricaMissao` |
-| I/O de arquivo JSON | `RankingRepository` |
-
-### Resultado da Migração
-
-Cada classe resultante tem coesão alta:
-
-| Classe | Linhas | Responsabilidade única |
-|---|---|---|
-| `Main.java` | 20 | Montar dependências e iniciar |
-| `GameController` | 90 | Ler input e orquestrar fluxo |
-| `JogoService` | 110 | Estado e regras da partida |
-| `MapaRenderer` | 90 | Exibir tudo no console |
-| `FabricaMissao` | 55 | Criar missão com seus elementos |
-| `RankingRepository` | 110 | Persistir ranking em JSON |
-
----
-
-## Parte 5 — Low Coupling
-
-### Definição
-
-> Minimize o número de dependências entre classes. Quanto menos uma classe conhece
-> outras, mais independente ela é para ser alterada e testada.
+## 9. Classificar e persistir — Indirection e Protected Variations
 
-### Problema no Exercício 10
+O controller solicita `RankingService.registrarVitoria(estado)` quando
+recebe o evento de vitória. O serviço de ranking:
 
-`Main` conhece e usa diretamente: `Scanner`, `Random`, `Path`, `Files`, `Comparator`,
-`Collectors`, `Missao`, `Nave`, `Passageiro`, `Professor`, `Engenheiro`, `Astronauta`,
-`Asteroide`, `Inimigo`, `Dificuldade` e `RankingEntry` — **~16 dependências diretas**.
+1. Consulta o repositório, ordena por pontos decrescentes e considera o Top 5.
+2. Avalia se o resultado entra na classificação.
+3. Cria um `RankingEntry` com nome, score, dificuldade, embarcados, data/hora e tempo.
+4. Salva a lista ordenada, limitada a cinco resultados.
 
-### Solução GRASP
+Um empate com a última posição de um ranking cheio não a substitui.
+O contrato de armazenamento tem `carregar()`, `salvar(List<RankingEntry>)`
+e `resetar()`. O `RankingRepository` concreto usa JSON.
 
-Cada classe resultante tem, no máximo, 4–5 dependências:
+O jogo não depende da persistência. `RankingService` depende de
+`IRankingRepository`, e o `Main` escolhe a implementação.
 
-```
-Main               → GameController (1 dep.)
-GameController     → JogoService, MapaRenderer, IRankingRepository, Scanner (4 dep.)
-JogoService        → IRankingRepository, FabricaMissao, Missao, Dificuldade (4 dep.)
-MapaRenderer       → Missao, Passageiro, Perigo, RankingEntry (4 dep.)
-FabricaMissao      → Missao, Nave, Dificuldade, Passageiro subclasses (5 dep.)
-RankingRepository  → Path, Files, RankingEntry, Dificuldade (4 dep.)
-```
+Uma falha de I/O chega à apresentação como `UncheckedIOException`.
+Uma vitória concluída permanece válida mesmo se sua gravação falhar.
 
-**Vantagem prática:** para trocar o formato de persistência (JSON → banco de dados),
-basta criar uma nova implementação de `IRankingRepository`. Nenhuma outra classe muda.
+Veja [Indirection](indirection.md) e
+[Protected Variations](protected-variations.md), incluindo um exemplo completo
+de repositório em memória.
 
----
+## 10. Preparar a migração gráfica
 
-## Parte 6 — Polymorphism
+A nova tela pode receber o mesmo `GameController`. Ela deve:
 
-### Definição
+1. Enviar ações ao controller a partir dos eventos da interface.
+2. Consultar `EstadoJogo` depois das ações.
+3. Desenhar entidades e indicadores a partir dos dados recebidos.
+4. Apresentar eventos e tratar erros de persistência.
+5. Enviar `ABORTAR` quando o usuário desistir da partida.
 
-> Use polimorfismo para variar comportamento baseado em tipo, em vez de usar
-> condicionais (`if`/`switch` com `instanceof`).
+Para uma célula com tamanho `t`, a conversão de coordenadas pode usar
+`pixelX = (entidade.x + estado.raioMapa) * t`, e a mesma regra para Y.
+O modelo fornece o símbolo; a apresentação gráfica escolhe imagens, cores
+e animações.
 
-### Problema no Exercício 10
+A simulação continua por turnos. Redesenhar em um temporizador de animação
+não precisa executar uma ação ou avançar perigos.
 
-`Main.desenharMapa()` usa `instanceof` para decidir o símbolo de cada passageiro:
+## 11. Conferir a implementação
 
-```java
-// Em Main.java — ANTES (com instanceof)
-for (Passageiro p : missao.getPassageiros()) {
-    if (p.getX() == x && p.getY() == y) {
-        if (p instanceof Engenheiro) {
-            symbol = 'E';
-        } else if (p instanceof Astronauta) {
-            symbol = 'T';
-        } else {
-            symbol = 'P';  // Professor (default)
-        }
-        break;
-    }
-}
-```
+Siga os [comandos de compilação e execução](RUNNING.md).
+A suíte atual tem 14 cenários de comportamento, incluindo um passageiro
+definido apenas no teste que fornece símbolo, pontuação e descrição sem
+alterar o renderer ou as regras de embarque.
 
-**Problema:** se um novo tipo `Medico` for adicionado, é preciso alterar este método.
+Os diagramas editáveis estão no [índice](diagrams/README.md).
 
-### Solução GRASP
+## Exercícios
 
-Adicionar `getSimbolo()` em cada classe — cada objeto sabe seu próprio símbolo:
+1. Implemente o `Medico` de [Polymorphism](polymorphism.md) e acrescente sua
+   criação ao cenário da fábrica.
+2. Use o repositório em memória de [Protected Variations](protected-variations.md).
+3. Implemente outro perigo com símbolo e movimento próprios, estendendo `Perigo`.
+4. Desenhe uma tela que use apenas o controller e o estado de leitura.
+5. Justifique cada responsabilidade do embarque com Information Expert.
+6. Localize uma decisão que aplique mais de um princípio GRASP.
 
-```java
-// Passageiro.java
-public char getSimbolo() { return 'P'; }   // default
-
-// Engenheiro.java
-@Override public char getSimbolo() { return 'E'; }
-
-// Astronauta.java
-@Override public char getSimbolo() { return 'T'; }
-```
-
-Para os perigos, criamos a interface `Perigo` com `getSimbolo()`:
-
-```java
-// Perigo.java
-public interface Perigo {
-    int getX();
-    int getY();
-    boolean colideCom(Nave nave);
-    char getSimbolo();              // ← polimorfismo
-}
-
-// Asteroide.java implements Perigo
-@Override public char getSimbolo() { return '#'; }
-
-// Inimigo.java implements Perigo
-@Override public char getSimbolo() { return 'X'; }
-```
-
-**`MapaRenderer.java`** — sem nenhum `instanceof`:
-
-```java
-// DEPOIS — polimorfismo puro
-private char resolverSimbolo(Missao missao, Nave nave, int x, int y) {
-    if (nave.getX() == x && nave.getY() == y) return '@';
-
-    for (Passageiro p : missao.getPassageiros()) {
-        if (p.getX() == x && p.getY() == y) return p.getSimbolo(); // polimorfismo!
-    }
-    for (Perigo p : missao.getPerigos()) {
-        if (p.getX() == x && p.getY() == y) return p.getSimbolo(); // polimorfismo!
-    }
-    if (x == 0 && y == 0) return 'L';
-    return '.';
-}
-```
-
-Para adicionar um novo tipo `Medico`, basta criar a subclasse com `getSimbolo()` — nenhuma
-outra classe precisa ser alterada.
-
----
-
-## Parte 7 — Pure Fabrication
-
-### Definição
-
-> Crie uma classe que **não representa um conceito do domínio** quando for necessário
-> atingir alta coesão e baixo acoplamento.
-> Exemplos comuns: repositórios, renderizadores, fábricas, adaptadores.
-
-### Problema no Exercício 10
-
-O domínio do jogo — missão, nave, passageiros — não tem nenhuma entidade que saiba
-renderizar o mapa em texto nem persistir ranking em arquivo. Mesmo assim, `Main`
-carregava ambas as responsabilidades.
-
-### Solução GRASP
-
-Três Pure Fabrications foram criadas:
-
-#### `MapaRenderer` — renderização
-
-```java
-/**
- * Pure Fabrication: não representa nenhum conceito do domínio do jogo.
- * Existe para isolar toda a responsabilidade de exibição no console.
- */
-public class MapaRenderer {
-    public void desenharMapa(Missao missao, ...) { ... }
-    public void exibirMenu() { ... }
-    public void exibirRanking(List<RankingEntry> ranking) { ... }
-    public void exibirEstatisticas(...) { ... }
-}
-```
-
-#### `RankingRepository` — persistência
-
-```java
-/**
- * Pure Fabrication: isola toda a I/O de arquivo JSON.
- * Não há nenhum "repositório" no domínio do jogo de nave espacial.
- */
-public class RankingRepository implements IRankingRepository {
-    public List<RankingEntry> carregar() { ... }
-    public void salvar(List<RankingEntry> ranking) { ... }
-    public void resetar() { ... }
-}
-```
-
-#### `FabricaMissao` — criação
-
-```java
-/**
- * Pure Fabrication: encapsula a lógica de montagem de uma missão completa.
- * "Fábrica de missão" não é um conceito natural do domínio do jogo.
- */
-public class FabricaMissao {
-    public Missao criar(Dificuldade dif, int minX, int maxX, ...) { ... }
-}
-```
-
----
-
-## Parte 8 — Indirection
-
-### Definição
-
-> Reduza o acoplamento entre dois componentes introduzindo um **intermediário** entre eles.
-> O intermediário absorve o acoplamento e protege ambos os lados de mudanças no outro.
-
-### Problema no Exercício 10
-
-`Main` lê/grava diretamente em arquivo JSON com `Files.readAllBytes()` e `Files.write()`.
-Qualquer mudança no formato de persistência requer alterar `Main`.
-
-```
-Antes:   Main ───(acesso direto)──→ Sistema de Arquivos (JSON)
-```
-
-### Solução GRASP
-
-`RankingRepository` age como intermediário:
-
-```
-Depois:  JogoService → IRankingRepository → RankingRepository → Sistema de Arquivos
-```
-
-```java
-// JogoService depende de IRankingRepository (abstração) — não de arquivos
-public class JogoService {
-    private final IRankingRepository rankingRepo;  // Indirection!
-
-    private void finalizarComSucesso() {
-        List<RankingEntry> ranking = rankingRepo.carregar();  // não sabe como é feito
-        if (rankingRepo.ehTopScore(ranking, score)) {
-            ranking.add(new RankingEntry(...));
-            rankingRepo.salvar(ranking);             // não sabe onde é salvo
-        }
-    }
-}
-```
-
-`JogoService` não importa `java.nio.file.*` — o acoplamento com o sistema de arquivos
-ficou confinado em `RankingRepository`.
-
----
-
-## Parte 9 — Protected Variations
-
-### Definição
-
-> Identifique pontos que podem variar ou ser instáveis. Crie uma **interface** ou
-> **ponto de estabilidade** ao redor desses pontos para proteger o resto do sistema.
-
-### Problema no Exercício 10
-
-O formato do ranking (arquivo JSON) pode mudar: banco de dados, memória, API REST.
-Sem proteção, cada mudança afetaria `Main` diretamente.
-
-### Solução GRASP
-
-A interface `IRankingRepository` é o ponto estável — o que pode variar fica atrás dela:
-
-```java
-// Protected Variations: interface estável que escuda o sistema
-public interface IRankingRepository {
-    List<RankingEntry> carregar();
-    void salvar(List<RankingEntry> ranking);
-    void resetar();
-    boolean ehTopScore(List<RankingEntry> ranking, int score);
-}
-```
-
-**Cenários de variação protegidos:**
-
-| O que pode mudar | Implementação atual | Para trocar |
-|---|---|---|
-| Formato JSON → SQL | `RankingRepository` | Criar `SqlRankingRepository` |
-| Arquivo local → API REST | `RankingRepository` | Criar `ApiRankingRepository` |
-| Top 5 → Top 10 | `RankingRepository.MAX_ENTRADAS` | Só muda lá |
-| Nenhuma dessas | `Main.java`, `JogoService.java`, `GameController.java` | Não muda nada |
-
-```java
-// Para trocar a persistência, só Main.java precisa mudar (1 linha)
-IRankingRepository rankingRepo = new RankingRepository(Paths.get("ranking.json"));
-// ou:
-IRankingRepository rankingRepo = new SqlRankingRepository("jdbc:sqlite:ranking.db");
-// Nenhuma outra classe precisa saber.
-```
-
----
-
-## Resumo: Mapeamento de Responsabilidades
-
-A tabela abaixo mostra onde cada responsabilidade da `Main` original foi para:
-
-| Responsabilidade (em Main original) | Padrão GRASP aplicado | Classe destino |
-|---|---|---|
-| Exibir menu | High Cohesion, Pure Fabrication | `MapaRenderer` |
-| Loop de menu e navegação | Controller | `GameController` |
-| Loop de partida e comandos | Controller | `GameController` |
-| Ler input do console | Controller | `GameController` |
-| Criar missão com elementos | Creator, Pure Fabrication | `FabricaMissao` |
-| Pontuação inicial por dificuldade | Information Expert | `Dificuldade.getPontuacaoInicial()` |
-| Verificar posição ocupada | Information Expert | `Missao.posicaoOcupada()` |
-| Regras de pontuação e vitória | High Cohesion, Low Coupling | `JogoService` |
-| Desenhar mapa (sem instanceof) | Polymorphism, Pure Fabrication | `MapaRenderer` |
-| Símbolo de cada entidade | Polymorphism, Information Expert | `getSimbolo()` em cada classe |
-| Ler/gravar arquivo JSON | Indirection, Pure Fabrication | `RankingRepository` |
-| Isolar mudança no formato de rank. | Protected Variations | `IRankingRepository` |
-| Montar dependências | Low Coupling | `Main` (20 linhas) |
-
----
-
-## Parte 10 — Como Compilar e Executar
-
-### Pré-requisitos
-
-- JDK 11 ou superior instalado.
-- Executar os comandos a partir da **pasta raiz** `missaoMarteUnifor/grasp/src/`.
-
-### Compilação
-
-```bash
-# Windows (PowerShell)
-$files = Get-ChildItem -Recurse -Filter "*.java" | Select-Object -ExpandProperty FullName
-javac -d out $files
-
-# Linux / macOS
-find graspexercicio10 -name "*.java" | xargs javac -d out
-```
-
-### Execução
-
-```bash
-java -cp out graspexercicio10.Main
-```
-
-### Resultado esperado
-
-```
-================================================================
-        MISSÃO MARTE UNIFOR — GRASP Edition
-================================================================
-  Pilote sua nave, salve os passageiros e desvie dos perigos!
-================================================================
-
---- MENU PRINCIPAL ---
-1. Iniciar Nova Missão
-2. Visualizar Ranking Top 5
-3. Resetar Histórico de Ranking
-4. Sair do Jogo
-----------------------
-Escolha uma opção: _
-```
-
----
-
-## Parte 11 — GRASP × SOLID: Como se Relacionam
-
-Aplicar GRASP neste exercício naturalmente satisfaz os princípios SOLID:
-
-| Padrão GRASP aplicado | Princípio SOLID satisfeito |
-|---|---|
-| High Cohesion + Controller + Pure Fabrication | **SRP** — cada classe tem uma razão para mudar |
-| Polymorphism (`getSimbolo()`) | **OCP** — adicionar novo passageiro não altera `MapaRenderer` |
-| Polymorphism (herança de `Passageiro`) | **LSP** — todo `Passageiro` pode substituir outro |
-| `IRankingRepository` (Protected Variations) | **ISP** — interface enxuta e específica |
-| `IRankingRepository` (Indirection) | **DIP** — `JogoService` depende de abstração |
-
----
-
-## Exercícios Propostos
-
-1. **Novo tipo de passageiro:** Crie `Geologo.java` com pontuação 25 e símbolo `G`.
-   Quantas classes precisam ser modificadas? (Resposta esperada: apenas `FabricaMissao`.)
-
-2. **Novo formato de ranking:** Crie `MemoriaRankingRepository.java` que mantém o ranking
-   apenas na memória (sem arquivo). Quantas classes precisam ser modificadas?
-
-3. **Novo tipo de perigo:** Crie `BuracoNegro.java` que implementa `Perigo` com símbolo `O`
-   e que, em vez de destruir a nave, reduz a pontuação em 10.
-   Quais classes precisam ser modificadas?
-
-4. **Teste unitário:** Escreva um teste (com `assert`) para `Missao.posicaoOcupada()`.
-   Por que é fácil testá-lo agora, ao contrário do exercício 10 original?
-
-5. **Análise de acoplamento:** Faça uma tabela com todas as dependências de `JogoService`.
-   Compare com o número de dependências de `Main` no exercício 10.
+GRASP orienta essas atribuições; não exige que cada princípio resulte em uma
+classe diferente. O objetivo é que a colaboração seja compreensível e extensível.

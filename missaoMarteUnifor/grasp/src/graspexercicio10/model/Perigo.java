@@ -1,15 +1,12 @@
 package graspexercicio10.model;
 
+import java.util.Random;
+
 /**
- * GRASP Polymorphism: interface unificada para todos os obstáculos da missão.
- *
- * Antes da migração, Main.desenharMapa() usava instanceof para identificar o símbolo
- * de cada tipo de perigo. Com esta interface, cada classe declara seu próprio símbolo,
- * eliminando condicionais de tipo no código cliente.
+ * Polymorphism: cada perigo decide como atualizar sua posição e verificar colisão.
  */
-public interface Perigo {
-    int getX();
-    int getY();
-    boolean colideCom(Nave nave);
-    char getSimbolo();
+public abstract class Perigo extends ElementoMapa {
+    protected Perigo(int x, int y) { super(x, y); }
+    public boolean colideCom(Nave nave) { return mesmaPosicao(nave); }
+    public abstract void atualizar(Random random, int minX, int maxX, int minY, int maxY);
 }

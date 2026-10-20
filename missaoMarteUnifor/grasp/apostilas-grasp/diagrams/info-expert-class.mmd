@@ -1,22 +1,27 @@
 classDiagram
-  class Produto {
-    +String nome
-    +double preco
-    +getNome()
-    +getPreco()
-  }
-
-  class PedidoItem {
-    - Produto produto
-    - int quantidade
-    + subtotal()
-  }
-
-  class Pedido {
-    - List~PedidoItem~ itens
-    + addItem(PedidoItem)
-    + calcularTotal()
-  }
-
-  Produto "1" -- "*" PedidoItem : contem
-  Pedido "1" -- "*" PedidoItem : possui
+    class ElementoMapa {
+        <<abstract>>
+        -int x
+        -int y
+        +ocupa(x, y) boolean
+        +mesmaPosicao(outro) boolean
+    }
+    class Nave {
+        -int capacidade
+        -List~Passageiro~ passageiros
+        +embarcar(passageiro) boolean
+    }
+    class Passageiro {
+        <<abstract>>
+        +getPontuacao()* int
+    }
+    class Missao {
+        +passagemNaPosicao() Passageiro
+        +embarcarPassageiroNaPosicao() boolean
+        +verificaColisao() boolean
+    }
+    ElementoMapa <|-- Nave
+    ElementoMapa <|-- Passageiro
+    Missao --> Nave
+    Missao --> "*" Passageiro
+    Nave --> "*" Passageiro : a bordo

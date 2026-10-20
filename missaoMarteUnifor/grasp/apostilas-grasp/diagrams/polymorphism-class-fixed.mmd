@@ -1,27 +1,53 @@
+%% Mesmo modelo atual de polymorphism-class.mmd.
 classDiagram
-  class Produto {
-    - nome: String
-    - preco: double
-  }
-
-  interface Desconto {
-    +double aplicar(Pedido)
-  }
-
-  class DescontoClienteFiel
-  class DescontoPromocional
-
-  class Pedido {
-    - itens: List~PedidoItem~
-    - desconto: Desconto
-  }
-
-  class PedidoItem {
-    - produto: Produto
-    - quantidade: int
-  }
-
-  Desconto <|-- DescontoClienteFiel
-  Desconto <|-- DescontoPromocional
-  Pedido ..> Desconto : usa
-  Pedido "1" -- "*" PedidoItem
+    class ElementoMapa {
+        <<abstract>>
+        -int x
+        -int y
+        +getX() int
+        +getY() int
+        +getSimbolo()* char
+        +getDescricao() String
+        +getNome() String
+        +isResgatavel() boolean
+        +ocupa(x, y) boolean
+        +mesmaPosicao(outro) boolean
+    }
+    class Passageiro {
+        <<abstract>>
+        +getPontuacao()* int
+    }
+    class Perigo {
+        <<abstract>>
+        +colideCom(nave) boolean
+        +atualizar(random, minX, maxX, minY, maxY)*
+    }
+    class Nave {
+        +mover(direcao, minX, maxX, minY, maxY) boolean
+        +embarcar(passageiro) boolean
+        +perderVida()
+    }
+    class Base
+    class Professor
+    class Engenheiro
+    class Astronauta
+    class Asteroide
+    class Inimigo
+    class Missao {
+        +getElementos() List~ElementoMapa~
+        +verificaColisao() boolean
+        +embarcarPassageiroNaPosicao() boolean
+    }
+    ElementoMapa <|-- Nave
+    ElementoMapa <|-- Base
+    ElementoMapa <|-- Passageiro
+    ElementoMapa <|-- Perigo
+    Passageiro <|-- Professor
+    Passageiro <|-- Engenheiro
+    Passageiro <|-- Astronauta
+    Perigo <|-- Asteroide
+    Perigo <|-- Inimigo
+    Missao "1" --> "1" Nave
+    Missao "1" *-- "1" Base
+    Missao "1" --> "*" Passageiro
+    Missao "1" --> "*" Perigo

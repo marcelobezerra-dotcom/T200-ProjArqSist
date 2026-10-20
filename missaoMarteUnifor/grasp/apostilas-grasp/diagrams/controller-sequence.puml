@@ -1,21 +1,28 @@
 @startuml
-participant Usuario
-participant PedidoController
-participant PedidoService
-participant PedidoRepository
-participant Pedido
-
-Usuario -> PedidoController: novoPedido(dados)
-PedidoController -> PedidoService: criarPedido(dados)
-activate PedidoService
-PedidoService -> Pedido: new Pedido(dados)
-activate Pedido
-PedidoService -> PedidoRepository: salvar(pedido)
-activate PedidoRepository
-PedidoRepository --> PedidoService: ok
-deactivate PedidoRepository
-PedidoService --> PedidoController: pedidoCriado
-deactivate PedidoService
-PedidoController --> Usuario: confirmarCriacao()
-
+actor Jogador
+participant ConsoleJogo
+participant GameController
+participant JogoService
+participant RankingService
+participant MapaRenderer
+Jogador -> ConsoleJogo: tecla d
+ConsoleJogo -> GameController: executar(DIREITA)
+GameController -> JogoService: executar(DIREITA)
+JogoService --> GameController: evento
+opt evento VITORIA
+    GameController -> JogoService: consultarEstado()
+    JogoService --> GameController: estado final
+    GameController -> RankingService: registrarVitoria(estado)
+end
+GameController --> ConsoleJogo: evento
+ConsoleJogo -> MapaRenderer: exibirEvento(evento)
+ConsoleJogo -> GameController: consultarEstado()
+GameController -> JogoService: consultarEstado()
+JogoService --> GameController: EstadoJogo
+GameController --> ConsoleJogo: EstadoJogo
+alt partida em andamento na próxima iteração
+    ConsoleJogo -> MapaRenderer: desenharMapa(estado)
+else partida encerrada
+    ConsoleJogo -> MapaRenderer: exibirEstatisticas(estado)
+end
 @enduml

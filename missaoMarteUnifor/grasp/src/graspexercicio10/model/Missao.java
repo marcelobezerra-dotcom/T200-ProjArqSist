@@ -1,6 +1,7 @@
 package graspexercicio10.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -9,45 +10,44 @@ import java.util.Random;
  * GRASP Information Expert: Missao conhece todos os elementos do tabuleiro
  * e portanto é responsável por verificar colisões e checar posições ocupadas.
  *
- * Dois métodos migrados de Main para cá:
- *   posicaoOcupada() — Main não tem os dados, Missao tem.
- *   verificaColisao() — já existia, agora usa getPerigos() (Polymorphism).
+ * Polymorphism: atualiza todos os perigos sem conhecer seus tipos concretos.
  */
 public class Missao {
+    private final Base base = new Base();
     private final Nave             nave;
     private final List<Passageiro> passageiros = new ArrayList<>();
-    private final List<Asteroide>  asteroides  = new ArrayList<>();
-    private final List<Inimigo>    inimigos    = new ArrayList<>();
+    private final List<Perigo> perigos = new ArrayList<>();
 
     public Missao(Nave nave) {
         this.nave = nave;
     }
 
     public Nave             getNave()          { return nave; }
-    public List<Passageiro> getPassageiros()   { return passageiros; }
-    public List<Asteroide>  getAsteroides()    { return asteroides; }
-    public List<Inimigo>    getInimigos()      { return inimigos; }
+    public Base             getBase()          { return base; }
+    public List<Passageiro> getPassageiros()   { return Collections.unmodifiableList(passageiros); }
 
     public void addPassageiro(Passageiro p)    { passageiros.add(p); }
-    public void addAsteroide(Asteroide a)      { asteroides.add(a); }
-    public void addInimigo(Inimigo i)          { inimigos.add(i); }
+    public void addPerigo(Perigo perigo)      { perigos.add(perigo); }
 
-    // GRASP Polymorphism: lista unificada via interface Perigo
+    // GRASP Polymorphism: lista unificada pela abstração Perigo.
     public List<Perigo> getPerigos() {
-        List<Perigo> todos = new ArrayList<>();
-        todos.addAll(asteroides);
-        todos.addAll(inimigos);
-        return todos;
+        return Collections.unmodifiableList(perigos);
+    }
+
+    /** Todos podem ser desenhados pelo mesmo contrato; nave tem prioridade na célula. */
+    public List<ElementoMapa> getElementos() {
+        List<ElementoMapa> elementos = new ArrayList<>();
+        elementos.add(nave);
+        elementos.addAll(passageiros);
+        elementos.addAll(perigos);
+        elementos.add(base);
+        return Collections.unmodifiableList(elementos);
     }
 
     // GRASP Information Expert: só Missao tem todos os dados necessários para esta verificação
     public boolean posicaoOcupada(int x, int y) {
-        if (nave.getX() == x && nave.getY() == y) return true;
-        for (Passageiro p : passageiros) {
-            if (p.getX() == x && p.getY() == y) return true;
-        }
-        for (Perigo p : getPerigos()) {
-            if (p.getX() == x && p.getY() == y) return true;
+        for (ElementoMapa elemento : getElementos()) {
+            if (elemento.ocupa(x, y)) return true;
         }
         return false;
     }
@@ -59,15 +59,15 @@ public class Missao {
         return false;
     }
 
-    public void moverInimigos(Random random, int minX, int maxX, int minY, int maxY) {
-        for (Inimigo i : inimigos) {
-            i.mover(random, minX, maxX, minY, maxY);
+    public void atualizarPerigos(Random random, int minX, int maxX, int minY, int maxY) {
+        for (Perigo perigo : perigos) {
+            perigo.atualizar(random, minX, maxX, minY, maxY);
         }
     }
 
     public Passageiro passagemNaPosicao() {
         for (Passageiro p : passageiros) {
-            if (p.getX() == nave.getX() && p.getY() == nave.getY()) return p;
+            if (p.mesmaPosicao(nave)) return p;
         }
         return null;
     }
@@ -76,7 +76,7 @@ public class Missao {
         Iterator<Passageiro> it = passageiros.iterator();
         while (it.hasNext()) {
             Passageiro p = it.next();
-            if (p.getX() == nave.getX() && p.getY() == nave.getY()) {
+            if (p.mesmaPosicao(nave)) {
                 boolean ok = nave.embarcar(p);
                 if (ok) it.remove();
                 return ok;

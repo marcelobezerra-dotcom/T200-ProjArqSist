@@ -1,81 +1,88 @@
-# Como compilar e executar o exemplo GRASP (Java)
+# Compilar, executar e testar a Missão Marte
 
-Este diretório contém um exemplo didático em Java mostrando os padrões GRASP aplicados ao domínio "Feira Livre".
-A árvore de fontes está em `src/feira/grasp`.
+O código executável está em [`../src/graspexercicio10`](../src/graspexercicio10/Main.java),
+relativo a esta pasta. As apostilas não mantêm uma segunda cópia dos fontes.
 
-Pré-requisitos
+Use JDK 11 ou superior, com `javac` e `java` disponíveis no PATH.
+Não há bibliotecas externas.
 
-- JDK 11 ou superior instalado e `javac`/`java` no PATH.
+## Diretório de execução
 
-Opção A — (recomendado) com Git Bash / WSL / Linux shell
+Todos os comandos de compilação abaixo partem da **raiz do repositório**,
+onde estão `src`, `tests` e `apostilas-grasp`.
 
-1. Vá para o diretório do exemplo:
-
-```bash
-cd apostilas-grasp
-```
-
-1. Compilar todos os .java do exemplo GRASP:
-
-```bash
-find src -name "*.java" -print0 | xargs -0 javac -d out
-```
-
-1. Executar a aplicação demo:
-
-```bash
-java -cp out feira.grasp.MainGrasp
-```
-
-Opção B — PowerShell (Windows)
-
-1. Abra PowerShell e posicione em `apostilas-grasp`:
+Se o terminal estiver dentro de `apostilas-grasp`, volte um nível primeiro:
 
 ```powershell
-Set-Location -Path apostilas-grasp
+Set-Location ..
 ```
 
-1. Colete os arquivos .java e compile:
+Em Bash, use `cd ..`.
+
+## PowerShell: compilar e jogar
 
 ```powershell
-$files = Get-ChildItem -Path src -Filter *.java -Recurse | ForEach-Object { $_.FullName }
-javac -d out $files
+$fontesGrasp = @(Get-ChildItem src/graspexercicio10 -Recurse -Filter *.java | ForEach-Object { $_.FullName })
+javac -encoding UTF-8 --release 11 -d build-grasp $fontesGrasp
+java -cp build-grasp graspexercicio10.Main
 ```
 
-1. Execute:
+## PowerShell: compilar e testar
 
 ```powershell
-java -cp out feira.grasp.MainGrasp
+$fontesGrasp = @(Get-ChildItem src/graspexercicio10 -Recurse -Filter *.java | ForEach-Object { $_.FullName })
+$testesGrasp = @(Get-ChildItem tests/graspexercicio10 -Recurse -Filter *.java | ForEach-Object { $_.FullName })
+javac -encoding UTF-8 --release 11 -d build-grasp $fontesGrasp $testesGrasp
+java -cp build-grasp graspexercicio10.JogoTest
 ```
 
-Observações
+Resultado esperado:
 
-- O `MainGrasp` demonstra criação de `Pedido`, adição de itens, aplicação de desconto e pagamento via `PagamentoFactory` (seleção por `FormaPagamento`).
-- O diretório `out` será criado contendo os .class compilados.
-Para desenvolvimento contínuo recomendo importar o projeto num IDE (IntelliJ/VS Code com Java extensions) e/ou criar um `pom.xml`/`build.gradle` para facilitar builds.
+```text
+14 cenários de comportamento passaram.
+```
 
-Problemas comuns
+Os testes usam cenários, relógio e ranking controlados. O teste de arquivo cria
+um JSON temporário em `build-grasp` e o remove ao terminar; não altera o ranking
+do jogador.
 
-- `javac` não encontrado: instale JDK e adicione ao PATH.
-- Erro de `package`: compile a partir da raiz `apostilas-grasp` usando os comandos acima (respeita a estrutura de `package`).
-
-Exemplo adicional: projeto `feira-livre-java` (raiz do workspace)
-
-Se quiser compilar e executar o exemplo `feira-livre-java` que fica na raiz do repositório:
+## Bash: compilar, jogar e testar
 
 ```bash
-cd ..\feira-livre-java
-javac -d out src/feira/*.java
-java -cp out feira.Main
+mkdir -p build-grasp
+find src/graspexercicio10 tests/graspexercicio10 -name '*.java' > build-grasp/grasp-sources.txt
+javac -encoding UTF-8 --release 11 -d build-grasp @build-grasp/grasp-sources.txt
+java -cp build-grasp graspexercicio10.Main
+java -cp build-grasp graspexercicio10.JogoTest
 ```
 
-No PowerShell (Windows):
+## Comandos e parâmetros do jogo
 
-```powershell
-Set-Location -Path ..\feira-livre-java
-$files = Get-ChildItem -Path src\feira -Filter *.java | ForEach-Object { $_.FullName }
-javac -d out $files
-java -cp out feira.Main
-```
+| Entrada | Operação |
+| --- | --- |
+| `w` / `s` | Cima / baixo: Y diminui / aumenta |
+| `a` / `d` | Esquerda / direita: X diminui / aumenta |
+| `c` | Embarcar passageiro na célula da nave |
+| `q` | Abortar a missão e voltar ao menu |
+| Opção `4` no menu | Encerrar o programa |
 
-Se quiser, eu posso gerar um `pom.xml` mínimo (Maven) para tornar a compilação/execução mais simples — quer que eu gere?
+O raio deve estar entre 2 e 20. Raio 5 produz uma grade de 11 × 11 células,
+de `(-5,-5)` a `(5,5)`, com a base em `(0,0)`.
+
+O arquivo `ranking-grasp.json` é criado no diretório de execução quando uma
+vitória se classifica. Os compilados ficam em `build-grasp`, separado dos
+arquivos antigos existentes no repositório.
+
+## Problemas comuns
+
+- **`javac` não encontrado:** confira a instalação do JDK e o PATH.
+- **Classe principal não encontrada:** confira se a compilação terminou sem
+  erros e se o classpath aponta para `build-grasp`.
+- **Terminal dentro da pasta das apostilas:** volte à raiz antes de compilar.
+- **Acentos incorretos:** os fontes e exemplos usam UTF-8. Configure o terminal
+  para essa codificação; no PowerShell, pode usar `chcp 65001`.
+- **Erro ao ler ou gravar ranking:** a apresentação informa a falha de I/O.
+  Uma vitória concluída permanece válida mesmo quando sua gravação falha.
+
+Continue pelo [tutorial](tutorial-grasp-missao-marte.md) ou pelo
+[guia do código](../src/graspexercicio10/README.md).

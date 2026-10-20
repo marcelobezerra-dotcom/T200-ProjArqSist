@@ -1,105 +1,61 @@
-# Low Coupling (Baixo Acoplamento)
+# Low Coupling
 
-**Definição**: o design de um sistema deve minimizar as dependências entre classes para reduzir o impacto de mudanças.
+Avalie as dependências entre objetos e reduza as que dificultam entender,
+testar ou modificar o sistema. Baixo acoplamento não significa eliminar
+todas as dependências nem criar uma interface para cada classe.
 
-**Problema**: o que acontece quando uma classe conhece detalhes de implementação de muitas outras?
-
-**Solução**: atribuir responsabilidades de forma que cada componente dependa menos de outro e mais de abstrações ou interfaces.
-
-## No contexto da Missão Marte
-
-Uma boa arquitetura não faz `JogoService` depender diretamente da implementação concreta de armazenamento do ranking. Em vez disso, o serviço depende de uma abstração.
-
-```java
-public interface RankingRepository {
-    void salvar(String nome, int pontuacao);
-    List<RankingEntry> listar();
-}
-
-public class RankingService implements RankingRepository {
-    // implementação concreta de arquivo/JSON
-}
-```
-
-Agora o `JogoService` pode funcionar sem saber como o ranking é persistido.
-
-## Exemplo prático
-
-```java
-public class JogoService {
-    private final RankingRepository rankingRepository;
-
-    public JogoService(RankingRepository rankingRepository) {
-        this.rankingRepository = rankingRepository;
-    }
-
-    public void registrarPontuacao(String nome, int pontos) {
-        rankingRepository.salvar(nome, pontos);
-    }
-}
-```
-
-Esse exemplo mostra baixo acoplamento porque:
-
-- `JogoService` depende de uma abstração,
-- a implementação concreta pode mudar,
-- o serviço continua funcionando.
-
-## Benefícios
-
-- facilidade de manutenção;
-- menos efeitos colaterais em mudanças;
-- maior testabilidade;
-- capacidade de trocar implementações sem quebrar o restante do sistema.
-
-## Relação com GRASP
-
-- **Low Coupling**: reduz dependências entre classes.
-- **Indirection**: introduz uma camada de abstração para mediar a comunicação.
-- **Protected Variations**: isola partes do sistema que podem mudar, como o mecanismo de persistência.
-
-## Diagrama de classes
+## Dependências do código atual
 
 ```mermaid
 classDiagram
-  class JogoService {
-    - rankingRepository: RankingRepository
-    + registrarPontuacao(nome, pontos)
-  }
-
-  class RankingRepository {
-    <<interface>>
-    + salvar(nome, pontuacao)
-    + listar()
-  }
-
-  class RankingService {
-    + salvar(nome, pontuacao)
-    + listar()
-  }
-
-  JogoService ..> RankingRepository
-  RankingRepository <|.. RankingService
+    ConsoleJogo --> GameController
+    ConsoleJogo --> MapaRenderer
+    GameController --> JogoService
+    GameController --> RankingService
+    JogoService --> FabricaMissao
+    JogoService --> Missao
+    JogoService ..> EstadoJogo
+    MapaRenderer ..> EstadoJogo
+    RankingService --> IRankingRepository
+    IRankingRepository <|.. RankingRepository
 ```
 
-## Diagrama de sequência
+`JogoService` não depende do console, do renderer ou do armazenamento do
+ranking. `RankingService` conhece o contrato de armazenamento, e o `Main`
+seleciona a implementação concreta.
 
-```mermaid
-sequenceDiagram
-  participant Jogador
-  participant JogoService
-  participant RankingRepository
-  participant RankingService
+## Composição das dependências
 
-  Jogador->>JogoService: finaliza partida
-  JogoService->>RankingRepository: salvar(nome, pontos)
-  RankingRepository->>RankingService: persistir valor
-  RankingService-->>RankingRepository: ok
-  RankingRepository-->>JogoService: confirmação
-  JogoService-->>Jogador: exibe resultado
+Trecho do [Main](../src/graspexercicio10/Main.java):
+
+```java
+RankingService ranking = new RankingService(new RankingRepository(Paths.get("ranking-grasp.json")));
+GameController controller = new GameController(new JogoService(), ranking);
 ```
 
-## Conclusão
+Uma futura tela gráfica pode receber esse mesmo controller. A apresentação
+consulta `EstadoJogo`, que contém cópias imutáveis dos elementos, e não recebe
+referências à `Nave` ou à `Missao` mutáveis.
 
-`Low Coupling` é importante porque a Missão Marte pode evoluir com novas formas de armazenamento, novos tipos de missão ou uma interface gráfica diferente. O sistema continua estável se as classes dependerem menos de detalhes concretos e mais de contratos bem definidos.
+O modelo compartilha posição e símbolo por `ElementoMapa`. Isso evita que
+cada consumidor precise conhecer todas as subclasses concretas.
+
+## Dependências para testes
+
+O construtor `JogoService(FabricaMissao, Random, Clock)` permite controlar o
+cenário, o sorteio e o relógio. `RankingService(IRankingRepository, Clock)`
+permite usar memória e um relógio controlado.
+
+Esses pontos de substituição são usados nos
+[testes existentes](../tests/graspexercicio10/JogoTest.java). O teste de um novo
+passageiro usa o jogo e o renderer existentes sem registrar um identificador visual.
+
+Diagramas editáveis: [classes](diagrams/low-coupling-class.mmd) e
+[sequência](diagrams/low-coupling-sequence.mmd).
+
+## Exercício
+
+Liste as dependências concretas e os contratos de `GameController`.
+Qual mudança de persistência é resolvida na composição? Qual mudança gráfica
+exige apenas outro adaptador de apresentação?
 

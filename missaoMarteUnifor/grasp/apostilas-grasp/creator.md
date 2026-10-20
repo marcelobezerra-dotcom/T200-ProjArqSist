@@ -1,80 +1,75 @@
 # Creator
 
-**Definição**: uma classe A deve criar instâncias de classe B se A agrega, contém, usa ou tem informações necessárias para inicializar B.
+Atribua a criação de um objeto a um colaborador que o contém, registra, usa de
+perto ou possui os dados necessários para inicializá-lo. Quando montar um
+conjunto de objetos exige uma lógica própria, uma fábrica pode concentrá-la.
 
-**Problema**: Quem deve ser responsável por criar uma nova instância de uma classe?
+## Quem cria o quê
 
-**Solução**: Atribua à classe B a responsabilidade de criar A se B: (1) agrega ou contém A; (2) registra instâncias de A; (3) usa muito de perto objetos de A; ou (4) possui os dados de inicialização de A.
+| Criador | Objeto criado | Dados disponíveis |
+| --- | --- | --- |
+| `Main` | Serviços, controller, console e repositório | Escolha das implementações e caminho do arquivo |
+| `FabricaMissao` | Nave, missão, passageiros e perigos | Dificuldade, limites e gerador aleatório |
+| `Missao` | Base | A missão tem uma base fixa em `(0,0)` |
+| `RankingService` | `RankingEntry` | Snapshot de vitória e relógio |
+| `JogoService` | `EstadoJogo` e cópias `EntidadeEstado` | Estado atual da partida e elementos |
 
-Regras comuns que justificam a criação:
+## Criação do cenário
 
-- A contém objetos do tipo B
-- A usa objetos do tipo B frequentemente
-- A tem dados necessários para construir B
-
-Exemplo: `FabricaMissao` cria `Missao` porque possui todas as informações necessárias (dificuldade, dimensões, número de perigos e passageiros).
-
-Dicas:
-
-- Evite que muitas classes criem diretamente dependências complexas; considere fábricas quando necessário.
-
-Relação com SOLID
-
-- **SRP:** ao atribuir criação a uma classe específica (ex.: `FabricaMissao`), reduz-se a responsabilidade de outras classes.
-- **DIP:** prefira depender de abstrações (fábricas ou interfaces) para criação quando a construção envolver dependências externas.
-- **OCP:** encapsular lógica de criação facilita alterar formas de criação sem modificar consumidores.
-
-## Exemplo evolutivo (Missão Marte)
-
-Inicialmente `Main` criava `Missao` diretamente com vários parâmetros espalhados. Ao aplicar `Creator`, movemos essa responsabilidade para `FabricaMissao`.
-
-Trecho ilustrativo:
+A assinatura real de [FabricaMissao](../src/graspexercicio10/service/FabricaMissao.java) é:
 
 ```java
-// antes: Missao m = new Missao(20, 10, Dificuldade.MEDIO, ...); // em Main
-// depois: FabricaMissao fabrica = new FabricaMissao();
-//         Missao m = fabrica.criar(Dificuldade.MEDIO);
+public Missao criar(Dificuldade dificuldade, int minX, int maxX, int minY, int maxY,
+                    Random random)
 ```
 
-Exemplo simples (preferível quando a criação é direta)
-
-Se a criação do `RankingEntry` é direta e ligada ao estado interno do ranking, `JogoService` pode criar e retornar a entrada — segue a forma mais simples e recomendada inicialmente:
+Essa linha é uma assinatura para leitura; o corpo está no arquivo vinculado.
+Uma chamada completa, usando as APIs atuais:
 
 ```java
-public class JogoService {
-    private final List<RankingEntry> ranking = new ArrayList<>();
-
-    public void registrarPontuacao(String nomeJogador, int pontos) {
-        RankingEntry entry = new RankingEntry(nomeJogador, pontos); // JogoService cria o entry
-        ranking.add(entry);
-    }
-}
+Missao missao = new FabricaMissao().criar(
+        Dificuldade.FACIL, -2, 2, -2, 2, new Random(42));
 ```
 
-Motivo: `JogoService` agrega `RankingEntry` e conhece os dados necessários para construí-lo (Information Expert + Creator). Use `FabricaMissao` para criações mais complexas que envolvam lógica externa.
+A fábrica valida limites, monta a lista de posições livres, reserva `(0,0)`,
+consulta as quantidades em `Dificuldade`, embaralha as posições e cria cada
+objeto em uma célula livre. Não usa tentativas aleatórias repetidas para
+encontrar espaço.
 
-### Diagrama de sequência
-
-O diagrama abaixo mostra a interação típica quando `FabricaMissao` cria uma `Missao` seguindo o princípio Creator.
+## Sequência de inicialização
 
 ```mermaid
 sequenceDiagram
-  participant Jogador
-  participant GameController
-  participant FabricaMissao
-  participant Missao
-
-  Jogador->>GameController: iniciarPartida(dificuldade)
-  GameController->>FabricaMissao: criar(dificuldade)
-  activate FabricaMissao
-  FabricaMissao->>Missao: new Missao(largura, altura, dificuldade)
-  activate Missao
-  FabricaMissao->>Missao: adicionarPerigos()
-  FabricaMissao->>Missao: adicionarPassageiros()
-  Missao-->>FabricaMissao: missaoPronta
-  deactivate Missao
-  FabricaMissao-->>GameController: missao
-  deactivate FabricaMissao
-  GameController-->>Jogador: partida iniciada
+    participant GameController
+    participant JogoService
+    participant FabricaMissao
+    participant Dificuldade
+    participant Nave
+    participant Missao
+    GameController->>JogoService: iniciarPartida(piloto, dificuldade, raioMapa)
+    JogoService->>FabricaMissao: criar(dificuldade, minX, maxX, minY, maxY, random)
+    FabricaMissao->>Dificuldade: getQuantidadePassageiros()
+    Dificuldade-->>FabricaMissao: quantidade
+    FabricaMissao->>Nave: new Nave("A-1", 5)
+    FabricaMissao->>Missao: new Missao(nave)
+    Note over FabricaMissao,Missao: Cria e adiciona passageiros e perigos em posições livres
+    FabricaMissao-->>JogoService: missao
+    JogoService-->>GameController: retorno
 ```
+
+O controller chama o serviço; o serviço usa a fábrica. A fábrica também aplica
+[Pure Fabrication](pure-fabrication.md), pois separa a montagem do cenário da
+execução dos turnos.
+
+Selecionar qual classe concreta instanciar é uma decisão de criação.
+O polimorfismo aparece nas chamadas posteriores a `getSimbolo()`,
+`getPontuacao()` e `atualizar(...)`.
+
+Diagramas editáveis: [Mermaid](diagrams/creator.mmd) e
+[PlantUML](diagrams/creator-sequence.puml).
+
+## Exercício
+
+Crie um novo passageiro com símbolo e pontuação próprios. Inclua sua criação
+na fábrica e identifique quais consumidores conseguem usá-lo sem alteração.
 

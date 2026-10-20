@@ -1,16 +1,16 @@
 sequenceDiagram
-  participant Usuario
-  participant PedidoController
-  participant PedidoService
-  participant ServicoPagamento
-
-  Usuario->>PedidoController: solicitarPagamento(pedidoId)
-  PedidoController->>PedidoService: processarPagamento(pedido, info)
-  activate PedidoService
-  PedidoService->>ServicoPagamento: processar(info)
-  activate ServicoPagamento
-  ServicoPagamento-->>PedidoService: ok
-  deactivate ServicoPagamento
-  PedidoService-->>PedidoController: confirmado
-  deactivate PedidoService
-  PedidoController-->>Usuario: resposta
+    participant GameController
+    participant RankingService
+    participant Repositorio as RankingRepository via IRankingRepository
+    participant Arquivo
+    GameController->>RankingService: registrarVitoria(estado)
+    RankingService->>Repositorio: carregar()
+    Repositorio->>Arquivo: ler JSON
+    Arquivo-->>Repositorio: conteúdo
+    Repositorio-->>RankingService: registros
+    Note over RankingService: Ordena e avalia elegibilidade no Top 5
+    opt pontuação elegível
+        RankingService->>RankingService: criar RankingEntry e limitar a lista
+        RankingService->>Repositorio: salvar(ranking)
+        Repositorio->>Arquivo: gravar JSON
+    end

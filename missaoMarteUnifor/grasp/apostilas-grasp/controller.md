@@ -1,102 +1,74 @@
 # Controller
 
-**Definição**: um controlador é um objeto que coordena a interação entre a entrada do usuário e o domínio do sistema.
+Atribua os eventos de aplicação a um objeto que represente o sistema ou um
+caso de uso. Esse objeto coordena colaboradores sem absorver todas as regras
+do domínio.
 
-**Problema**: quem deve receber o comando do jogador e encaminhar a operação para as classes certas?
+## Entrada textual e evento de aplicação
 
-**Solução**: criar uma classe responsável por orquestrar o caso de uso, sem misturar essa responsabilidade com a lógica de negócios nem com a renderização.
+`ConsoleJogo` lê a tecla `d` e a traduz para `AcaoJogo.DIREITA`.
+`GameController` recebe a ação, independentemente de ela ter vindo de uma tecla
+ou de um botão gráfico.
 
-## No contexto da Missão Marte
-
-Em vez de colocar toda a lógica no `Main`, o sistema pode ter um componente de controle que:
-
-- lê a opção do menu,
-- inicia uma missão,
-- delega o jogo para `JogoService`,
-- chama a persistência do ranking quando necessário.
-
-Isso deixa o código organizado e mais fácil de evoluir.
-
-## Quando o Controller faz sentido?
-
-Use um controller quando:
-
-- a entrada do usuário precisa ser tratada,
-- existe uma sequência de ações para um caso de uso,
-- a camada de apresentação deve ficar simples,
-- o domínio precisa receber comandos sem depender de console diretamente.
-
-## Exemplo prático
-
-Imagine uma classe `JogoController` que coordena o fluxo da partida:
+Em [GameController](../src/graspexercicio10/controller/GameController.java):
 
 ```java
-public class JogoController {
-    private final JogoService jogoService;
-    private final Scanner scanner;
-
-    public JogoController(JogoService jogoService, Scanner scanner) {
-        this.jogoService = jogoService;
-        this.scanner = scanner;
-    }
-
-    public void iniciarAplicacao() {
-        boolean executando = true;
-        while (executando) {
-            System.out.println("1. Iniciar missão");
-            System.out.println("2. Ver ranking");
-            System.out.println("3. Sair");
-
-            String opcao = scanner.nextLine();
-            switch (opcao) {
-                case "1":
-                    jogoService.executarLoop(scanner);
-                    break;
-                case "2":
-                    jogoService.listarRanking();
-                    break;
-                case "3":
-                    executando = false;
-                    break;
-            }
-        }
-    }
+public EventoJogo executar(AcaoJogo acao) {
+    EventoJogo evento = jogo.executar(acao);
+    if (evento == EventoJogo.VITORIA) ranking.registrarVitoria(consultarEstado());
+    return evento;
 }
 ```
 
-## Relação com GRASP
+`JogoService` executa o turno. Ao receber o evento `VITORIA`, o controller
+pede ao `RankingService` que avalie o registro. Ações depois do encerramento
+retornam `PARTIDA_INATIVA`, evitando outro registro pela mesma transição.
 
-- **Controller**: a classe `JogoController` usa o padrão para orquestrar fluxos.
-- **Information Expert**: a classe que conhece melhor o jogo é `JogoService`.
-- **Low Coupling**: o controller não precisa conhecer detalhes de persistência; ele delega.
-- **High Cohesion**: cada componente gerencia uma parte do fluxo sem misturar preocupações.
+## Operações públicas atuais
 
-## Diagrama de sequência
+| Operação | Resultado |
+| --- | --- |
+| `iniciarPartida(String, Dificuldade, int)` | Inicializa a partida e devolve `EstadoJogo` |
+| `executar(AcaoJogo)` | Devolve `EventoJogo` |
+| `consultarEstado()` | Devolve um snapshot `EstadoJogo` |
+| `consultarRanking()` | Devolve `List<RankingEntry>` |
+| `resetarRanking()` | Solicita a limpeza do ranking |
+
+O menu e seu laço estão em `ConsoleJogo`. As mensagens e o desenho estão em
+`MapaRenderer`. O controller recebe os eventos já traduzidos.
+
+## Sequência de uma ação
 
 ```mermaid
 sequenceDiagram
-  participant Jogador
-  participant JogoController
-  participant JogoService
-  participant RankingRepository
-
-  Jogador->>JogoController: escolhe opção do menu
-  JogoController->>JogoService: executarLoop(scanner)
-  JogoService->>JogoService: criar missão e movimentar nave
-  JogoService->>RankingRepository: salvar pontuação final
-  RankingRepository-->>JogoService: confirmação
-  JogoService-->>JogoController: estado da partida
-  JogoController-->>Jogador: exibe resultado
+    actor Jogador
+    participant ConsoleJogo
+    participant GameController
+    participant JogoService
+    participant MapaRenderer
+    Jogador->>ConsoleJogo: tecla d
+    ConsoleJogo->>GameController: executar(DIREITA)
+    GameController->>JogoService: executar(DIREITA)
+    JogoService-->>GameController: evento
+    GameController-->>ConsoleJogo: evento
+    ConsoleJogo->>MapaRenderer: exibirEvento(evento)
+    ConsoleJogo->>GameController: consultarEstado()
+    GameController->>JogoService: consultarEstado()
+    JogoService-->>GameController: EstadoJogo
+    GameController-->>ConsoleJogo: EstadoJogo
+    ConsoleJogo->>MapaRenderer: desenharMapa(estado)
 ```
 
-## Observação importante
+O desenho representa uma ação dentro do laço da interface. O console redesenha
+o mapa na próxima iteração enquanto a partida continua ativa; no encerramento,
+exibe as estatísticas.
 
-O controlador não substitui o `JogoService`.
+Diagramas editáveis: [Mermaid](diagrams/controller.mmd) e
+[PlantUML](diagrams/controller-sequence.puml).
 
-O papel dele é coordenar o caso de uso; o papel do serviço é executar a lógica do jogo. Essa separação é um exemplo clássico de GRASP em ação.
+## Exercício
 
-## Conclusão
-
-Na Missão Marte, o `Controller` ajuda a manter a entrada do usuário, a lógica do jogo e a persistência separadas. Isso reduz confusão, facilita manutenção e deixa o fluxo mais previsível.
+Como uma interface gráfica enviaria `AcaoJogo.EMBARCAR`? Explique por que a
+troca de interface não exige adicionar um `Scanner` ao controller.
 
 

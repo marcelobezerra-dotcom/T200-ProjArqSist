@@ -1,13 +1,47 @@
 classDiagram
-  class Pedido {
-    - id: String
-    - itens: List~PedidoItem~
-  }
-
-  interface PedidoRepository
-  class PedidoRepositoryMemoria
-  class PedidoService
-
-  PedidoService --> PedidoRepository : usa
-  PedidoRepository <|-- PedidoRepositoryMemoria
-  Pedido "1" -- "*" PedidoItem
+    class GameController {
+        +iniciarPartida(piloto, dificuldade, raioMapa) EstadoJogo
+        +executar(acao) EventoJogo
+        +consultarEstado() EstadoJogo
+        +consultarRanking() List~RankingEntry~
+        +resetarRanking()
+    }
+    class JogoService {
+        +iniciarPartida(piloto, dificuldade, raioMapa)
+        +executar(acao) EventoJogo
+        +consultarEstado() EstadoJogo
+    }
+    class RankingService {
+        +consultar() List~RankingEntry~
+        +registrarVitoria(estado)
+        +resetar()
+    }
+    class IRankingRepository {
+        <<interface>>
+        +carregar() List~RankingEntry~
+        +salvar(ranking)
+        +resetar()
+    }
+    class RankingRepository
+    class ConsoleJogo
+    class MapaRenderer
+    class FabricaMissao
+    class Missao
+    class EstadoJogo
+    class EntidadeEstado
+    class RankingEntry
+    Main ..> ConsoleJogo : compõe
+    Main ..> GameController : compõe
+    Main ..> RankingRepository : escolhe
+    ConsoleJogo --> GameController
+    ConsoleJogo --> MapaRenderer
+    GameController --> JogoService
+    GameController --> RankingService
+    JogoService --> FabricaMissao
+    JogoService --> Missao
+    JogoService ..> EstadoJogo : cria
+    EstadoJogo --> "*" EntidadeEstado
+    MapaRenderer ..> EstadoJogo : lê
+    RankingService --> IRankingRepository
+    RankingService ..> RankingEntry : cria
+    IRankingRepository <|.. RankingRepository

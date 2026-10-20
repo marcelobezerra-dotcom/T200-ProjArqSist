@@ -12,5 +12,4 @@ public interface IRankingRepository {
     List<RankingEntry> carregar();
     void salvar(List<RankingEntry> ranking);
     void resetar();
-    boolean ehTopScore(List<RankingEntry> ranking, int score);
 }

@@ -1,20 +1,17 @@
 @startuml
-participant Usuario
-participant PedidoController
-participant PedidoService
-participant Pedido
-
-Usuario -> PedidoController: solicitaCriarPedido()
-PedidoController -> PedidoService: criarPedido()
-activate PedidoService
-PedidoService -> Pedido: new Pedido()
-activate Pedido
-Pedido --> PedidoService: instanciaPedido
-deactivate Pedido
-PedidoService -> Pedido: addItem(produto, qtd)
-PedidoService -> Pedido: calcularTotal()
-PedidoService --> PedidoController: pedidoCriado / resumo
-deactivate PedidoService
-PedidoController --> Usuario: mostrarResumo()
-
+participant GameController
+participant JogoService
+participant FabricaMissao
+participant Nave
+participant Missao
+GameController -> JogoService: iniciarPartida(piloto, dificuldade, raioMapa)
+JogoService -> FabricaMissao: criar(dificuldade, minX, maxX, minY, maxY, random)
+note right of FabricaMissao: Valida espaço e embaralha posições livres
+FabricaMissao -> Nave: new Nave("A-1", 5)
+FabricaMissao -> Missao: new Missao(nave)
+note right of Missao: Cria Base em (0,0)
+FabricaMissao -> Missao: addPassageiro(passageiro)
+FabricaMissao -> Missao: addPerigo(perigo)
+FabricaMissao --> JogoService: missao
+JogoService --> GameController: retorno
 @enduml

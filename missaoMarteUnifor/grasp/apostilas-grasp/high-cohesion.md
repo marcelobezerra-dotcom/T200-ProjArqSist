@@ -1,139 +1,59 @@
-# High Cohesion (Alta Coesão)
+# High Cohesion
 
-**Definição**: uma classe deve conter responsabilidades que estão fortemente relacionadas entre si.
+Mantenha juntas as responsabilidades relacionadas e separe as que mudam por
+motivos diferentes. O tamanho de uma classe, sozinho, não mede sua coesão.
 
-**Problema**: como evitar que uma classe vire um “saco de funções”?
+## Distribuição das responsabilidades
 
-**Solução**: organizar as responsabilidades de modo que cada classe tenha um foco claro e um conjunto de tarefas coerentes.
+| Classe | Foco |
+| --- | --- |
+| `ElementoMapa` | Coordenadas, operações de posição e contrato do símbolo |
+| `Nave` | Movimento comandado, capacidade, embarque e vidas |
+| `Missao` | Elementos do cenário, colisão e transferência de passageiros |
+| `FabricaMissao` | Montagem inicial do cenário |
+| `JogoService` | Sequência dos turnos, pontos, tempo e encerramento |
+| `GameController` | Coordenação dos casos de uso |
+| `RankingService` | Classificação, limite de cinco resultados e criação do registro |
+| `RankingRepository` | Leitura, escrita e remoção do arquivo |
+| `ConsoleJogo` | Entrada textual, menu e tradução de teclas |
+| `MapaRenderer` | Desenho, mensagens e legenda do console |
+| `EstadoJogo` / `EntidadeEstado` | Dados imutáveis para leitura |
 
-## Por que isso importa na Missão Marte?
+## Um turno com responsabilidades distribuídas
 
-Se a classe `Missao` fosse responsável por:
+`JogoService` pede o movimento à nave. Se ele for válido, desconta um ponto,
+conta o movimento e pede à missão que atualize os perigos. Em seguida, consulta
+a colisão, aplica perda de vida e verifica combustível e objetivo.
 
-- desenhar o mapa,
-- controlar o loop do jogo,
-- salvar o ranking,
-- validar colisões,
-- decidir a pontuação,
+A nave reutiliza o movimento com limites de `ElementoMapa`. A missão
+atualiza cada `Perigo` pelo contrato abstrato. As regras que dependem do
+conjunto da partida ficam no serviço; as decisões locais ficam no domínio.
 
-ela teria baixa coesão e ficaria difícil de manter.
+## Exemplo de coesão na apresentação
 
-Em vez disso, a arquitetura separa bem as coisas:
-
-- `Missao`: dados do domínio e estado da missão.
-- `JogoService`: regras e fluxo principal da partida.
-- `MapaRenderer`: representações visuais no console.
-- `RankingRepository`: persistência da pontuação.
-
-## Exemplo prático
-
-### 1) `Missao` com coesão de domínio
-
-```java
-public class Missao {
-    private final int largura;
-    private final int altura;
-    private final List<Passageiro> passageiros = new ArrayList<>();
-    private final List<Asteroide> asteroides = new ArrayList<>();
-
-    public void adicionarPassageiro(Passageiro passageiro) {
-        passageiros.add(passageiro);
-    }
-
-    public void adicionarAsteroide(Asteroide asteroide) {
-        asteroides.add(asteroide);
-    }
-
-    public List<Passageiro> getPassageiros() {
-        return Collections.unmodifiableList(passageiros);
-    }
-}
-```
-
-Aqui a classe mantém informações do mundo do jogo e nada que não pertença ao domínio da missão.
-
-### 2) `JogoService` com coesão de fluxo
+Trecho do [MapaRenderer](../src/graspexercicio10/presentation/MapaRenderer.java):
 
 ```java
-public class JogoService {
-    private final RankingRepository rankingRepository;
-    private final MapaRenderer mapaRenderer;
-
-    public void executarLoop(Scanner scanner) {
-        Missao missao = criarNovaMissao();
-        Nave nave = missao.getNave();
-
-        while (partidaAtiva) {
-            mapaRenderer.desenhar(missao, nave);
-            char comando = scanner.next().charAt(0);
-            moverNave(nave, comando);
-            verificarColisoes(missao, nave);
-            verificarResgates(missao, nave);
-        }
-    }
+for (EntidadeEstado e : estado.entidades) {
+    if (e.x == x && e.y == y) return e.simbolo;
 }
+return '.';
 ```
 
-Aqui a classe concentra a lógica de execução da partida, o que é uma responsabilidade coesa e bem definida.
+Esse trecho pertence a `resolverSimbolo`. O renderer escolhe a célula que será
+desenhada e usa o símbolo fornecido pelo modelo através do snapshot.
+O embarque não é uma responsabilidade da apresentação.
 
-### 3) `MapaRenderer` com coesão de apresentação
+## Critério de revisão
 
-```java
-public class MapaRenderer {
-    public void desenhar(Missao missao, Nave nave) {
-        for (int y = 0; y < missao.getAltura(); y++) {
-            for (int x = 0; x < missao.getLargura(); x++) {
-                System.out.print(simboloEm(missao, nave, x, y));
-            }
-            System.out.println();
-        }
-    }
-}
-```
+Pergunte quais motivos fariam cada classe mudar. Uma alteração no texto do menu
+deve ficar na apresentação. Uma alteração no Top 5 deve ficar no
+`RankingService`. Alterar o formato de arquivo deve ficar no repositório.
 
-Essa classe foca em uma responsabilidade específica: renderizar o estado do mapa.
+Diagramas editáveis: [classes](diagrams/high-cohesion-class.mmd) e
+[sequência](diagrams/high-cohesion-sequence.mmd).
 
-## Benefícios da alta coesão
+## Exercício
 
-- a classe fica mais fácil de entender;
-- a manutenção se torna mais segura;
-- o código tem menos mistura de regras e apresentação;
-- a reutilização fica mais simples.
-
-## Relação com GRASP
-
-- **SRP**: coesão ajuda a garantir que a classe tenha uma responsabilidade principal.
-- **Information Expert**: a classe com os dados certos deve decidir o que fazer.
-- **Low Coupling**: uma classe coesa tende a depender menos de outras classes para coisas que não pertencem a ela.
-
-## Diagrama de classes
-
-```mermaid
-classDiagram
-  class Missao {
-    + adicionarPassageiro(passageiro)
-    + adicionarAsteroide(asteroide)
-  }
-
-  class JogoService {
-    + executarLoop(scanner)
-    + verificarColisoes(missao, nave)
-    + verificarResgates(missao, nave)
-  }
-
-  class MapaRenderer {
-    + desenhar(missao, nave)
-  }
-
-  class RankingRepository {
-    <<interface>>
-  }
-
-  JogoService --> Missao
-  JogoService --> MapaRenderer
-  JogoService ..> RankingRepository
-```
-
-## Conclusão
-
-Na Missão Marte, alta coesão significa que cada classe mantém um foco claro. Isso ajuda a deixar o software mais compreensível e mais fácil de evoluir.
+Por que inserir `MapaRenderer` dentro de `JogoService` dificultaria reutilizar
+as regras em uma interface gráfica? Identifique quais responsabilidades seriam misturadas.

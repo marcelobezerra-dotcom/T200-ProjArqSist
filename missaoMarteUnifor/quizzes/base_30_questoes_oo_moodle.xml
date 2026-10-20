@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+<!-- Q01 -->
+  <question type="multichoice">
+    <name><text>Q01 - Classe</text></name>
+    <questiontext format="html"><text><![CDATA[Em Java, o que é uma classe?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.1</penalty>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100"><text><![CDATA[Um molde (blueprint) para criar objetos]]></text><feedback><text><![CDATA[Classe é o molde que define atributos e comportamentos de objetos em OO.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Um tipo de dado primitivo]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Uma instrução de compilador]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Um pacote do sistema]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Um arquivo de configuração]]></text></answer>
+  </question>
+
+<!-- Q02 -->
+  <question type="multichoice">
+    <name><text>Q02 - Encapsulamento</text></name>
+    <questiontext format="html"><text><![CDATA[Qual é a principal vantagem do encapsulamento?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Ocultar detalhes internos e expor apenas o necessário]]></text><feedback><text><![CDATA[Encapsulamento protege o estado interno e fornece interfaces controladas.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Aumentar a velocidade de execução]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Permitir herança múltipla]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Evitar o uso de interfaces]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Remover métodos públicos]]></text></answer>
+  </question>
+
+<!-- Q03 -->
+  <question type="multichoice">
+    <name><text>Q03 - Modificador private</text></name>
+    <questiontext format="html"><text><![CDATA[Qual modificador de acesso normalmente impede acesso direto a um atributo fora da classe?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[private]]></text><feedback><text><![CDATA[`private` restringe acesso apenas ao escopo da própria classe.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[public]]></text></answer>
+    <answer fraction="0"><text><![CDATA[protected]]></text></answer>
+    <answer fraction="0"><text><![CDATA[static]]></text></answer>
+    <answer fraction="0"><text><![CDATA[transient]]></text></answer>
+  </question>
+
+<!-- Q04 -->
+  <question type="multichoice">
+    <name><text>Q04 - Construtor</text></name>
+    <questiontext format="html"><text><![CDATA[O que faz um construtor em Java?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Inicializa o objeto no momento da criação]]></text><feedback><text><![CDATA[Construtores preparam o estado inicial do objeto ao usar `new`.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Retorna um valor booleano]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Define a visibilidade da classe]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Cria um pacote automaticamente]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Compila a classe]]></text></answer>
+  </question>
+
+<!-- Q05 -->
+  <question type="multichoice">
+    <name><text>Q05 - getX()</text></name>
+    <questiontext format="html"><text><![CDATA[Considere: public class Nave { private int x; public Nave(int x){ this.x = x; } public int getX(){ return x; } }  o que retorna new Nave(5).getX()?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[5]]></text><feedback><text><![CDATA[O construtor atribui 5 ao atributo `x` e `getX()` retorna esse valor.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[0]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Erro de compilação]]></text></answer>
+    <answer fraction="0"><text><![CDATA[null]]></text></answer>
+    <answer fraction="0"><text><![CDATA[NullPointerException]]></text></answer>
+  </question>
+
+<!-- Q06 -->
+  <question type="multichoice">
+    <name><text>Q06 - Pessoa getNome</text></name>
+    <questiontext format="html"><text><![CDATA[Dado: public class Pessoa { private String nome; public Pessoa(String nome){ this.nome = nome;} public String getNome(){ return nome; } } Qual o resultado de new Pessoa("Ana").getNome()?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Ana]]></text><feedback><text><![CDATA[O construtor atribui "Ana" ao atributo `nome` e o getter retorna esse valor.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[nome]]></text></answer>
+    <answer fraction="0"><text><![CDATA[null]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Erro em tempo de execução]]></text></answer>
+    <answer fraction="0"><text><![CDATA[]]></text></answer>
+  </question>
+
+<!-- Q07 -->
+  <question type="multichoice">
+    <name><text>Q07 - Herança</text></name>
+    <questiontext format="html"><text><![CDATA[Sobre herança em Java, marque a alternativa correta:]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Uma classe filha herda atributos e métodos da classe pai]]></text><feedback><text><![CDATA[Herança compartilha características entre superclasse e subclasse.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Herança impede polimorfismo]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Uma classe filha não pode declarar métodos próprios]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Herança é usada apenas para interfaces]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Uma subclasse pode herdar de múltiplas classes diretamente]]></text></answer>
+  </question>
+
+<!-- Q08 -->
+  <question type="multichoice">
+    <name><text>Q08 - Polimorfismo emitirSom</text></name>
+    <questiontext format="html"><text><![CDATA[Dado: class Animal{public void emitirSom(){System.out.println("Som");}} class Cachorro extends Animal{public void emitirSom(){System.out.println("Au au");}} Se Animal a = new Cachorro(); a.emitirSom(); qual saída ocorre?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Au au]]></text><feedback><text><![CDATA[Polimorfismo de tempo de execução chama a implementação da subclasse `Cachorro`.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Som]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Erro de compilação]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Nenhuma saída]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Animal]]></text></answer>
+  </question>
+
+<!-- Q09 -->
+  <question type="multichoice">
+    <name><text>Q09 - Polimorfismo conceito</text></name>
+    <questiontext format="html"><text><![CDATA[Sobre polimorfismo, assinale a opção correta:]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Permite tratar objetos de diferentes subclasses por meio do tipo da superclasse]]></text><feedback><text><![CDATA[Polimorfismo permite código genérico que opera sobre a superclasse/interface.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Permite herdar de múltiplas classes]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Garante que todos os métodos sejam estáticos]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Substitui a necessidade de interfaces]]></text></answer>
+    <answer fraction="0"><text><![CDATA[É sempre resolvido em tempo de compilação]]></text></answer>
+  </question>
+
+<!-- Q10 -->
+  <question type="multichoice">
+    <name><text>Q10 - instanceof</text></name>
+    <questiontext format="html"><text><![CDATA[Em Java, o operador instanceof serve para:]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Verificar se um objeto é instância de uma classe/interface]]></text><feedback><text><![CDATA[`instanceof` retorna true se o objeto for do tipo especificado ou subclasse.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Criar uma nova instância]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Comparar valores primitivos]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Chamar um método estático]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Serializar um objeto]]></text></answer>
+  </question>
+
+<!-- Q11 -->
+  <question type="multichoice">
+    <name><text>Q11 - Composição</text></name>
+    <questiontext format="html"><text><![CDATA[Qual relação é indicada quando uma classe contém uma instância de outra (por exemplo, Missao tem Nave)?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Composição (ou agregação)]]></text><feedback><text><![CDATA[Quando uma classe possui referências a outras, é composição/agregação dependendo da semântica de posse.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Herança]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Associação sem dependência]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Polimorfismo]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Sobrecarga]]></text></answer>
+  </question>
+
+<!-- Q12 -->
+  <question type="multichoice">
+    <name><text>Q12 - List size</text></name>
+    <questiontext format="html"><text><![CDATA[Sobre listas em Java: qual saída corresponde ao código List<String> nomes = new ArrayList<>(); nomes.add("Ana"); nomes.add("Bruno"); System.out.println(nomes.size());]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[2]]></text><feedback><text><![CDATA[Dois elementos foram adicionados, logo `size()` retorna 2.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[1]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Ana]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Bruno]]></text></answer>
+    <answer fraction="0"><text><![CDATA[0]]></text></answer>
+  </question>
+
+<!-- Q13 -->
+  <question type="multichoice">
+    <name><text>Q13 - this.nome</text></name>
+    <questiontext format="html"><text><![CDATA[O que representa this.nome = nome; dentro de um construtor?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Atribui o parâmetro ao atributo da instância atual]]></text><feedback><text><![CDATA[`this` refere-se ao atributo do objeto atual; distingue do parâmetro.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Declara um novo atributo local]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Chama o método setNome() implicitamente]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Copia a referência para outra classe]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Cria um objeto novo]]></text></answer>
+  </question>
+
+<!-- Q14 -->
+  <question type="multichoice">
+    <name><text>Q14 - Interface</text></name>
+    <questiontext format="html"><text><![CDATA[Sobre interfaces em Java, assinale a alternativa correta:]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Uma interface define um contrato que classes podem implementar]]></text><feedback><text><![CDATA[Interfaces declaram métodos que classes devem implementar; permitem baixo acoplamento.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Uma interface pode conter estado (atributos mutáveis) por padrão]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Uma classe pode implementar múltiplas interfaces]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Interfaces não podem declarar métodos padrão (default)]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Interfaces forçam herança múltipla de implementação]]></text></answer>
+  </question>
+
+<!-- Q15 -->
+  <question type="multichoice">
+    <name><text>Q15 - == vs equals</text></name>
+    <questiontext format="html"><text><![CDATA[Em Java, qual diferença principal entre == e equals() quando usados com objetos?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[== compara referências, equals() compara igualdade lógica (quando implementada)]]></text><feedback><text><![CDATA[== verifica se duas variáveis apontam ao mesmo objeto; equals() compara conteúdo quando implementada.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[== compara conteúdo, equals() compara referências]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Ambos sempre comparam referências]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Ambos sempre comparam conteúdo]]></text></answer>
+    <answer fraction="0"><text><![CDATA[equals() só funciona para tipos primitivos]]></text></answer>
+  </question>
+
+<!-- Q16 -->
+  <question type="multichoice">
+    <name><text>Q16 - Loop soma</text></name>
+    <questiontext format="html"><text><![CDATA[Considere: public class Teste { public static void main(String[] args){ int x = 0; for(int i=0;i<3;i++){ x += i; } System.out.println(x); } } Qual será a saída?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[3]]></text><feedback><text><![CDATA[Soma 0+1+2 = 3.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[0]]></text></answer>
+    <answer fraction="0"><text><![CDATA[1]]></text></answer>
+    <answer fraction="0"><text><![CDATA[6]]></text></answer>
+    <answer fraction="0"><text><![CDATA[2]]></text></answer>
+  </question>
+
+<!-- Q17 -->
+  <question type="multichoice">
+    <name><text>Q17 - Exceções checked</text></name>
+    <questiontext format="html"><text><![CDATA[Sob... Sobre exceções em Java, marque a opção verdadeira:]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Checked exceptions devem ser declaradas ou tratadas]]></text><feedback><text><![CDATA[Checked exceptions (subclasses de Exception que não estendem RuntimeException) exigem try/catch ou throws.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Todas as exceções são verificadas em tempo de compilação]]></text></answer>
+    <answer fraction="0"><text><![CDATA[RuntimeException deve sempre ser capturada]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Erro (Error) é a mesma coisa que Exception]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Exceções não podem ser propagadas]]></text></answer>
+  </question>
+
+<!-- Q18 -->
+  <question type="multichoice">
+    <name><text>Q18 - Override</text></name>
+    <questiontext format="html"><text><![CDATA[O que é sobrescrita (override) de método?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Uma subclasse fornece implementação específica para um método herdado]]></text><feedback><text><![CDATA[Override substitui o comportamento herdado por um comportamento da subclasse.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Criar um novo método com mesmo nome, porém parâmetros diferentes]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Usar static para substituir método da superclasse]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Remover o método da superclasse]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Uma técnica para melhorar desempenho]]></text></answer>
+  </question>
+
+<!-- Q19 -->
+  <question type="multichoice">
+    <name><text>Q19 - Getters</text></name>
+    <questiontext format="html"><text><![CDATA[Qual é a finalidade de métodos getters (acessores)?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Permitir acesso controlado a atributos privados]]></text><feedback><text><![CDATA[Getters expõem valores privados de modo controlado, mantendo encapsulamento.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Substituir construtores]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Criar novas instâncias]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Serializar objetos]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Implementar polimorfismo]]></text></answer>
+  </question>
+
+<!-- Q20 -->
+  <question type="multichoice">
+    <name><text>Q20 - toString polimórfico</text></name>
+    <questiontext format="html"><text><![CDATA[Considere: class A { public String toString(){ return "A"; } } class B extends A { public String toString(){ return "B"; } } A a = new B(); System.out.println(a); Qual será a saída?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[B]]></text><feedback><text><![CDATA[`println(a)` chama `toString()` dinâmico; `B` sobrescreve `toString()`.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[A]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Erro de compilação]]></text></answer>
+    <answer fraction="0"><text><![CDATA[null]]></text></answer>
+    <answer fraction="0"><text><![CDATA[B A]]></text></answer>
+  </question>
+
+<!-- Q21 -->
+  <question type="multichoice">
+    <name><text>Q21 - Overload</text></name>
+    <questiontext format="html"><text><![CDATA[Sobre sobrecarga (overload) de métodos, escolha certo:]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Métodos com mesmo nome mas assinaturas diferentes na mesma classe]]></text><feedback><text><![CDATA[Overload é ter métodos com mesma identificação e parâmetros diferentes.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Assinaturas iguais e retorno diferente causam overload]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Overload só ocorre entre classes diferentes]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Overload é equivalente a override]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Overload altera o comportamento em tempo de execução]]></text></answer>
+  </question>
+
+<!-- Q22 -->
+  <question type="multichoice">
+    <name><text>Q22 - Composição vs Herança</text></name>
+    <questiontext format="html"><text><![CDATA[Em designs orientados a objetos, por que costuma-se preferir composição à herança?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Maior flexibilidade e menor acoplamento entre classes]]></text><feedback><text><![CDATA[Composição favorece delegação sem hierarquias rígidas.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Herança melhora sempre reutilização sem riscos]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Composição exige menos código]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Herança permite trocar implementações em runtime]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Composição elimina necessidade de interfaces]]></text></answer>
+  </question>
+
+<!-- Q23 -->
+  <question type="multichoice">
+    <name><text>Q23 - Conta getSaldo</text></name>
+    <questiontext format="html"><text><![CDATA[Considere: public class Conta { private double saldo; public Conta(double saldo){ this.saldo = saldo; } public double getSaldo(){ return saldo; } } Conta c = new Conta(150.0); System.out.println(c.getSaldo()); Qual será a saída?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[150.0]]></text><feedback><text><![CDATA[Construtor define `saldo` como 150.0; getter retorna esse valor.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[0.0]]></text></answer>
+    <answer fraction="0"><text><![CDATA[150]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Erro de compilação]]></text></answer>
+    <answer fraction="0"><text><![CDATA[null]]></text></answer>
+  </question>
+
+<!-- Q24 -->
+  <question type="multichoice">
+    <name><text>Q24 - Abstract</text></name>
+    <questiontext format="html"><text><![CDATA[Em Java, `abstract` class é usada para:]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Definir uma classe que pode ter métodos abstratos e não ser instanciada diretamente]]></text><feedback><text><![CDATA[Classes abstratas definem contratos/parciais e não podem ser instanciadas.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Garantir que a classe seja final]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Forçar múltipla herança]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Criar uma classe sem métodos]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Substituir interfaces completamente]]></text></answer>
+  </question>
+
+<!-- Q25 -->
+  <question type="multichoice">
+    <name><text>Q25 - Condicional idade</text></name>
+    <questiontext format="html"><text><![CDATA[int idade = 18; if (idade >= 18) { System.out.println("Maior de idade"); } else { System.out.println("Menor de idade"); } Qual a saída?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Maior de idade]]></text><feedback><text><![CDATA[18 >= 18 é verdadeiro, logo imprime "Maior de idade".]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Menor de idade]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Nenhuma saída]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Erro de compilação]]></text></answer>
+    <answer fraction="0"><text><![CDATA[idade=18]]></text></answer>
+  </question>
+
+<!-- Q26 -->
+  <question type="multichoice">
+    <name><text>Q26 - For loop</text></name>
+    <questiontext format="html"><text><![CDATA[for (int i = 0; i < 3; i++) { System.out.println(i); } Quais valores serão impressos?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[0, 1 e 2]]></text><feedback><text><![CDATA[Loop inicia em 0 e executa para i = 0, 1, 2.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[1, 2 e 3]]></text></answer>
+    <answer fraction="0"><text><![CDATA[0, 1, 2 e 3]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Nenhum valor]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Erro de compilação]]></text></answer>
+  </question>
+
+<!-- Q27 -->
+  <question type="multichoice">
+    <name><text>Q27 - List Passageiro</text></name>
+    <questiontext format="html"><text><![CDATA[Sobre List<Passageiro> em uma Missao, qual afirmação é correta?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Permite armazenar múltiplos passageiros dinamicamente]]></text><feedback><text><![CDATA[`List` é uma coleção dinâmica adequada para vários elementos.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Impede adicionar mais de um passageiro]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Garante ordenação por nome]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Substitui necessidade de arrays]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Evit a colisões entre objetos]]></text></answer>
+  </question>
+
+<!-- Q28 -->
+  <question type="multichoice">
+    <name><text>Q28 - instanceof exemplo</text></name>
+    <questiontext format="html"><text><![CDATA[class P {} class Professor extends P {} P p = new Professor(); System.out.println(p instanceof Professor); Qual será a saída?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[true]]></text><feedback><text><![CDATA[O objeto criado é uma instância de Professor, então instanceof retorna true.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[false]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Erro de compilação]]></text></answer>
+    <answer fraction="0"><text><![CDATA[null]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Professor]]></text></answer>
+  </question>
+
+<!-- Q29 -->
+  <question type="multichoice">
+    <name><text>Q29 - equals e hashCode</text></name>
+    <questiontext format="html"><text><![CDATA[Sobre equals() em classes de domínio, qual é uma prática recomendada?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[Sobrescrever equals() e hashCode() de forma consistente]]></text><feedback><text><![CDATA[Implementar ambos garante comportamento correto em coleções e comparações.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[Usar equals() apenas para comparar referências]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Evitar hashCode() quando equals() for implementado]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Sempre usar == para objetos]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Implementar equals() somente para tipos primitivos]]></text></answer>
+  </question>
+
+<!-- Q30 -->
+  <question type="multichoice">
+    <name><text>Q30 - somar</text></name>
+    <questiontext format="html"><text><![CDATA[Método: public int somar(int a, int b) { return a + b; } Qual o resultado de somar(4,6)?]]></text></questiontext>
+    <defaultgrade>1</defaultgrade>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answer fraction="100"><text><![CDATA[10]]></text><feedback><text><![CDATA[Soma aritmética 4 + 6 = 10.]]></text></feedback></answer>
+    <answer fraction="0"><text><![CDATA[4]]></text></answer>
+    <answer fraction="0"><text><![CDATA[6]]></text></answer>
+    <answer fraction="0"><text><![CDATA[46]]></text></answer>
+    <answer fraction="0"><text><![CDATA[Erro de compilação]]></text></answer>
+  </question>
+
+</quiz>

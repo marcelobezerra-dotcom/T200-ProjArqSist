@@ -1,23 +1,21 @@
 sequenceDiagram
-  participant Usuario
-  participant PedidoController
-  participant PedidoService
-  participant PagamentoGateway
-  participant Notificador
-  participant Pedido
-
-  Usuario->>PedidoController: solicitarProcessamento(pedidoId)
-  PedidoController->>PedidoService: processarPedido(pedidoId)
-  activate PedidoService
-  PedidoService->>Pedido: calcularTotal()
-  PedidoService->>PagamentoGateway: processarPagamento(pedido)
-  activate PagamentoGateway
-  PagamentoGateway-->>PedidoService: pagamentoOk
-  deactivate PagamentoGateway
-  PedidoService->>Notificador: enviarConfirmacao(pedido)
-  activate Notificador
-  Notificador-->>PedidoService: notificado
-  deactivate Notificador
-  PedidoService-->>PedidoController: concluido
-  deactivate PedidoService
-  PedidoController-->>Usuario: confirmado
+    participant GameController
+    participant JogoService
+    participant Nave
+    participant Missao
+    participant Perigo
+    GameController->>JogoService: executar(DIREITA)
+    JogoService->>Nave: mover(DIREITA, minX, maxX, minY, maxY)
+    Nave-->>JogoService: true
+    JogoService->>JogoService: descontar ponto e contar movimento
+    JogoService->>Missao: atualizarPerigos(random, minX, maxX, minY, maxY)
+    loop cada perigo
+        Missao->>Perigo: atualizar(random, minX, maxX, minY, maxY)
+    end
+    JogoService->>Missao: verificaColisao()
+    Missao-->>JogoService: colisão
+    opt houve colisão
+        JogoService->>Nave: perderVida()
+    end
+    JogoService->>JogoService: verificar vidas, pontos e objetivo
+    JogoService-->>GameController: EventoJogo

@@ -6,5 +6,5 @@ public class Professor extends Passageiro {
     }
 
     @Override public int  getPontuacao() { return 10; }
-    @Override public char getSimbolo()   { return 'P'; }
+    @Override public char getSimbolo() { return 'P'; }
 }

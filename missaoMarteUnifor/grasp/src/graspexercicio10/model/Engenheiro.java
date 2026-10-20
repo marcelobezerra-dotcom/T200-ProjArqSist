@@ -6,5 +6,5 @@ public class Engenheiro extends Passageiro {
     }
 
     @Override public int  getPontuacao() { return 15; }
-    @Override public char getSimbolo()   { return 'E'; }
+    @Override public char getSimbolo() { return 'E'; }
 }

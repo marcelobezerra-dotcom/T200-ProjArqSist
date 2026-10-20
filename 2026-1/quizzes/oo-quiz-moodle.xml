@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_01</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Uma equipe de desenvolvimento está modelando o domínio do jogo Missão Marte. Ela precisa representar que cada missão possui uma nave, vários passageiros e vários asteroides. Qual modelo melhor expressa a relação entre <strong>Missao</strong> e <strong>Nave</strong>?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>O modelo correto é a composição, porque a nave não é apenas "usada" por uma missão; ela faz parte da estrutura da missão e normalmente não existe de forma independente dentro do contexto do jogo. Em OO, composição representa objetos que pertencem ao todo e são controlados por ele.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Composição, porque a missão agrupa a nave como parte integrante de seu estado.]]></text>
+        <feedback><![CDATA[<p>Correta. A Missao possui uma Nave como parte essencial do seu funcionamento.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Herança, porque a nave é um tipo especial de missão.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Herança representa "é um", e não uma relação de parte-todo.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Agregação, porque a nave pode existir independentemente da missão.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A nave no contexto do jogo é normalmente parte essencial da missão, o que caracteriza composição mais diretamente.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Dependência de implementação, porque a nave depende diretamente da missão.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Dependência de implementação não descreve bem a relação de domínio entre as classes.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_02</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Considere a classe <code>Nave</code> com o atributo privado <code>capacidade</code> e um método público <code>setCapacidade(int capacidade)</code>. O objetivo da classe é impedir valores inválidos. Qual é a principal vantagem dessa prática?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Encapsulamento é o princípio que protege o estado interno do objeto e garante que regras de negócio sejam atendidas antes de alterar dados. Isso reduz inconsistências, acoplamento e facilita manutenção.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Garantir que o estado da nave seja alterado apenas por regras válidas e controladas.]]></text>
+        <feedback><![CDATA[<p>Correta. O encapsulamento reduz acesso direto e permite centralizar validações.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Eliminar a necessidade de construtores na classe.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Construtores continuam necessários para inicializar o objeto.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Permitir que qualquer classe altere o atributo sem validação.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Esse comportamento aumenta risco de inconsistência no sistema.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Reduzir o uso de métodos públicos em todas as classes.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Métodos públicos continuam essenciais para a interface do objeto.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_03</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Em um projeto de software, foi identificado que a classe <code>Professor</code> e a classe <code>Engenheiro</code> compartilham atributos como nome, posição e tipo. Para reduzir duplicação, a equipe propõe criar uma classe base chamada <code>Passageiro</code>. Qual princípio está sendo aplicado?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Esse é um caso clássico de herança. A classe base reúne atributos e comportamentos comuns, enquanto as subclasses especializam o comportamento. Isso favorece reúso e organização do código.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Herança, porque as subclasses reutilizam propriedades e comportamentos da classe base.]]></text>
+        <feedback><![CDATA[<p>Correta. Herança representa especialização de um tipo mais geral.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Polimorfismo estático, porque o código fica estático dentro da classe base.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Polimorfismo é um conceito relacionado ao comportamento em tempo de execução, não à criação de uma classe base.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Composição, porque a classe base é formada por subclasses.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Composição descreve "tem um"; herança descreve "é um".</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Acoplamento forte, porque tudo depende da mesma classe base.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A herança, quando bem usada, diminui duplicação e pode reduzir acoplamento, dependendo do desenho.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_04</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Na implementação do jogo, a classe <code>Passageiro</code> é usada como tipo da variável e objetos de subclasses como <code>Professor</code> e <code>Engenheiro</code> são atribuídos a ela. Qual conceito está sendo explorado?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Esse é um exemplo de polimorfismo. A variável do tipo base aceita objetos das subclasses e o comportamento real é determinado em tempo de execução. Isso permite tratar objetos diferentes de maneira uniforme.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Polimorfismo, porque a referência da classe base pode apontar para objetos concretos diferentes.]]></text>
+        <feedback><![CDATA[<p>Correta. A operação usa a interface do tipo base, mas o objeto concreto decide o comportamento final.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Injeção de dependência, porque a classe determina a implementação em tempo de compilação.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Injeção de dependência é um mecanismo de design, não a base dessa situação.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Sobrecarga de método, porque a assinatura dos métodos mudou entre as subclasses.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Sobrecarga é a existência de vários métodos com o mesmo nome, mas parâmetros diferentes; não é o caso principal aqui.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Encapsulamento, porque o objeto ocultou suas propriedades em subclasses.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Encapsulamento diz respeito ao controle de acesso aos dados, não à substituição de comportamento por tipo base.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_05</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Uma equipe quer separar a lógica de persistência da lógica de negócio, usando uma interface <code>MissaoRepository</code> e várias implementações concretas. O objetivo é permitir trocar a forma de armazenamento sem impactar o restante do sistema. Esse desenho ilustra o uso de:</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Essa abordagem usa abstração por meio de interface para reduzir acoplamento. A classe de serviço depende de um contrato e não de uma implementação concreta, o que facilita manutenção e testes.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Programação orientada a interfaces e baixo acoplamento.]]></text>
+        <feedback><![CDATA[<p>Correta. Essa é uma estratégia clássica para desacoplar serviço e persistência.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Herança múltipla, pois uma classe pode herdar de várias interfaces.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Herança múltipla de classes não é permitida em Java; interfaces foram criadas para isso, mas o princípio aqui é a abstração do contrato.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Coesão baixa, porque a interface está separada do restante do sistema.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Separar responsabilidades em contratos pode aumentar a coesão da classe de serviço e reduzir seu acoplamento.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Polimorfismo estático, porque as classes diferentes possuem o mesmo nome.]]></text>
+        <feedback><![CDATA[<p>Incorreta. O acoplamento e a abstração são os pontos centrais; o nome das classes não define o conceito aqui.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_06</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Em uma análise de software, foi constatado que a classe <code>Missao</code> realiza muitas operações de domínio diretamente: valida embarque, movimenta nave, verifica colisão e também salva ranking. O problema central é que a classe acumula responsabilidades diferentes. Esse caso exemplifica:</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Essa situação ilustra baixa coesão. Quando uma classe faz coisas muito diferentes e pouco relacionadas, ela fica mais complexa, mais difícil de manter e mais propensa a erros. A boa arquitetura busca alta coesão e baixo acoplamento.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Baixa coesão, porque a classe concentra responsabilidades pouco relacionadas entre si.]]></text>
+        <feedback><![CDATA[<p>Correta. Coesão baixa aumenta a complexidade e prejudica a clareza do software.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Encapsulamento forte, porque os dados estão privados.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Encapsulamento não elimina a baixa coesão; ele apenas controla acesso aos atributos.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Herança correta, porque a missão é uma especialização de nave.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Não há relação de herança apropriada entre essas responsabilidades.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Polimorfismo de classe, porque a mesma classe realiza várias operações.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Polimorfismo não é um diagnóstico para baixa coesão.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_07</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Considere o código abaixo:</p><pre><code>Passageiro p = new Professor("Ana", 0, 0);
+System.out.println(p.getTipo());</code></pre><p>Se <code>Professor</code> sobrescreve o método <code>getTipo()</code> herdado de <code>Passageiro</code>, qual é o comportamento esperado?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Em Java, a referência do tipo base pode apontar para uma instância da subclasse. Quando o método é chamado, a JVM executa a versão da classe concreta, fenômeno conhecido como polimorfismo dinâmico ou ligação tardia.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Será executado o método da classe concreta Professor, mesmo a variável sendo do tipo Passageiro.]]></text>
+        <feedback><![CDATA[<p>Correta. Isso é o comportamento polimórfico do Java em tempo de execução.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Será executado o método da classe Passageiro, porque a variável foi declarada como Passageiro.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Em Java, a chamada costuma resolver para a implementação do objeto real, salvo casos específicos de métodos privados ou estáticos.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[O compilador rejeita a instrução porque Passageiro e Professor são tipos incompatíveis.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Herança permite que um objeto da subclasse seja atribuído à variável da superclasse.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Será executado o método da classe Object, porque todas as classes herdam de Object.]]></text>
+        <feedback><![CDATA[<p>Incorreta. O método em questão pertence à hierarquia de Passageiro e é sobrescrito pela subclasse.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_08</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>O método <code>embarquePassageiro</code> da classe <code>Nave</code> verifica se a capacidade foi excedida antes de adicionar um passageiro. Qual é o maior benefício da implementação dessa validação dentro da própria classe?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Centralizar a regra dentro da classe garante consistência do estado e evita que código externo crie objetos inválidos. Isso é uma aplicação direta do encapsulamento e do princípio de coesão.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Manter o estado da nave sempre consistente e proteger regras de negócio.]]></text>
+        <feedback><![CDATA[<p>Correta. Regras internas da classe evitam estados inválidos e reduzem erros.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Diminuir o número de atributos da classe.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A validação não reduz os atributos; ela reforça a integridade do objeto.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Tornar os métodos privados obrigatórios.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A validação pode ser feita em métodos públicos ou privados, dependendo do desenho.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Substituir a necessidade de testes automatizados.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Validação melhora robustez, mas não substitui o uso de testes.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_09</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Em Java, quando duas variáveis diferentes apontam para o mesmo objeto, e uma delas é alterada, o estado do objeto observado pela outra também muda. Qual conceito explica esse comportamento?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Em Java, variáveis armazenam referências, não objetos. Quando uma variável recebe outra, ela copia a referência, não cria uma cópia do objeto. Assim, ambas apontam para o mesmo objeto no heap.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Referências a objetos no heap, em que a atribuição copia a referência e não o objeto em si.]]></text>
+        <feedback><![CDATA[<p>Correta. Esse é o mecanismo central do modelo de referência do Java.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Clone profundo automático de objetos.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Java não clona objetos automaticamente ao fazer atribuição.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Herança múltipla com sobrescrita de atributos.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Isso não explica a atribuição de referência entre variáveis.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Uso de ponteiros nativos em memória estática.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Java não expõe a memória de forma direta como linguagem procedural C/C++.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_10</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Durante a execução do programa, um objeto <code>Professor</code> é passado como argumento para um método que recebe um parâmetro do tipo <code>Passageiro</code>. O método altera um atributo do objeto recebido e depois faz <code>p = new Engenheiro(...)</code>. O que acontece com o objeto original do chamador?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Em Java, argumentos são passados por valor. O valor passado é a referência. Portanto, alterações no objeto original são visíveis fora do método. Porém, reatribuir o parâmetro local não altera a variável original do chamador.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[As alterações no conteúdo do objeto original persistem, mas a reatribuição do parâmetro local não altera a variável do chamador.]]></text>
+        <feedback><![CDATA[<p>Correta. Esse é o comportamento clássico de passagem por valor em Java.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Tudo é copiado por valor e o objeto do chamador nunca é alterado.]]></text>
+        <feedback><![CDATA[<p>Incorreta. O objeto referenciado pode ser alterado dentro do método.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[O objeto original é destruído ao fim do método.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Objetos em Java são coletados pelo garbage collector quando deixam de ser referenciados.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[A linha <code>p = new Engenheiro(...)</code> sempre altera a variável do chamador no escopo externo.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Reatribuir o parâmetro não muda a referência do chamador.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_11</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Uma classe <code>Missao</code> possui uma lista de passageiros e outro conjunto de asteroides. O sistema precisa verificar, em cada turno, se há algum passageiro na mesma posição da nave ou se a nave colidiu com um asteroide. Qual abordagem melhor atende ao modelo orientado a objetos?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>As responsabilidades devem ser distribuídas entre as classes: a nave representa movimentação; a missão coordena agrupamentos e regras; e os objetos de domínio devem encapsular comportamento relevante, como colisão e embarque. Isso mantém a lógica bem organizada e reduz acoplamento entre responsabilidades.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Distribuir as regras nas classes de domínio, como nave e missão, mantendo a lógica de colisão e embarque próximas ao objeto envolvido.]]></text>
+        <feedback><![CDATA[<p>Correta. Essa é a melhor modelagem com alto grau de coesão e baixo acoplamento.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Colocar todas as verificações em <code>Main</code>, para centralizar a lógica do jogo.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Main deve orquestrar, mas a lógica de domínio deve permanecer nas classes adequadas.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Deixar os passageiros e asteroides sem métodos, apenas com atributos públicos.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A ausência de comportamento reduz abstração e encapsulamento.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Usar apenas herança para todas as relações, sem composição.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A relação “tem um” exige composição e a hierarquia não substitui esse conceito.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_12</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Em um sistema de transporte, a classe <code>Viagem</code> contém uma lista de <code>Passageiro</code> e um objeto <code>Motorista</code>. Se um passageiro for removido da viagem, ele continua existindo como pessoa independente, mas a relação da viagem com ele cessa. Esse tipo de associação é melhor classificado como:</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Essa é uma agregação: um objeto maior contém ou coordena outros objetos, mas esses objetos não são necessariamente dependentes da existência do todo. A diferença para composição é que o componente pode existir independentemente.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Agregação, porque os passageiros podem existir independentemente da viagem.]]></text>
+        <feedback><![CDATA[<p>Correta. A vida do passageiro não depende da existência da viagem.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Composição, porque a viagem é formada por passageiros.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Composição implicaria que o passageiro não tenha existência independente da viagem.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Herança, porque os passageiros são subclasses de Viagem.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Herança representa especialização, não associação de coleção.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Dependência temporal, porque o relacionamento existe apenas durante a execução.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A relação temporal não é o conceito de associação principal aqui.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_13</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Uma classe <code>MissaoRepositoryMemoria</code> implementa uma interface <code>MissaoRepository</code> e um serviço usa essa interface em seu construtor. Qual é o principal objetivo dessa estratégia?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Quando um serviço depende de uma abstração em vez de uma implementação concreta, ele fica mais flexível, testável e menos acoplado. Isso é uma aplicação direta de design orientado a interfaces.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Diminuir acoplamento e facilitar troca de implementação sem alterar o serviço.]]></text>
+        <feedback><![CDATA[<p>Correta. É exatamente o objetivo de programar contra interfaces e abstrações.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Remover totalmente a necessidade de manutenção.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A estratégia reduz problemas, mas não elimina necessidade de manutenção.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Permitir que a classe de serviço herde da classe de repositório.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A relação aqui é de dependência por contrato, não de herança de implementação.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Transformar todas as classes em classes estáticas.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Isso seria um design muito diferente e não é o objetivo da abstração.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_14</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Em Java, a classe <code>Asteroide</code> tem um método <code>colideCom(Nave nave)</code> que compara a posição do asteroide com a da nave. Se a nave está em uma posição diferente, o retorno é falso. Essa lógica representa melhor:</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>O método encapsula a regra de negócio do objeto asteroide e usa dados do objeto nave para decidir se houve colisão. Isso melhora a coesão, porque a lógica relevante fica junto ao conceito que a possui.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Coesão, porque a regra de colisão está relacionada ao conceito de asteroide.]]></text>
+        <feedback><![CDATA[<p>Correta. A lógica relevante está diretamente ligada à entidade em questão.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Acoplamento fraco, porque o asteroide não depende da nave.]]></text>
+        <feedback><![CDATA[<p>Incorreta. O método depende da nave para calcular a colisão, então há uma dependência explícita.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Herança múltipla, porque asteroide e nave são classes relacionadas.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A colisão não é uma relação de herança.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Método abstrato sem implementação concreta.]]></text>
+        <feedback><![CDATA[<p>Incorreta. O método tem implementação lógica concreta e específica.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_15</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Um sistema de ranking salva dados em arquivo JSON. O código foi refatorado para separar a responsabilidade de serialização da lógica do jogo. Qual princípio está sendo melhor atendido com essa separação?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Separar regras de persistência da lógica de negócio melhora a coesão, reduz acoplamento e facilita evoluções futuras. O domínio do jogo não depende de detalhes de armazenamento.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Alta coesão e baixo acoplamento entre domínio e persistência.]]></text>
+        <feedback><![CDATA[<p>Correta. Essa separação reduz dependências desnecessárias e aumenta clareza.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Uso excessivo de herança para persistência.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Persistência geralmente é tratada por interfaces ou componentes separados, não por herança do domínio.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Abstração de classes concretas em tudo.]]></text>
+        <feedback><![CDATA[<p>Incorreta. O foco não é abstrair tudo indiscriminadamente, mas escolher as fronteiras certas.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Polimorfismo estático por meio de campos públicos.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Isso não representa corretamente a separação de responsabilidades.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_16</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Uma equipe quer comparar se dois objetos de uma classe <code>Nave</code> representam a mesma nave logicamente, e não apenas a mesma referência. Qual método é o mais adequado para essa comparação?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>O método <code>equals()</code> deve ser implementado quando a igualdade lógica é importante. Ele pode comparar atributos relevantes, enquanto <code>==</code> apenas compara se as referências são as mesmas.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Usar <code>equals()</code>, implementando a comparação do conteúdo relevante do objeto.]]></text>
+        <feedback><![CDATA[<p>Correta. Essa é a forma correta de comparar igualdade lógica.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Usar <code>==</code>, porque ele compara conteúdo e não referência.]]></text>
+        <feedback><![CDATA[<p>Incorreta. O operador <code>==</code> compara referências em Java.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Usar uma classe estática para comparar objetos.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A lógica de igualdade mais natural é um método da própria classe, como <code>equals()</code>.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Ignorar a comparação, porque Java já considera objetos iguais.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Objetos diferentes podem ter estados equivalentes ou distintos; isso depende da implementação de igualdade.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_17</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Na classe <code>Professor</code>, o construtor chama <code>super(nome, "Professor", x, y)</code>. Qual é o papel principal dessa chamada?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>A chamada ao construtor da superclasse inicializa os atributos e o estado compartilhado pela hierarquia. Isso garante que a classe pai seja construída corretamente antes que a subclasse conclua sua inicialização específica.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Inicializar os atributos herdados da classe base antes da criação do objeto específico.]]></text>
+        <feedback><![CDATA[<p>Correta. A superclasse precisa ser construída antes da parte específica da subclasse.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Substituir a implementação do construtor da subclasse.]]></text>
+        <feedback><![CDATA[<p>Incorreta. O construtor da superclasse não substitui o da subclasse; ele complementa a inicialização.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Definir um método estático para a classe filha.]]></text>
+        <feedback><![CDATA[<p>Incorreta. <code>super(...)</code> é usada em construtores, não para criar métodos.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Permitir que a subclasse ignore todos os atributos da superclasse.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Os atributos herdados continuam existindo e são inicializados pela superclasse.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_18</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Um aluno implementou uma classe com atributos públicos e sem validação. Ao longo do projeto, observe-se que outros trechos do programa alteram os valores de forma inconsistente. Qual princípio foi ignorado?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>O encapsulamento foi ignorado. Quando atributos públicos podem ser modificados arbitrariamente, regras de negócio deixam de ser garantidas, o que torna o sistema mais frágil e difícil de manter.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Encapsulamento, porque os dados foram expostos sem controle e validação.]]></text>
+        <feedback><![CDATA[<p>Correta. A classe ficou vulnerável a estados inválidos.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Polimorfismo, porque existem muitas subclasses.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Polimorfismo não é o problema central nesse cenário.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Herança múltipla, porque a classe foi criada sem superclass.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Não há relação de herança que explique o problema de consistência.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Alocação dinâmica, porque os dados não foram gravados em heap.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A alocação em heap não depende de visibilidade de atributos.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_19</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Ao desenvolver o jogo em console, o aluno usa o comando <code>Scanner scanner = new Scanner(System.in);</code> para ler a decisão do usuário. Qual é a função principal desse recurso?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>O Scanner permite interação com o usuário em tempo de execução, lendo dados de entrada do teclado e convertendo para tipos úteis, como inteiros e strings. Esse mecanismo é essencial para jogos e aplicações interativas em console.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[Obter entrada do usuário em tempo de execução para controlar o jogo.]]></text>
+        <feedback><![CDATA[<p>Correta. Scanner é usado para ler dados do teclado e transformar em valores do programa.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Compilar automaticamente as classes Java.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A compilação é feita por <code>javac</code>, não por Scanner.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Gerenciar estrutura de arquivos do sistema operacional.]]></text>
+        <feedback><![CDATA[<p>Incorreta. O Scanner não manipula arquivos do sistema; ele lê fluxos de entrada.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Definir a ordem de execução de métodos estáticos.]]></text>
+        <feedback><![CDATA[<p>Incorreta. A ordem de execução depende da lógica do programa e do fluxo de controle.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+  <question type="multichoice">
+    <name>
+      <text>POO_20</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Ao escolher a arquitetura de um sistema de missão espacial, o professor enfatiza que uma boa solução busca baixo acoplamento e alta coesão. Qual das afirmações melhor descreve esse objetivo?</p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>Um sistema bem arquitetado separa responsabilidades, reduz dependências desnecessárias e concentra cada classe em um conjunto lógico de responsabilidades. Isso facilita manutenção, testes e evolução do software.</p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answers>
+      <answer fraction="100">
+        <text><![CDATA[As classes devem ter responsabilidades bem definidas e depender o mínimo possível umas das outras.]]></text>
+        <feedback><![CDATA[<p>Correta. Esse é o equilíbrio ideal para arquitetura de software.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[As classes devem depender o máximo possível umas das outras para evitar duplicação.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Isso aumenta acoplamento e dificulta mudanças futuras.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[Quanto mais métodos públicos, melhor a arquitetura, porque a classe fica mais flexível.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Excessos de visibilidade podem piorar encapsulamento e reduzir clareza.</p>]]></feedback>
+      </answer>
+      <answer fraction="0">
+        <text><![CDATA[O objetivo principal é reduzir o número de classes e concentrar a lógica em uma só.]]></text>
+        <feedback><![CDATA[<p>Incorreta. Essa abordagem costuma gerar baixa coesão e alta complexidade.</p>]]></feedback>
+      </answer>
+    </answers>
+  </question>
+
+</quiz>

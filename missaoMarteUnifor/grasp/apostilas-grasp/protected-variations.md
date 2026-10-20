@@ -1,126 +1,91 @@
 # Protected Variations
 
-**Definição**: proteger elementos de um sistema contra variações previstas, definindo pontos de estabilidade (interfaces, abstrações).
+Identifique mudanças previstas e crie contratos que preservem os consumidores
+dessas variações. Uma abstração deve proteger uma necessidade reconhecida.
 
-**Problema**: Como proteger o sistema de instabilidades em elementos externos ou mutáveis?
+## Variações consideradas
 
-**Solução**: Identifique pontos de variação previsíveis e envolva-os com uma interface estável, usando o Polimorfismo para as implementações.
+| Mudança esperada | Contrato |
+| --- | --- |
+| Novos elementos com outros símbolos | `ElementoMapa.getSimbolo()` |
+| Novos passageiros com outros valores | `Passageiro.getPontuacao()` |
+| Perigos com outro movimento | `Perigo.atualizar(...)` |
+| Entrada por console ou botões | `AcaoJogo` e operações de `GameController` |
+| Outro desenho da partida | `EstadoJogo` e `EntidadeEstado` |
+| Outro armazenamento de ranking | `IRankingRepository` |
 
-Estratégia:
+`EstadoJogo` é uma cópia de leitura: campos finais, lista protegida e elementos
+imutáveis. A apresentação consulta novamente para obter outro snapshot depois
+de uma jogada.
 
-- Encapsular variações atrás de interfaces
-- Usar indirection e pure fabrication para isolar mudanças
+## Contrato de armazenamento
 
-Exemplo: definir `IRankingRepository` para isolar diferentes estratégias de persistência do ranking (arquivo JSON, banco de dados, memória).
-
-Relação com SOLID
-
-- **DIP:** proteger variações frequentemente é feito invertendo dependências e programando para abstrações.
-- **OCP:** encapsular variações atrás de interfaces permite estender comportamentos sem modificar código cliente.
-
-## Exemplo evolutivo (Missão Marte)
-
-Ao aplicar `Protected Variations`, definimos `IRankingRepository` para isolar o `JogoService` de saber se o ranking é salvo em arquivo, banco ou memória.
-
-Trecho ilustrativo:
-
-```java
-public interface IRankingRepository {
-    void salvar(RankingEntry entry);
-    List<RankingEntry> carregar();
-}
-public class RankingRepositoryEmMemoria implements IRankingRepository { /* ... */ }
-public class RankingRepositoryArquivo   implements IRankingRepository { /* ... */ }
-```
-
-Este padrão trabalha bem com `Indirection` e `Pure Fabrication`.
-
-Exemplos de código
-
-1) `IRankingRepository` — interface estável para proteger variações:
+Conteúdo de [IRankingRepository](../src/graspexercicio10/repository/IRankingRepository.java),
+omitindo apenas o comentário:
 
 ```java
+package graspexercicio10.repository;
+
+import java.util.List;
+
 public interface IRankingRepository {
-    void salvar(RankingEntry entry);
     List<RankingEntry> carregar();
+    void salvar(List<RankingEntry> ranking);
     void resetar();
-    boolean ehTopScore(List<RankingEntry> ranking, int pontos);
 }
 ```
 
-2) Implementação em memória (para testes e aulas):
+O limite de cinco resultados e a decisão de elegibilidade pertencem ao
+`RankingService`. O repositório recebe a lista pronta para armazenamento.
+
+## Implementação alternativa para exercício
+
+Esta classe é um exemplo adicional completo; não faz parte dos fontes de produção:
 
 ```java
-public class RankingRepositoryEmMemoria implements IRankingRepository {
-    private final List<RankingEntry> dados = new ArrayList<>();
+package graspexercicio10.repository;
 
-    @Override public void salvar(RankingEntry entry) { dados.add(entry); }
-    @Override public List<RankingEntry> carregar()   { return new ArrayList<>(dados); }
-    @Override public void resetar()                  { dados.clear(); }
-    @Override public boolean ehTopScore(List<RankingEntry> r, int pts) {
-        return r.size() < 10 || r.stream().mapToInt(RankingEntry::getPontuacao).min().orElse(0) < pts;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MemoriaRankingRepository implements IRankingRepository {
+    private List<RankingEntry> entradas = new ArrayList<>();
+
+    @Override public List<RankingEntry> carregar() {
+        return new ArrayList<>(entradas);
+    }
+
+    @Override public void salvar(List<RankingEntry> ranking) {
+        entradas = new ArrayList<>(ranking);
+    }
+
+    @Override public void resetar() {
+        entradas.clear();
     }
 }
 ```
 
-3) Uso no `GameController` — protegendo variações:
+No `Main`, a seleção passa a ser:
 
 ```java
-// dentro de GameController
-public void encerrarPartida(String nomeJogador, int pontos) {
-    List<RankingEntry> ranking = rankingRepository.carregar();
-    if (rankingRepository.ehTopScore(ranking, pontos)) {
-        rankingRepository.salvar(new RankingEntry(nomeJogador, pontos));
-    }
-}
+RankingService ranking = new RankingService(new MemoriaRankingRepository());
 ```
 
-Diagramas
+A implementação em memória copia as listas para que o consumidor não altere
+seu armazenamento por uma referência compartilhada.
 
-1) Diagrama de classes — `IRankingRepository` protege variações de persistência:
+Diagramas editáveis: [classes](diagrams/protected-variations-class.mmd) e
+[sequência](diagrams/protected-variations-sequence.mmd).
 
-```mermaid
-classDiagram
-  class RankingEntry {
-    - nome: String
-    - pontuacao: int
-  }
+## Limite da proteção
 
-  class IRankingRepository {
-    <<interface>>
-    + salvar(entry)
-    + carregar() List
-  }
-  class RankingRepositoryEmMemoria
-  class RankingRepositoryArquivo
-  class JogoService
-  class GameController
+A apresentação gráfica poderá reaproveitar ações, eventos, estado e controller.
+O jogo atual continua por turnos. Movimento contínuo exige rever a simulação;
+o contrato de leitura não transforma essa regra automaticamente.
 
-  GameController --> JogoService : delega
-  JogoService --> IRankingRepository : usa
-  IRankingRepository <|.. RankingRepositoryEmMemoria
-  IRankingRepository <|.. RankingRepositoryArquivo
-  IRankingRepository --> RankingEntry
-```
+## Exercício
 
-2) Diagrama de sequência — troca de implementação sem alterar `JogoService`:
-
-```mermaid
-sequenceDiagram
-  participant GameController
-  participant JogoService
-  participant IRankingRepository
-  participant RankingRepositoryArquivo
-
-  GameController->>JogoService: encerrarPartida(nome, pontos)
-  JogoService->>IRankingRepository: carregar()
-  IRankingRepository->>RankingRepositoryArquivo: lerArquivo()
-  RankingRepositoryArquivo-->>IRankingRepository: lista
-  IRankingRepository-->>JogoService: ranking
-  JogoService->>IRankingRepository: salvar(entry)
-  IRankingRepository->>RankingRepositoryArquivo: gravarArquivo()
-  RankingRepositoryArquivo-->>IRankingRepository: ok
-  IRankingRepository-->>JogoService: ok
-  JogoService-->>GameController: ok
-```
+Compare o teste com ranking em memória e a implementação em arquivo.
+Em que ponto a implementação concreta é escolhida? Como a tela recebe uma
+falha de armazenamento?
 

@@ -1,24 +1,23 @@
 sequenceDiagram
-  participant Usuario
-  participant PedidoController
-  participant PedidoService
-  participant Pedido
-  participant PedidoItem
-  participant Produto
-
-  Usuario->>PedidoController: adicionarItem(produto, quantidade)
-  PedidoController->>PedidoService: adicionarItem(pedidoId, produto, quantidade)
-  activate PedidoService
-  PedidoService->>Pedido: addItem(produto, quantidade)
-  activate Pedido
-  Pedido->>PedidoItem: new PedidoItem(produto, quantidade)
-  activate PedidoItem
-  PedidoItem->>Produto: getPreco()
-  Produto-->>PedidoItem: preco
-  PedidoItem-->>Pedido: instanciaItem
-  Pedido->>Pedido: itens.add(instanciaItem)
-  deactivate PedidoItem
-  deactivate Pedido
-  PedidoService-->>PedidoController: ok
-  deactivate PedidoService
-  PedidoController-->>Usuario: confirmado
+    participant GameController
+    participant JogoService
+    participant FabricaMissao
+    participant Dificuldade
+    participant Nave
+    participant Missao
+    GameController->>JogoService: iniciarPartida(piloto, dificuldade, raioMapa)
+    JogoService->>FabricaMissao: criar(dificuldade, minX, maxX, minY, maxY, random)
+    FabricaMissao->>Dificuldade: getQuantidadePassageiros()
+    Dificuldade-->>FabricaMissao: quantidade
+    FabricaMissao->>Dificuldade: getQuantidadeAsteroides()
+    Dificuldade-->>FabricaMissao: quantidade
+    FabricaMissao->>Dificuldade: getQuantidadeInimigos()
+    Dificuldade-->>FabricaMissao: quantidade
+    FabricaMissao->>Nave: new Nave("A-1", 5)
+    FabricaMissao->>Missao: new Missao(nave)
+    Note over Missao: Constrói Base em (0,0)
+    Note over FabricaMissao: Cria elementos em posições livres embaralhadas
+    FabricaMissao->>Missao: addPassageiro(passageiro)
+    FabricaMissao->>Missao: addPerigo(perigo)
+    FabricaMissao-->>JogoService: missao
+    JogoService-->>GameController: retorno

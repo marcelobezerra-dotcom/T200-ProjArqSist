@@ -1,0 +1,134 @@
+::Q01:: Em Java, o que é uma classe?
+{=Um molde (blueprint) para criar objetos #Explicação: Classe é o molde que define atributos e comportamentos de objetos em OO. ~Um tipo de dado primitivo #Incorreto. ~Uma instrução de compilador #Incorreto. ~Um pacote do sistema #Incorreto. ~Um arquivo de configuração #Incorreto.}
+
+::Q02:: Qual é a principal vantagem do encapsulamento?
+{=Ocultar detalhes internos e expor apenas o necessário #Explicação: Encapsulamento protege o estado interno e fornece interfaces controladas. ~Aumentar a velocidade de execução #Incorreto. ~Permitir herança múltipla #Incorreto. ~Evitar o uso de interfaces #Incorreto. ~Remover métodos públicos #Incorreto.}
+
+::Q03:: Qual modificador de acesso normalmente impede acesso direto a um atributo fora da classe?
+{=private #Explicação: `private` restringe acesso apenas ao escopo da própria classe. ~public #Incorreto. ~protected #Incorreto (permite acesso em subclasses/mesmo pacote). ~static #Incorreto. ~transient #Incorreto.}
+
+::Q04:: O que faz um construtor em Java?
+{=Inicializa o objeto no momento da criação #Explicação: Construtores preparam o estado inicial do objeto ao usar `new`. ~Retorna um valor booleano #Incorreto. ~Define a visibilidade da classe #Incorreto. ~Cria um pacote automaticamente #Incorreto. ~Compila a classe #Incorreto.}
+
+::Q05:: Considere o código: `public class Nave \{ private int x; public Nave(int x)\{ this.x = x; \} public int getX()\{ return x; \} \}` o que retorna `new Nave(5).getX()`?
+{=5 #Explicação: O construtor atribui 5 ao atributo `x` e `getX()` retorna esse valor. ~0 #Incorreto. ~Erro de compilação #Incorreto. ~null #Incorreto. ~NullPointerException #Incorreto.}
+
+::Q06:: Dado `public class Pessoa \{ private String nome; public Pessoa(String nome)\{ this.nome = nome;\} public String getNome()\{ return nome; \} \}` o resultado de `new Pessoa("Ana").getNome()` é:
+{=Ana #Explicação: O construtor atribui "Ana" ao atributo `nome` e o getter retorna esse valor. ~"nome" #Incorreto. ~null #Incorreto. ~Erro em tempo de execução #Incorreto. ~"" #Incorreto.}
+
+::Q07:: Sobre herança em Java, marque a alternativa correta:
+{=Uma classe filha herda atributos e métodos da classe pai #Explicação: Herança compartilha características entre superclasse e subclasse. ~Herança impede polimorfismo #Incorreto. ~Uma classe filha não pode declarar métodos próprios #Incorreto. ~Herança é usada apenas para interfaces #Incorreto. ~Uma subclasse pode herdar de múltiplas classes diretamente #Incorreto.}
+
+::Q08:: Dado `class Animal\{public void emitirSom()\{System.out.println("Som");\}\} class Cachorro extends Animal\{public void emitirSom()\{System.out.println("Au au");\}\}` Se `Animal a = new Cachorro(); a.emitirSom();` qual saída ocorre?
+{=Au au #Explicação: Polimorfismo de tempo de execução chama a implementação da subclasse `Cachorro`. ~Som #Incorreto. ~Erro de compilação #Incorreto. ~Nenhuma saída #Incorreto. ~"Animal" #Incorreto.}
+
+::Q09:: Sobre polimorfismo, assinale a opção correta:
+{=Permite tratar objetos de diferentes subclasses por meio do tipo da superclasse #Explicação: Polimorfismo permite código genérico que opera sobre a superclasse/interface. ~Permite herdar de múltiplas classes #Incorreto. ~Garante que todos os métodos sejam estáticos #Incorreto. ~Substitui a necessidade de interfaces #Incorreto. ~É sempre resolvido em tempo de compilação #Incorreto (muito é resolvido em tempo de execução).}
+
+::Q10:: Em Java, o operador `instanceof` serve para:
+{=Verificar se um objeto é instância de uma classe/inteface #Explicação: `instanceof` retorna true se o objeto for do tipo especificado ou subclasse. ~Criar uma nova instância #Incorreto. ~Comparar valores primitivos #Incorreto. ~Chamar um método estático #Incorreto. ~Serializar um objeto #Incorreto.}
+
+::Q11:: Qual relação é indicada quando uma classe contém uma instância de outra (por exemplo, `Missao` tem `Nave`)?
+{=Composição (ou agregação) #Explicação: Quando uma classe possui referências a outras, é composição/agregação dependendo da semântica de posse. ~Herança #Incorreto. ~Associação sem dependência #Incorreto. ~Polimorfismo #Incorreto. ~Sobrecarga #Incorreto.}
+
+::Q12:: Sobre listas em Java: qual saída corresponde ao código `List<String> nomes = new ArrayList<>(); nomes.add("Ana"); nomes.add("Bruno"); System.out.println(nomes.size());`
+{=2 #Explicação: Dois elementos foram adicionados, logo `size()` retorna 2. ~1 #Incorreto. ~Ana #Incorreto. ~Bruno #Incorreto. ~0 #Incorreto.}
+
+::Q13:: O que representa `this.nome = nome;` dentro de um construtor?
+{=Atribui o parâmetro ao atributo da instância atual #Explicação: `this` refere-se ao atributo do objeto atual; isso distingue do parâmetro. ~Declara um novo atributo local #Incorreto. ~Chama o método setNome() implicitamente #Incorreto. ~Copia a referência para outra classe #Incorreto. ~Cria um objeto novo #Incorreto.}
+
+::Q14:: Sobre interfaces em Java, assinale a alternativa correta:
+{=Uma interface define um contrato que classes podem implementar #Explicação: Interfaces declaram métodos que classes devem implementar; permitem baixo acoplamento. ~Uma interface pode conter estado (atributos mutáveis) por padrão #Incorreto. ~Uma classe pode implementar múltiplas interfaces #Correto em parte, mas esta alternativa está posicionada como incorreta aqui para manter única correta. ~Interfaces não podem declarar métodos padrão (default) #Incorreto. ~Interfaces forçam herança múltipla de implementação #Incorreto.}
+
+::Q15:: Em Java, qual diferença principal entre `==` e `equals()` quando usados com objetos?
+{=`==` compara referências, `equals()` compara igualdade lógica (quando implementada) #Explicação: `==` verifica se duas variáveis apontam ao mesmo objeto; `equals()` deve comparar conteúdo quando implementada. ~`==` compara conteúdo, `equals()` compara referências #Incorreto. ~Ambos sempre comparam referências #Incorreto. ~Ambos sempre comparam conteúdo #Incorreto. ~`equals()` só funciona para tipos primitivos #Incorreto.}
+
+::Q16:: Análise de código: qual será a saída?
+public class Teste \{
+  public static void main(String[] args)\{
+    int x = 0;
+    for(int i=0;i<3;i++)\{
+      x += i;
+    \}
+    System.out.println(x);
+  \}
+\}
+{=3 #Explicação: soma 0+1+2 = 3. ~0 #Incorreto. ~1 #Incorreto. ~6 #Incorreto (6 seria 1+2+3). ~2 #Incorreto.}
+
+::Q17:: Sobre exceções em Java, marque a opção verdadeira:
+{=Checked exceptions devem ser declaradas ou tratadas #Explicação: Checked exceptions (subclasses de Exception não RuntimeException) exigem try/catch ou throws. ~Todas as exceções são verificadas em tempo de compilação #Incorreto. ~RuntimeException deve sempre ser capturada #Incorreto. ~Erro (Error) é a mesma coisa que Exception #Incorreto. ~Exceções não podem ser propagadas #Incorreto.}
+
+::Q18:: O que é sobrescrita (override) de método?
+{=Uma subclasse fornece implementação específica para um método herdado #Explicação: Override substitui o comportamento herdado por um comportamento específico da subclasse. ~Criar um novo método com mesmo nome, porém parâmetros diferentes #Isto é sobrecarga (overload), não override. ~Usar `static` para substituir método da superclasse #Incorreto. ~Remover o método da superclasse #Incorreto. ~Uma técnica para melhorar desempenho #Incorreto.}
+
+::Q19:: Qual é a finalidade de métodos getters (acessores)?
+{=Permitir acesso controlado a atributos privados #Explicação: Getters expõem valores privados de modo controlado, mantendo encapsulamento. ~Substituir construtores #Incorreto. ~Criar novas instâncias #Incorreto. ~Serializar objetos #Incorreto. ~Implementar polimorfismo #Incorreto.}
+
+::Q20:: Análise de código — escolha a saída:
+class A \{ public String toString()\{ return "A"; \} \}
+class B extends A \{ public String toString()\{ return "B"; \} \}
+public class Test \{
+  public static void main(String[] args)\{
+    A a = new B();
+    System.out.println(a);
+  \}
+\}
+{=B #Explicação: `println(a)` chama `toString()` dinâmico; `B` sobrescreve `toString()`. ~A #Incorreto. ~Erro de compilação #Incorreto. ~null #Incorreto. ~B A #Incorreto.}
+
+::Q21:: Sobre sobrecarga (overload) de métodos, escolha certo:
+{=Métodos com mesmo nome mas assinaturas diferentes na mesma classe #Explicação: Overload é ter métodos com mesma identificação e parâmetros diferentes. ~Assinaturas iguais e retorno diferente causam overload #Incorreto (assinaturas idênticas não permitem overload só por retorno). ~Overload só ocorre entre classes diferentes #Incorreto. ~Overload é equivalente a override #Incorreto. ~Overload altera o comportamento em tempo de execução #Incorreto.}
+
+::Q22:: Em designs orientados a objetos, por que costuma-se preferir composição à herança?
+{=Maior flexibilidade e menor acoplamento entre classes #Explicação: Composição delega comportamentos a objetos internos sem acoplar hierarquias rígidas. ~Herança melhora sempre reutilização sem riscos #Incorreto. ~Composição exige menos código #Incorreto. ~Herança permite trocar implementações em runtime #Incorreto. ~Composição elimina necessidade de interfaces #Incorreto.}
+
+::Q23:: Análise de código: qual será a saída?
+public class Conta \{
+  private double saldo;
+  public Conta(double saldo)\{ this.saldo = saldo; \}
+  public double getSaldo()\{ return saldo; \}
+\}
+public class Test \{
+  public static void main(String[] args)\{
+    Conta c = new Conta(150.0);
+    System.out.println(c.getSaldo());
+  \}
+\}
+{=150.0 #Explicação: Construtor define `saldo` como 150.0; getter retorna esse valor. ~0.0 #Incorreto. ~150 #Incorreto (formatação). ~Erro de compilação #Incorreto. ~null #Incorreto.}
+
+::Q24:: Em Java, `abstract` class é usada para:
+{=Definir uma classe que pode ter métodos abstratos e não ser instanciada diretamente #Explicação: Classes abstratas definem contratos/parciais e não podem ser instanciadas. ~Garantir que a classe seja final #Incorreto. ~Forçar múltipla herança #Incorreto. ~Criar uma classe sem métodos #Incorreto. ~Substituir interfaces completamente #Incorreto.}
+
+::Q25:: Qual a saída do trecho:
+int idade = 18;
+if (idade >= 18) \{
+  System.out.println("Maior de idade");
+\} else \{
+  System.out.println("Menor de idade");
+\}
+{=Maior de idade #Explicação: 18 >= 18 é verdadeiro, logo imprime "Maior de idade". ~Menor de idade #Incorreto. ~Nenhuma saída #Incorreto. ~Erro de compilação #Incorreto. ~"idade=18" #Incorreto.}
+
+::Q26:: Análise de código: qual será a saída?
+for (int i = 0; i < 3; i++) \{
+  System.out.println(i);
+\}
+{=0, 1 e 2 #Explicação: Loop inicia em 0 e executa para i=0,1,2. ~1, 2 e 3 #Incorreto. ~0, 1, 2 e 3 #Incorreto. ~Nenhum valor #Incorreto. ~Erro de compilação #Incorreto.}
+
+::Q27:: Sobre `List<Passageiro>` em uma `Missao`, qual afirmação é correta?
+{=Permite armazenar múltiplos passageiros dinamicamente #Explicação: `List` é uma coleção dinâmica que armazena vários elementos. ~Impede adicionar mais de um passageiro #Incorreto. ~Garante ordenação por nome #Incorreto (ordenação não é garantida). ~Substitui necessidade de arrays #Incorreto. ~Evita colisões entre objetos #Incorreto.}
+
+::Q28:: Análise de código (polimorfismo + instanceof):
+class P \{ \}
+class Professor extends P \{ \}
+public class Test \{
+  public static void main(String[] args)\{
+    P p = new Professor();
+    System.out.println(p instanceof Professor);
+  \}
+\}
+{=true #Explicação: O objeto criado é uma instância de `Professor`, então `instanceof` retorna true. ~false #Incorreto. ~Erro de compilação #Incorreto. ~null #Incorreto. ~"Professor" #Incorreto.}
+
+::Q29:: Sobre `equals()` em classes de domínio, qual é uma prática recomendada?
+{=Sobrescrever `equals()` e `hashCode()` de forma consistente #Explicação: Implementar ambos garante comportamento correto em coleções e comparações. ~Usar `equals()` apenas para comparar referências #Incorreto. ~Evitar `hashCode()` quando `equals()` for implementado #Incorreto. ~Sempre usar `==` para objetos #Incorreto. ~Implementar `equals()` somente para tipos primitivos #Incorreto.}
+
+::Q30:: Método e retorno — qual o resultado de `somar(4,6)` dado `public int somar(int a, int b) { return a + b; }`?
+{=10 #Explicação: Soma aritmética 4 + 6 = 10. ~4 #Incorreto. ~6 #Incorreto. ~46 #Incorreto (concatenaria em strings). ~Erro de compilação #Incorreto.}

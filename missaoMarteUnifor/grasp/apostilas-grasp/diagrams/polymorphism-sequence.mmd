@@ -1,17 +1,18 @@
 sequenceDiagram
-  participant Usuario
-  participant PedidoController
-  participant PedidoService
-  participant Desconto
-  participant Pedido
-
-  Usuario->>PedidoController: aplicarDesconto(pedidoId, tipo)
-  PedidoController->>PedidoService: aplicarDesconto(pedidoId, desconto)
-  activate PedidoService
-  PedidoService->>Desconto: aplicar(pedido)
-  activate Desconto
-  Desconto-->>PedidoService: valorDesconto
-  deactivate Desconto
-  PedidoService-->>PedidoController: descontoAplicado
-  deactivate PedidoService
-  PedidoController-->>Usuario: confirmado
+    participant JogoService
+    participant Missao
+    participant ElementoMapa
+    participant EntidadeEstado
+    participant MapaRenderer
+    JogoService->>Missao: getElementos()
+    Missao-->>JogoService: List de ElementoMapa
+    loop cada elemento
+        JogoService->>EntidadeEstado: new EntidadeEstado(elemento)
+        EntidadeEstado->>ElementoMapa: getSimbolo()
+        ElementoMapa-->>EntidadeEstado: símbolo da subclasse
+        EntidadeEstado->>ElementoMapa: getX() e getY()
+        ElementoMapa-->>EntidadeEstado: coordenadas
+    end
+    Note over JogoService,EntidadeEstado: EstadoJogo reúne as cópias imutáveis
+    Note over MapaRenderer: Console consulta o controller e entrega EstadoJogo ao renderer
+    MapaRenderer->>MapaRenderer: desenhar usando e.simbolo, e.x e e.y

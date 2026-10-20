@@ -1,14 +1,15 @@
 sequenceDiagram
-  participant Usuario
-  participant Pedido
-  participant PedidoItem
-  participant Produto
-
-  Usuario->>Pedido: calcularTotal()
-  loop para cada item
-    Pedido->>PedidoItem: subtotal()
-    PedidoItem->>Produto: getPreco()
-    Produto-->>PedidoItem: preco
-    PedidoItem-->>Pedido: subtotal(valor)
-  end
-  Pedido-->>Usuario: total
+    participant JogoService
+    participant Missao
+    participant Nave
+    participant Passageiro
+    JogoService->>Missao: passagemNaPosicao()
+    Missao-->>JogoService: passageiro
+    JogoService->>Missao: embarcarPassageiroNaPosicao()
+    Missao->>Nave: embarcar(passageiro)
+    Nave-->>Missao: true
+    Missao->>Missao: remover passageiro da superfície
+    Missao-->>JogoService: true
+    JogoService->>Passageiro: getPontuacao()
+    Passageiro-->>JogoService: pontos
+    JogoService->>JogoService: somar pontos e verificar objetivo

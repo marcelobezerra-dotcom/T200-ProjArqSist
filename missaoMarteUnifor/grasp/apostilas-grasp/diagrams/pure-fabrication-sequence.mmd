@@ -1,16 +1,11 @@
 sequenceDiagram
-  participant Usuario
-  participant PedidoController
-  participant PedidoService
-  participant PedidoRepository
-
-  Usuario->>PedidoController: criarPedido(dados)
-  PedidoController->>PedidoService: criarPedido(dados)
-  activate PedidoService
-  PedidoService->>PedidoRepository: salvar(pedido)
-  activate PedidoRepository
-  PedidoRepository-->>PedidoService: ok
-  deactivate PedidoRepository
-  PedidoService-->>PedidoController: confirmado
-  deactivate PedidoService
-  PedidoController-->>Usuario: resposta
+    participant ConsoleJogo
+    participant GameController
+    participant JogoService
+    participant MapaRenderer
+    ConsoleJogo->>GameController: consultarEstado()
+    GameController->>JogoService: consultarEstado()
+    JogoService-->>GameController: EstadoJogo
+    GameController-->>ConsoleJogo: EstadoJogo
+    ConsoleJogo->>MapaRenderer: desenharMapa(estado)
+    MapaRenderer->>MapaRenderer: imprimir grade, legenda e indicadores

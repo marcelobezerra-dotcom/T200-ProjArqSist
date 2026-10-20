@@ -1,75 +1,79 @@
 # Information Expert
 
-Definição: atribuir responsabilidade à classe que possui a informação necessária para cumpri-la.
+Atribua uma responsabilidade ao objeto que possui as informações necessárias
+para executá-la. O objetivo é manter dados e comportamento próximos, preservando
+a coesão e o encapsulamento.
 
-* **Problema:** Qual é o princípio básico para atribuir responsabilidades aos objetos?
-* **Solução:** Atribua a responsabilidade à classe que possui a informação necessária para cumpri-la.
+## Aplicação na Missão Marte
 
-Quando aplicar:
+| Decisão | Especialista | Informação disponível |
+| --- | --- | --- |
+| Um elemento ocupa uma célula? | `ElementoMapa.ocupa` | Suas coordenadas |
+| Dois elementos estão juntos? | `ElementoMapa.mesmaPosicao` | Posições dos elementos |
+| Há capacidade para embarcar? | `Nave.embarcar` | Lista a bordo e capacidade |
+| Existe colisão? | `Missao.verificaColisao` | Nave e perigos |
+| Quem pode embarcar aqui? | `Missao.passagemNaPosicao` | Posição da nave e passageiros |
+| Quanto vale um passageiro? | `Passageiro.getPontuacao` | Comportamento da subclasse |
+| Quais são os parâmetros do nível? | `Dificuldade` | Nível selecionado |
 
-- A classe já contém (ou pode acessar facilmente) os dados necessários.
-- Evitar mover dados entre classes apenas para cumprir uma responsabilidade.
+## Trechos do código atual
 
-Exemplo: em uma missão, o cálculo de quantos passageiros faltam resgatar é responsabilidade de `Missao`, porque ela conhece a lista de passageiros.
+Em [ElementoMapa](../src/graspexercicio10/model/ElementoMapa.java):
 
-Dicas:
+```java
+public final boolean ocupa(int x, int y) {
+    return this.x == x && this.y == y;
+}
 
-- Prefira colocar comportamento onde estão os dados.
-- Use com moderação quando violações de encapsulamento surgirem.
-
-Relação com SOLID
-
-- **SRP (Single Responsibility):** colocar comportamento no `Information Expert` ajuda a manter responsabilidades únicas em classes.
-- **OCP (Open/Closed):** ao manter lógica relacionada aos dados na mesma classe, você facilita estender comportamento sem alterar outras classes.
-
-## Exemplo evolutivo (Missão Marte)
-
-No nosso exemplo, o método `passageirosRestantes()` permanece em `Missao` — um caso clássico de `Information Expert`. `Missao` sabe quais passageiros estão presentes e quais foram resgatados.
-
-Referência de código: `Missao.java` contém a responsabilidade de calcular passageiros restantes.
-
-Diagramas (Information Expert)
-
-1) Diagrama de classes — mostra onde a responsabilidade está localizada:
-
-```mermaid
-classDiagram
-  class Passageiro {
-    <<abstract>>
-    + String tipo
-    + int pontosValor
-    + getPontosValor() int
-  }
-
-  class Missao {
-    - List~Passageiro~ passageiros
-    - List~Passageiro~ resgatados
-    + adicionarPassageiro(p)
-    + resgatar(p)
-    + passageirosRestantes() int
-    + todosResgatados() boolean
-  }
-
-  Missao "1" -- "*" Passageiro : contém
+public final boolean mesmaPosicao(ElementoMapa outro) {
+    return ocupa(outro.getX(), outro.getY());
+}
 ```
 
-2) Diagrama de sequência — fluxo do resgate e cálculo de restantes:
+Em [Nave](../src/graspexercicio10/model/Nave.java):
+
+```java
+public boolean embarcar(Passageiro p) {
+    if (passageiros.size() < capacidade) {
+        passageiros.add(p);
+        return true;
+    }
+    return false;
+}
+```
+
+`Missao.embarcarPassageiroNaPosicao()` localiza o passageiro e pede à nave
+que embarque. A remoção da superfície acontece somente quando a nave aceita.
+O serviço usa `getPontuacao()` para somar os pontos da partida.
+
+## Colaboração no embarque
 
 ```mermaid
 sequenceDiagram
-  participant JogoService
-  participant Missao
-  participant Passageiro
-
-  JogoService->>Missao: resgatar(passageiro)
-  activate Missao
-  Missao->>Passageiro: getPontosValor()
-  Passageiro-->>Missao: pontosValor
-  Missao->>Missao: resgatados.add(passageiro)
-  Missao-->>JogoService: pontosGanhos
-  deactivate Missao
-
-  JogoService->>Missao: passageirosRestantes()
-  Missao-->>JogoService: quantidade
+    participant JogoService
+    participant Missao
+    participant Nave
+    participant Passageiro
+    JogoService->>Missao: passagemNaPosicao()
+    Missao-->>JogoService: passageiro
+    JogoService->>Missao: embarcarPassageiroNaPosicao()
+    Missao->>Nave: embarcar(passageiro)
+    Nave-->>Missao: true
+    Missao->>Missao: remover passageiro da superfície
+    Missao-->>JogoService: true
+    JogoService->>Passageiro: getPontuacao()
+    Passageiro-->>JogoService: pontos
+    JogoService->>JogoService: somar pontos
 ```
+
+Os retornos `null` e `false` produzem os eventos `NENHUM_PASSAGEIRO`
+e `NAVE_CHEIA`. O serviço verifica o objetivo depois de um embarque aceito.
+
+Diagramas editáveis: [classes](diagrams/info-expert-class.mmd) e
+[sequência](diagrams/info-expert-sequence.mmd).
+
+## Exercício
+
+Qual problema surgiria se o renderer removesse passageiros ou alterasse a
+capacidade da nave? Explique usando as informações e responsabilidades de cada objeto.
 

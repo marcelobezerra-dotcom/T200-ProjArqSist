@@ -1,13 +1,15 @@
 classDiagram
-  class Pedido {
-    - id: String
-    - itens: List~PedidoItem~
-  }
-
-  interface PagamentoGateway
-  class FakePagamentoGateway
-  class PedidoService
-
-  PedidoService --> PagamentoGateway : usa
-  PagamentoGateway <|-- FakePagamentoGateway
-  Pedido "1" -- "*" PedidoItem
+    class RankingService {
+        +consultar() List~RankingEntry~
+        +registrarVitoria(estado)
+        +resetar()
+    }
+    class IRankingRepository {
+        <<interface>>
+        +carregar() List~RankingEntry~
+        +salvar(ranking)
+        +resetar()
+    }
+    class RankingRepository
+    RankingService --> IRankingRepository
+    IRankingRepository <|.. RankingRepository

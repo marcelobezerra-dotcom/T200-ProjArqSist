@@ -1,29 +1,21 @@
 package graspexercicio10;
 
 import graspexercicio10.controller.GameController;
+import graspexercicio10.presentation.ConsoleJogo;
 import graspexercicio10.presentation.MapaRenderer;
-import graspexercicio10.repository.IRankingRepository;
 import graspexercicio10.repository.RankingRepository;
 import graspexercicio10.service.JogoService;
-
+import graspexercicio10.service.RankingService;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-/**
- * GRASP Low Coupling: Main apenas monta as dependências (wiring) e entrega ao Controller.
- * Nenhuma lógica de domínio ou de apresentação reside aqui.
- *
- * Compare com o exercício 10 original: Main.java tinha ~550 linhas.
- * Após a migração GRASP: Main.java tem menos de 20 linhas.
- */
+/** Ponto de composição: escolhe as implementações e conecta as dependências. */
 public class Main {
     public static void main(String[] args) {
-        IRankingRepository rankingRepo = new RankingRepository(Paths.get("ranking-grasp.json"));
-        JogoService        jogo        = new JogoService(rankingRepo);
-        MapaRenderer       renderer    = new MapaRenderer();
-        Scanner            scanner     = new Scanner(System.in);
-
-        new GameController(jogo, renderer, rankingRepo, scanner).iniciar();
-        scanner.close();
+        RankingService ranking = new RankingService(new RankingRepository(Paths.get("ranking-grasp.json")));
+        GameController controller = new GameController(new JogoService(), ranking);
+        try (Scanner scanner = new Scanner(System.in, "UTF-8")) {
+            new ConsoleJogo(controller, new MapaRenderer(System.out), scanner).iniciar();
+        }
     }
 }
