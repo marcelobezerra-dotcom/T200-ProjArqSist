@@ -286,9 +286,7 @@ public class MainBuilder {
 ## Exercícios
 
 1. Adicione o campo `boolean temEscudo` à `ConfiguracaoMissao`. Defina o valor padrão como `false`. O que na assinatura dos construtores existentes **não** precisa mudar?
-
 2. Crie `MissaoDiretor.missaoChefe()` para uma missão especial (sem asteroides, apenas 1 inimigo muito poderoso, 10 passageiros). Qual é a vantagem de ter o Diretor?
-
 3. Por que o construtor de `ConfiguracaoMissao` é `private`? O que aconteceria se fosse `public`?
 
 ## Checklist antes de usar
