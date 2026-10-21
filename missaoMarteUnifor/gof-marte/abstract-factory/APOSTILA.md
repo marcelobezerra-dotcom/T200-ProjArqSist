@@ -19,15 +19,7 @@ Use o padrão Abstract Factory quando:
 
 ## Estrutura
 
-```
-AbstractFactory
-  ├── criarProdutoA() → AbstractProductA
-  └── criarProdutoB() → AbstractProductB
-
-ConcreteFactory1 implements AbstractFactory
-  ├── criarProdutoA() → ProductA1
-  └── criarProdutoB() → ProductB1
-```
+![1774979581798](image/APOSTILA/1774979581798.png)
 
 ## Participantes
 

@@ -13,18 +13,7 @@ Use o padrão Builder quando:
 
 ## Estrutura
 
-```
-Director
-  └── constrói usando Builder
-
-Builder (interface)
-  ├── setPartA()
-  ├── setPartB()
-  └── build() → Product
-
-ConcreteBuilder implements Builder
-Product
-```
+![1774807803219](image/APOSTILA/1774807803219.png)
 
 ## Participantes
 
