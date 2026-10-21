@@ -2,7 +2,9 @@
 
 ## Intenção
 
-Factory Method define uma interface para criação de objetos, permitindo que subclasses ou classes especializadas decidam qual tipo concreto instanciar.
+## Intenção
+
+Factory Method define uma interface para criacao de objetos, permitindo que subclasses ou classes especializadas decidam qual tipo concreto instanciar.
 
 ## Também conhecido como
 
@@ -12,25 +14,27 @@ Virtual Constructor
 
 Use o padrão Factory Method quando:
 
-* uma classe não pode antecipar a classe de objetos que deve criar;
+* uma classe não pode antecipar a classe de objetos que deve criam;
 * uma classe quer que suas subclasses especifiquem os objetos que criam;
 * classes delegam responsabilidade para uma dentre várias subclasses auxiliares, e você quer localizar o conhecimento de qual subclasse auxiliar que é a delegada.
 
 ## Estrutura
 
-```
-Creator
-  └── factoryMethod() → Product
-ConcreteCreator
-  └── factoryMethod() → ConcreteProduct
-```
+![1774805569758](image/APOSTILA/1774805569758.png)
 
 ## Participantes
 
-* **Product** — define a interface dos objetos que o método fábrica cria.
-* **ConcreteProduct** — implementa a interface de Product.
-* **Creator** — declara o método fábrica, que retorna um objeto do tipo Product.
-* **ConcreteCreator** — redefine o método fábrica para retornar uma instância de ConcreteProduct.
+* Product (Document)
+  * define a interface de objetos que o método fábrica cria.
+* ConcreteProduct (MyDocument)
+  * implementa a interface de Product.
+* Creator (Application)
+  * Declara o método fábrica, o qual retorna um objeto do tipo Product. Creator pode também definir uma implementação por omissão do método factory que retorna por omissão um objeto ConcreteProduct.
+  * Pode chamar o método factory para criar um objeto Product.
+* ConcreteCreator (MyApplication)
+  * Redefine o método-fábrica  para retornar a uma instância de um ConcreteProduc
+
+Factory Method define uma interface para criação de objetos, permitindo que subclasses ou classes especializadas decidam qual tipo concreto instanciar.
 
 ## Problema
 
@@ -244,9 +248,7 @@ public class MainFactoryMethod {
 ## Exercícios
 
 1. Crie uma `MedicoFactory` que produza um novo tipo de passageiro `Medico` com símbolo `'M'`. Qual arquivo você precisa criar? O que **não** precisa mudar?
-
 2. Refatore `FabricaMissao` para receber uma `List<PassageiroFactory>` no construtor em vez de `FACTORIES` fixo. Como isso melhora a testabilidade?
-
 3. Relacione: qual princípio SOLID este padrão ajuda a satisfazer ao eliminar o `if/else` de instanciação? Qual padrão GRASP o complementa?
 
 ## Checklist antes de usar
