@@ -2,8 +2,6 @@
 
 ## Intenção
 
-## Intenção
-
 Factory Method define uma interface para criacao de objetos, permitindo que subclasses ou classes especializadas decidam qual tipo concreto instanciar.
 
 ## Também conhecido como
