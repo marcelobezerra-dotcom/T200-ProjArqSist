@@ -18,19 +18,13 @@ Use o padrão Adapter quando:
 
 ## Estrutura
 
-**Adaptador de objeto** (composição — preferido):
-```
-Client → Target (interface)
-              ↑ implements
-         Adapter → Adaptee (composição)
-```
+Um adaptador de classe usa a herança múltipla para adaptar uma interface à outra:
 
-**Adaptador de classe** (herança):
-```
-Client → Target (interface)
-              ↑ implements  ↑ extends
-         ClassAdapter → Adaptee
-```
+![1775401320732](image/APOSTILA/1775401320732.png)
+
+Um adaptador de objeto depende da composição de objetos:
+
+![1775401434560](image/APOSTILA/1775401434560.png)
 
 ## Participantes
 
@@ -56,6 +50,7 @@ api.submitScore(nome, pontos);                 // nome de método diferente
 Criar um `LeaderboardAdapter` que implementa `IRankingRepository` (interface do domínio) e adapta as chamadas para `ApiLeaderboardExterna`.
 
 Mostramos as duas formas clássicas:
+
 - **Adaptador de objeto**: usa composição — delega para uma instância da API externa.
 - **Adaptador de classe**: herda da API externa e implementa a interface do domínio.
 
@@ -315,9 +310,7 @@ public class MainAdapter {
 ## Exercícios
 
 1. A `ApiLeaderboardExterna` foi substituída por uma nova versão que usa `getHighScores(n)` em vez de `fetchScores(n)`. Quais classes precisam ser alteradas? O `JogoService` precisa mudar?
-
 2. Quando preferiria o **adaptador de classe** (herança) em vez do **adaptador de objeto** (composição)? Cite um exemplo onde herança seria problemática.
-
 3. Relacione: o Adapter é uma forma de aplicar qual princípio SOLID? Qual padrão GRASP o complementa?
 
 ## Checklist antes de usar
