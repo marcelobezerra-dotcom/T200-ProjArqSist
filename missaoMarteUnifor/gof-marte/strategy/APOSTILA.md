@@ -19,12 +19,7 @@ Use o padrão Strategy quando:
 
 ## Estrutura
 
-```
-Context → Strategy (interface)
-              ├── ConcreteStrategyA
-              ├── ConcreteStrategyB
-              └── ConcreteStrategyC
-```
+![1775414976350](image/APOSTILA/1775414976350.png)
 
 ## Participantes
 
@@ -292,9 +287,7 @@ public class MainStrategy {
 ## Exercícios
 
 1. Crie `FugirDaNave` — uma estratégia que move o inimigo na direção **oposta** à nave. Quantos arquivos existentes precisaram ser alterados?
-
 2. Relacione Strategy com o princípio OCP. Por que adicionar `FugirDaNave` não exige editar `Inimigo` nem `JogoService`?
-
 3. Como você usaria Strategy para implementar diferentes regras de cálculo de pontuação por dificuldade? Esboce as classes.
 
 ## Checklist antes de usar
