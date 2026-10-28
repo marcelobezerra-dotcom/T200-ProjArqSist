@@ -14,12 +14,7 @@ Use o padrão Façade quando:
 
 ## Estrutura
 
-```
-Client → Facade
-              ├── SubsistemaA
-              ├── SubsistemaB
-              └── SubsistemaC
-```
+![1775414085785](image/APOSTILA/1775414085785.png)
 
 ## Participantes
 
