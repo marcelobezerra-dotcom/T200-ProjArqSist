@@ -18,13 +18,7 @@ Use Decorator:
 
 ## Estrutura
 
-```
-Component (interface)
-  ├── ConcreteComponent
-  └── Decorator (abstract) → Component (composição)
-        ├── ConcreteDecoratorA
-        └── ConcreteDecoratorB
-```
+![1775412933043](image/APOSTILA/1775412933043.png)
 
 ## Participantes
 
@@ -318,9 +312,7 @@ public class MainDecorator {
 ## Exercícios
 
 1. Crie `ComBonusDificuldade` que multiplica o total por 1.5 se a missão foi no nível DIFICIL. Como você passa a `Dificuldade` para o decorador? O que **não** precisa mudar nas outras classes?
-
 2. Monte uma combinação que aplique apenas `ComBonusVelocidade` e `ComBonusSobrevivencia`, sem o bônus de resgate. Quantas classes precisaram ser criadas ou alteradas?
-
 3. Compare Decorator com herança: se você tivesse 4 bônus independentes, quantas subclasses seriam necessárias para cobrir todas as combinações com herança? E com Decorator?
 
 ## Checklist antes de usar
