@@ -19,13 +19,7 @@ Use o padrão Command quando você quiser:
 
 ## Estrutura
 
-```
-Client → Command (interface)
-               ├── ConcreteCommandA
-               └── ConcreteCommandB
-Invoker → execute(Command)
-Receiver ← comando.executar() chama receiver
-```
+![1775415643908](image/APOSTILA/1775415643908.png)
 
 ## Participantes
 

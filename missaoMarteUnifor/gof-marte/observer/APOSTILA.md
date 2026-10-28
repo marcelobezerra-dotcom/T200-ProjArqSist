@@ -18,14 +18,7 @@ Use o padrão Observer em qualquer uma das seguintes situações:
 
 ## Estrutura
 
-```
-Subject
-  ├── attach(Observer)
-  ├── detach(Observer)
-  └── notificar()  →  Observer.atualizar()
-                         ├── ConcreteObserverA
-                         └── ConcreteObserverB
-```
+![1775415335537](image/APOSTILA/1775415335537.png)
 
 ## Participantes
 
