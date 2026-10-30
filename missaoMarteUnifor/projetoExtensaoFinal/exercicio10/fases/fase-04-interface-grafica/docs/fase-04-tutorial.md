@@ -120,6 +120,38 @@ Complemento oficial: *Event handling* (<https://libgdx.com/wiki/input/event-hand
 | Entidade que carrega a própria `Texture` | As texturas ficam na camada `gdx` (o domínio não conhece libGDX) |
 | Movimento contínuo com `delta` | Lógica por turnos; `delta` só anima o visual |
 
+### 3.9 Onde obter sprites, sons e ferramentas
+
+As imagens e os sons deste projeto foram gerados por código (`tools/GeradorDeAssets.java`). Para um resultado mais bonito, você pode usar arte pronta ou criar a sua.
+
+**Bancos de arte gratuitos**
+
+| Site | O que oferece | Licença |
+|---|---|---|
+| [Kenney](https://kenney.nl/assets) | Pacotes 2D, 3D, UI e áudio, organizados por série e categoria | Os pacotes abaixo são Creative Commons CC0 (uso livre, sem atribuição) |
+| [itch.io, assets gratuitos](https://itch.io/game-assets/free) | Milhares de pacotes; filtros por [sprites](https://itch.io/game-assets/free/tag-sprites), [efeitos sonoros](https://itch.io/game-assets/free/tag-sound-effects), [música](https://itch.io/game-assets/free/tag-music), [ficção científica](https://itch.io/game-assets/free/tag-science-fiction) e [pixel art](https://itch.io/game-assets/free/tag-pixel-art) | **Varia a cada pacote**: leia a página do autor |
+| [OpenGameArt](https://opengameart.org/) | Sprites, texturas, sons e músicas enviados pela comunidade | **Varia a cada item** (por exemplo CC0, CC-BY e outras) |
+
+Pacotes da Kenney que combinam com o tema deste jogo (todos CC0):
+
+- [Space Shooter Remastered](https://kenney.nl/assets/space-shooter-remastered) e [Space Shooter Extension](https://kenney.nl/assets/space-shooter-extension): naves, meteoros e efeitos de explosão.
+- [Simple Space](https://kenney.nl/assets/simple-space) e [Planets](https://kenney.nl/assets/planets): sprites simples de espaço e planetas, bons para o fundo.
+- [UI Pack - Sci-Fi](https://kenney.nl/assets/ui-pack-sci-fi): botões e painéis para o HUD.
+- [Sci-fi Sounds](https://kenney.nl/assets/sci-fi-sounds) e [Digital Audio](https://kenney.nl/assets/digital-audio): efeitos sonoros.
+
+**Ferramentas para criar sprites**
+
+- [Piskel](https://www.piskelapp.com/): editor gratuito de pixel art e animações que roda no navegador, com versões offline para Windows, macOS e Linux. Exporta *sprite sheet* em PNG, que é exatamente o formato de faixa horizontal usado aqui (código-fonte aberto em <https://github.com/piskelapp/piskel>).
+
+**Cuidados ao usar arte de terceiros**
+
+1. **Licença.** Confira a licença de cada pacote. CC0 permite tudo; licenças com atribuição (como CC-BY) exigem citar o autor. Registre a origem e a licença dos arquivos que usar (por exemplo, em um `CREDITOS.md`).
+2. **Nome e dimensões.** O catálogo `Imagem` define o nome do arquivo, o tamanho de cada quadro e a quantidade de quadros. Ao substituir um arquivo, mantenha o nome e as dimensões, ou altere o enum para refletir a nova imagem. O `ArquivosDeAssetsTest` acusa qualquer divergência.
+3. **Proporção.** Cada célula do mapa é quadrada (48 x 48). Sprites que não são quadrados serão esticados; redimensione-os antes ou ajuste o desenho.
+4. **Pixel art.** O `Recursos` usa filtro linear, que suaviza a imagem. Para pixel art pequena (por exemplo 16 x 16 ampliada), troque para `Texture.TextureFilter.Nearest` em `Recursos.carregar()` e as bordas ficam nítidas.
+5. **Animações.** Para animar, junte os quadros lado a lado em uma única imagem (uma faixa horizontal) e informe a quantidade em `Imagem`.
+6. **Sons.** O backend desktop toca WAV, OGG e MP3. Se trocar a extensão, atualize o nome em `Som`.
+
 ## 4. Problemas encontrados no código original
 
 Pontos da Fase 3 que atrapalhariam a nova apresentação:

@@ -35,10 +35,11 @@ cd exercicio10\fases\fase-04-interface-grafica
 
 Opções de execução (propriedades do Java, repassadas pelo Gradle):
 
-| Opção | Efeito |
-|---|---|
-| `-Dmissaomarte.semente=4` | Repete exatamente o mesmo cenário e os mesmos movimentos dos inimigos |
-| `-Dmissaomarte.semaudio=true` | Desativa o áudio (para máquinas sem dispositivo de som) |
+
+| Opção                       | Efeito                                                                 |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| `-Dmissaomarte.semente=4`     | Repete exatamente o mesmo cenário e os mesmos movimentos dos inimigos |
+| `-Dmissaomarte.semaudio=true` | Desativa o áudio (para máquinas sem dispositivo de som)              |
 
 Exemplo: `.\gradlew.bat :lwjgl3:run -Dmissaomarte.semente=4 --console=plain`.
 
@@ -46,13 +47,14 @@ O `ranking.json` é gravado nesta pasta.
 
 ## Controles
 
-| Tela | Teclas |
-|---|---|
-| Menu | `1` Jogar, `2` Ver ranking, `3` Limpar ranking, `4` Sair |
-| Nova partida | digitar o nome, `Backspace` apaga, setas esquerda/direita mudam a dificuldade, `Enter` decola, `Esc` volta |
-| Partida | `W/A/S/D` ou setas movem (segure a tecla para repetir), `E` embarca, `Q` ou `Esc` aborta |
-| Fim de partida e ranking | `Enter` continua |
-| Qualquer tela, exceto Nova partida | `M` liga ou desliga o som |
+
+| Tela                               | Teclas                                                                                                     |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| Menu                               | `1` Jogar, `2` Ver ranking, `3` Limpar ranking, `4` Sair                                                   |
+| Nova partida                       | digitar o nome, `Backspace` apaga, setas esquerda/direita mudam a dificuldade, `Enter` decola, `Esc` volta |
+| Partida                            | `W/A/S/D` ou setas movem (segure a tecla para repetir), `E` embarca, `Q` ou `Esc` aborta                   |
+| Fim de partida e ranking           | `Enter` continua                                                                                           |
+| Qualquer tela, exceto Nova partida | `M` liga ou desliga o som                                                                                  |
 
 ## Imagens e sons
 
@@ -67,4 +69,5 @@ Para usar arte ou sons próprios, substitua os arquivos mantendo o nome e as dim
 ## Documentação
 
 - [Planejamento](docs/fase-04-planejamento.md)
+- [Enunciado para o aluno](docs/fase-04-enunciado.md)
 - [Tutorial](docs/fase-04-tutorial.md)
