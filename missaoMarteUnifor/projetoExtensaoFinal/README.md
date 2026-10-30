@@ -9,7 +9,8 @@ Projeto de ensino de evolução arquitetural de software: o jogo do Exercício 1
 | Original | `exercicio10/src` | Preservado, sem alterações |
 | 1 - Refatoração arquitetural | `exercicio10/fases/fase-01-refatoracao` | Concluída |
 | 2 - Migração para Gradle | `exercicio10/fases/fase-02-gradle` | Concluída |
-| 3 a 7 | `fase-03-libgdx`, `fase-04-interface-grafica`, `fase-05-servidor-ranking`, `fase-06-android`, `fase-07-evolucao-livre` | Não iniciadas |
+| 3 - Introdução ao libGDX | `exercicio10/fases/fase-03-libgdx` | Concluída |
+| 4 a 7 | `fase-04-interface-grafica`, `fase-05-servidor-ranking`, `fase-06-android`, `fase-07-evolucao-livre` | Não iniciadas |
 
 Cada fase parte da versão concluída da fase anterior e tem seu próprio tutorial em `docs/fase-XX-tutorial.md`.
 
@@ -30,10 +31,19 @@ cd exercicio10\fases\fase-02-gradle
 .\gradlew.bat run --console=plain
 ```
 
+### Fase 3 (libGDX, janela desktop)
+
+```powershell
+cd exercicio10\fases\fase-03-libgdx
+.\gradlew.bat build
+.\gradlew.bat :lwjgl3:run --console=plain
+```
+
 ## Requisitos
 
 - JDK 17 no PATH e em `JAVA_HOME`.
-- Gradle instalado é opcional: a Fase 2 usa o Gradle Wrapper.
+- Gradle instalado é opcional: as Fases 2 e 3 usam o Gradle Wrapper.
+- Fase 3: placa de vídeo com OpenGL 2.0 ou superior.
 
 ## Material de apoio
 
@@ -41,3 +51,4 @@ cd exercicio10\fases\fase-02-gradle
 - [Prompt mestre](PROMPT_MESTRE.md): regras de execução das fases.
 - Tutorial da Fase 1: [docs/fase-01-tutorial.md](exercicio10/fases/fase-01-refatoracao/docs/fase-01-tutorial.md)
 - Tutorial da Fase 2: [docs/fase-02-tutorial.md](exercicio10/fases/fase-02-gradle/docs/fase-02-tutorial.md)
+- Tutorial da Fase 3: [docs/fase-03-tutorial.md](exercicio10/fases/fase-03-libgdx/docs/fase-03-tutorial.md)

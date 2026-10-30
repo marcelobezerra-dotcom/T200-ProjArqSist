@@ -1,0 +1,5 @@
+rootProject.name = 'missao-marte'
+
+// core: jogo independente de plataforma. lwjgl3: janela desktop.
+include 'core'
+include 'lwjgl3'

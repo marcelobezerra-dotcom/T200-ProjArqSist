@@ -1,0 +1,23 @@
+apply plugin: 'application'
+
+dependencies {
+    implementation project(':core')
+
+    // Backend desktop: janela e OpenGL via LWJGL3, mais as bibliotecas nativas.
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+}
+
+application {
+    mainClass = 'br.edu.unifor.missaomarte.lwjgl3.Lwjgl3Launcher'
+}
+
+run {
+    // ranking.json e gravado na raiz da fase, nao na pasta do modulo.
+    workingDir = rootProject.projectDir
+
+    // O macOS exige que o loop de eventos rode na primeira thread.
+    if (System.getProperty('os.name').toLowerCase().contains('mac')) {
+        jvmArgs '-XstartOnFirstThread'
+    }
+}
