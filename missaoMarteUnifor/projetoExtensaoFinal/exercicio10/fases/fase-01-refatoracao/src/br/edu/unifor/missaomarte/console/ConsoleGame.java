@@ -7,7 +7,6 @@ import br.edu.unifor.missaomarte.application.MissaoFactory;
 import br.edu.unifor.missaomarte.application.ResultadoTurno;
 import br.edu.unifor.missaomarte.domain.Dificuldade;
 import br.edu.unifor.missaomarte.domain.Missao;
-import br.edu.unifor.missaomarte.infrastructure.ranking.FileRankingRepository;
 import br.edu.unifor.missaomarte.infrastructure.ranking.RankingEntry;
 import br.edu.unifor.missaomarte.infrastructure.ranking.RankingRepository;
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public class ConsoleGame {
         GameSession session = new GameSession(nome, dificuldade, missao, pontuacaoInicial, min, max, random);
 
         System.out.println();
-        System.out.println("Legenda: N=nave, B=base, P/E/A=passageiros, *=asteroide, X=inimigo");
+        System.out.println(renderer.legenda(missao));
         System.out.println("Comandos: W/A/S/D para mover, E para embarcar, Q para sair");
         System.out.println("Pressione Enter para decolar!");
         if (!scanner.hasNextLine()) {

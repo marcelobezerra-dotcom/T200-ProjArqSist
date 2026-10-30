@@ -19,6 +19,8 @@ public class GameSession {
 
     private int pontuacao;
     private int movimentos;
+    private int resgatados;
+    private final int totalPassageiros;
     private EstadoPartida estado;
 
     public GameSession(String piloto, Dificuldade dificuldade, Missao missao, int pontuacaoInicial, int min, int max, Random random) {
@@ -30,6 +32,8 @@ public class GameSession {
         this.max = max;
         this.random = random;
         this.inicioMillis = System.currentTimeMillis();
+        this.totalPassageiros = missao.getPassageiros().size();
+        this.resgatados = 0;
         this.estado = EstadoPartida.EM_ANDAMENTO;
     }
 
@@ -53,6 +57,7 @@ public class GameSession {
             moverNave(acao);
             pontuacao -= 1;
             movimentos += 1;
+            processarBase(mensagens);
         }
 
         missao.moverInimigosAleatoriamente(min, max, random);
@@ -80,6 +85,15 @@ public class GameSession {
             missao.removerPassageiro(passageiro);
             pontuacao += passageiro.getPontuacao();
             mensagens.add("Passageiro " + passageiro.getNome() + " embarcou! +" + passageiro.getPontuacao() + " pontos.");
+        }
+    }
+
+    private void processarBase(List<String> mensagens) {
+        Nave nave = missao.getNave();
+        if (nave.getPosicao().equals(missao.getBase().getPosicao()) && !nave.getPassageiros().isEmpty()) {
+            int desembarcados = nave.desembarcarTodos();
+            resgatados += desembarcados;
+            mensagens.add("Base alcancada. " + desembarcados + " passageiro(s) desembarcado(s).");
         }
     }
 
@@ -127,15 +141,11 @@ public class GameSession {
     }
 
     private void verificarVitoria(List<String> mensagens) {
-        if (!missao.todosPassageirosForamResgatados() || estado != EstadoPartida.EM_ANDAMENTO) {
+        if (resgatados < totalPassageiros || estado != EstadoPartida.EM_ANDAMENTO) {
             return;
         }
 
-        if (missao.getNave().getX() == 0 && missao.getNave().getY() == 0) {
-            estado = EstadoPartida.VITORIA;
-        } else {
-            mensagens.add("Todos resgatados! Retorne para a base (0,0) para concluir.");
-        }
+        estado = EstadoPartida.VITORIA;
     }
 
     public String getPiloto() {
@@ -156,6 +166,14 @@ public class GameSession {
 
     public int getMovimentos() {
         return movimentos;
+    }
+
+    public int getResgatados() {
+        return resgatados;
+    }
+
+    public int getTotalPassageiros() {
+        return totalPassageiros;
     }
 
     public EstadoPartida getEstado() {

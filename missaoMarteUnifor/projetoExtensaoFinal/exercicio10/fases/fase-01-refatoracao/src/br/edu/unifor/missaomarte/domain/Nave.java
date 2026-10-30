@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Nave {
+public class Nave implements ObjetoRenderizavel {
     private Posicao posicao;
     private int vidas;
     private final int capacidade;
@@ -25,8 +25,14 @@ public class Nave {
         return posicao.getY();
     }
 
+    @Override
     public Posicao getPosicao() {
         return posicao;
+    }
+
+    @Override
+    public char getSimbolo() {
+        return 'N';
     }
 
     public int getVidas() {
@@ -50,6 +56,12 @@ public class Nave {
             return false;
         }
         return passageiros.add(passageiro);
+    }
+
+    public int desembarcarTodos() {
+        int quantidade = passageiros.size();
+        passageiros.clear();
+        return quantidade;
     }
 
     public void perderVida() {

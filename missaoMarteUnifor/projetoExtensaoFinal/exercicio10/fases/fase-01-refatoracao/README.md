@@ -16,8 +16,20 @@ $files = Get-ChildItem -Recurse src -Filter *.java | ForEach-Object FullName
 javac -encoding UTF-8 -d out $files
 ```
 
+Ou use comando unico:
+
+```powershell
+.\build.ps1
+```
+
 ## Executar
 
 ```powershell
 java -cp out br.edu.unifor.missaomarte.Main
+```
+
+Para compilar e executar em um unico comando:
+
+```powershell
+.\build.ps1 -Run
 ```

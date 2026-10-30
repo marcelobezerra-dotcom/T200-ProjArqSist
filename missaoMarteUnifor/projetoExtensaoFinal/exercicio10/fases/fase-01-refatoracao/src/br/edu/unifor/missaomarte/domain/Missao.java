@@ -6,16 +6,22 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Missao {
+    private final Base base;
     private final Nave nave;
     private final List<Passageiro> passageiros;
     private final List<Asteroide> asteroides;
     private final List<Inimigo> inimigos;
 
     public Missao(Nave nave) {
+        this.base = new Base(0, 0);
         this.nave = nave;
         this.passageiros = new ArrayList<>();
         this.asteroides = new ArrayList<>();
         this.inimigos = new ArrayList<>();
+    }
+
+    public Base getBase() {
+        return base;
     }
 
     public Nave getNave() {

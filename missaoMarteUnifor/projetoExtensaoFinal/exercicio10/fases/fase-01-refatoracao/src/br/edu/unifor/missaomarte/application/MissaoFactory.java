@@ -9,25 +9,35 @@ import br.edu.unifor.missaomarte.domain.Missao;
 import br.edu.unifor.missaomarte.domain.Nave;
 import br.edu.unifor.missaomarte.domain.Passageiro;
 import br.edu.unifor.missaomarte.domain.Professor;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class MissaoFactory {
     public Missao criarMissao(Dificuldade dificuldade, int min, int max, Random random) {
         ConfiguracaoDificuldade cfg = RegrasDificuldade.obter(dificuldade);
-        Nave nave = new Nave(0, 0, 3, 3);
+        Nave nave = new Nave(0, 0, 3, cfg.getQuantidadePassageiros());
         Missao missao = new Missao(nave);
+        Set<String> ocupadas = new HashSet<>();
+        ocupadas.add(chave(0, 0));
 
         for (int i = 0; i < cfg.getQuantidadePassageiros(); i++) {
-            Passageiro passageiro = criarPassageiroAleatorio(i, min, max, random);
+            int[] pos = novaPosicaoLivre(min, max, random, ocupadas);
+            Passageiro passageiro = criarPassageiroAleatorio(i, pos[0], pos[1], random);
             missao.adicionarPassageiro(passageiro);
+            ocupadas.add(chave(pos[0], pos[1]));
         }
 
         for (int i = 0; i < cfg.getQuantidadeAsteroides(); i++) {
-            missao.adicionarAsteroide(new Asteroide(random.nextInt(max - min + 1) + min, random.nextInt(max - min + 1) + min));
+            int[] pos = novaPosicaoLivre(min, max, random, ocupadas);
+            missao.adicionarAsteroide(new Asteroide(pos[0], pos[1]));
+            ocupadas.add(chave(pos[0], pos[1]));
         }
 
         for (int i = 0; i < cfg.getQuantidadeInimigos(); i++) {
-            missao.adicionarInimigo(new Inimigo(random.nextInt(max - min + 1) + min, random.nextInt(max - min + 1) + min));
+            int[] pos = novaPosicaoLivre(min, max, random, ocupadas);
+            missao.adicionarInimigo(new Inimigo(pos[0], pos[1]));
+            ocupadas.add(chave(pos[0], pos[1]));
         }
 
         return missao;
@@ -37,10 +47,8 @@ public class MissaoFactory {
         return RegrasDificuldade.obter(dificuldade).getPontuacaoInicial();
     }
 
-    private Passageiro criarPassageiroAleatorio(int indice, int min, int max, Random random) {
+    private Passageiro criarPassageiroAleatorio(int indice, int x, int y, Random random) {
         int tipo = random.nextInt(3);
-        int x = random.nextInt(max - min + 1) + min;
-        int y = random.nextInt(max - min + 1) + min;
         String sufixo = String.valueOf(indice + 1);
 
         if (tipo == 0) {
@@ -50,5 +58,22 @@ public class MissaoFactory {
             return new Engenheiro("Eng. " + sufixo, x, y);
         }
         return new Astronauta("Astro " + sufixo, x, y);
+    }
+
+    private int[] novaPosicaoLivre(int min, int max, Random random, Set<String> ocupadas) {
+        int tentativasMaximas = (max - min + 1) * (max - min + 1) * 2;
+        for (int tentativa = 0; tentativa < tentativasMaximas; tentativa++) {
+            int x = random.nextInt(max - min + 1) + min;
+            int y = random.nextInt(max - min + 1) + min;
+            String key = chave(x, y);
+            if (!ocupadas.contains(key)) {
+                return new int[]{x, y};
+            }
+        }
+        throw new IllegalStateException("Nao foi possivel encontrar posicao livre no mapa.");
+    }
+
+    private String chave(int x, int y) {
+        return x + "," + y;
     }
 }

@@ -1,6 +1,6 @@
 package br.edu.unifor.missaomarte.domain;
 
-public class Passageiro {
+public class Passageiro implements ObjetoRenderizavel {
     private final String nome;
     private Posicao posicao;
 
@@ -21,6 +21,7 @@ public class Passageiro {
         return posicao.getY();
     }
 
+    @Override
     public Posicao getPosicao() {
         return posicao;
     }
@@ -33,6 +34,7 @@ public class Passageiro {
         return 10;
     }
 
+    @Override
     public char getSimbolo() {
         return 'P';
     }

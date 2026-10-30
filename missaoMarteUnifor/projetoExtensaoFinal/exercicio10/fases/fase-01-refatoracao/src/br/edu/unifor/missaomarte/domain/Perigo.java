@@ -1,9 +1,6 @@
 package br.edu.unifor.missaomarte.domain;
 
-public interface Perigo {
-    Posicao getPosicao();
-
-    char getSimbolo();
+public interface Perigo extends ObjetoRenderizavel {
 
     default boolean colideCom(Nave nave) {
         return getPosicao().equals(nave.getPosicao());
