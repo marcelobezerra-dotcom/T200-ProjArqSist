@@ -48,6 +48,40 @@ Durante a evolução, ensinar:
 - Desenvolvimento multiplataforma
 - Evolução e manutenção de software
 
+## REFERENCIAL TEÓRICO DAS FASES 2, 3 E 4
+
+Arquivo: `tutorial-api-gradle-libgdx.md`, na raiz de
+`projetoExtensaoFinal/` (mesma pasta deste prompt).
+
+Use esse arquivo como base teórica das Fases 2, 3 e 4.
+Ele NÃO é a especificação do projeto nem um código a ser copiado.
+
+O arquivo cobre API, Gradle e LibGDX (incluindo sprites, sons, HUD e
+colisões). Ele não cobre servidor, JPA, autenticação nem Android;
+portanto não deve ser usado como base das Fases 5, 6 e 7.
+
+### Onde buscar o conteúdo em cada fase
+
+Cite as seções pelo título, pois a numeração interna do arquivo
+não é consistente (por exemplo, a parte do ambiente de desenvolvimento
+não tem o título "Parte 4" e há subseções numeradas "3.x" repetidas).
+
+| Fase | Partes e seções do referencial |
+|---|---|
+| 2 — Gradle | Parte 1 (O que é uma API?); Parte 2 (história, versões, build tool, Gradle vs Maven, tasks, DAG, daemon, cache, DSL Groovy vs Kotlin, estrutura do `build.gradle`, dependências e escopos, Wrapper, ciclo de vida do build, comandos essenciais; "Projeto Multi-módulo" apenas como prévia da Fase 3); seções de ambiente (JDK, VS Code, extensões, abrir e executar o projeto); Parte 9 (executar, painel Gradle e depurar). |
+| 3 — LibGDX | Parte 3 (história, características, módulos, principais classes, versões, "Por que a libGDX usa Gradle?", alternativas, ecossistema); "Projeto Multi-módulo" da Parte 2 e Parte 8 (`settings.gradle`, `build.gradle` raiz, `core` e `lwjgl3`); Parte 5 (Game Loop, Screen, diagrama de classes); Parte 6 (classe principal, `GameScreen` e `Lwjgl3Launcher`, somente como exemplo de estrutura). |
+| 4 — Interface gráfica | Parte 3 (Sprites e Texturas, Sons e Áudio, HUD, Detecção de Colisões e efeito visual de explosão); Parte 6 (`Nave`, `Asteroide` e `GameScreen`, como exemplos); Parte 7 (alternativa sem imagens com `ShapeRenderer`); Parte 9 (controles e execução). |
+
+### Regras de uso
+
+1. O projeto existente prevalece. Não substitua as classes do Exercício 10 (por exemplo `Nave` e `Asteroide`) pelas classes de exemplo do tutorial; adapte as ideias ao código da fase anterior.
+2. Os exemplos do tutorial usam o pacote `br.unifor.missaomarte` e um jogo simplificado. O projeto usa `br.edu.unifor.missaomarte` e a arquitetura da Fase 1. Adapte, não copie.
+3. As versões do tutorial (JDK 17, Gradle 8.7, libGDX 1.12.1, DSL Groovy) são referência. Antes de fixar versões, verifique o ambiente e as versões disponíveis; se divergirem do tutorial, registre a divergência no plano da fase e aguarde aprovação.
+4. Se um tópico exigido pela fase não estiver no referencial (por exemplo, animação de sprites por quadros), complemente com a documentação oficial e indique a fonte no tutorial da fase.
+5. Se o referencial conflitar com este prompt, este prompt prevalece e o conflito deve ser informado no plano da fase.
+6. O referencial é somente leitura: nunca o altere nem o copie para as pastas das fases.
+7. Usar o referencial não dispensa a aprovação explícita do plano de cada fase.
+
 ## PLANO DE EVOLUÇÃO
 
 FASE 1 — REFATORAÇÃO ARQUITETURAL
@@ -76,6 +110,9 @@ Explicar:
 
 Preservar o funcionamento do jogo.
 
+Referencial teórico: `tutorial-api-gradle-libgdx.md`
+(ver REFERENCIAL TEÓRICO DAS FASES 2, 3 E 4).
+
 FASE 3 — INTRODUÇÃO AO LIBGDX
 
 Apresentar o framework LibGDX.
@@ -94,6 +131,9 @@ Explicar:
 Adaptar gradualmente o jogo para a estrutura
 do LibGDX, reutilizando sua lógica existente.
 
+Referencial teórico: `tutorial-api-gradle-libgdx.md`
+(ver REFERENCIAL TEÓRICO DAS FASES 2, 3 E 4).
+
 FASE 4 — INTERFACE GRÁFICA
 
 Transformar a apresentação do jogo utilizando:
@@ -108,6 +148,9 @@ Transformar a apresentação do jogo utilizando:
 - HUD
 
 Preservar as regras de negócio.
+
+Referencial teórico: `tutorial-api-gradle-libgdx.md`
+(ver REFERENCIAL TEÓRICO DAS FASES 2, 3 E 4).
 
 FASE 5 — SERVIDOR E RANKING GLOBAL
 
@@ -201,7 +244,7 @@ Regras para essas pastas:
 5. Preserve o comportamento atual, salvo
    quando a fase exigir mudanças.
 6. Execute somente a fase solicitada.
-7. Planeje cada fase separadamente. Antes de iniciar uma fase, apresente o diagnóstico do estado de origem, o escopo, as pastas e classes afetadas, as alterações propostas, os padrões que serão usados e por quê, os riscos para o comportamento existente, os critérios de conclusão e a estratégia de validação.
+7. Planeje cada fase separadamente. Antes de iniciar uma fase, apresente o diagnóstico do estado de origem, o escopo, as pastas e classes afetadas, as alterações propostas, os padrões que serão usados e por quê, os riscos para o comportamento existente, os critérios de conclusão e a estratégia de validação. Nas Fases 2, 3 e 4, informe também quais seções do referencial teórico serão usadas, as versões de ferramentas propostas e onde o referencial diverge do código existente.
 8. Aguarde minha aprovação explícita para aquela fase. Até receber essa aprovação, não crie, copie, mova, renomeie ou edite arquivos ou pastas. A aprovação de uma fase não autoriza o início de nenhuma fase posterior.
 9. Depois da aprovação, implemente somente o plano aprovado e somente dentro da pasta da fase solicitada. Preserve intactos o projeto original e as pastas das fases anteriores. Se surgir a necessidade de ampliar o escopo ou mudar o plano, pare e peça nova aprovação.
 10. Após implementar a fase aprovada, compile e execute os testes disponíveis naquela pasta.
@@ -227,6 +270,13 @@ O tutorial deverá conter:
 10. Como executar e testar
 11. Exercícios para os alunos
 12. Conclusão
+
+Nas Fases 2, 3 e 4, a seção "Conceitos teóricos" deve resumir
+os conceitos e citar as seções do `tutorial-api-gradle-libgdx.md`
+com link relativo (a partir de `docs/`:
+`../../../../tutorial-api-gradle-libgdx.md`), sem reproduzir
+trechos longos. O foco do tutorial da fase continua sendo a
+transformação feita no projeto.
 
 Sempre que pertinente, inclua diagramas
 Mermaid e exemplos reais do projeto.

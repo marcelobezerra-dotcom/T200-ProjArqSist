@@ -1,11 +1,11 @@
-# Fase 01 - Refatoracao Arquitetural (Console)
+# Fase 01 - Refatoração Arquitetural (Console)
 
 Esta fase preserva o jogo em modo texto e separa responsabilidades em camadas:
 
-- `domain`: regras e entidades de negocio.
-- `application`: orquestracao da partida e casos de uso.
-- `console`: entrada e saida textual.
-- `infrastructure`: persistencia do ranking em arquivo.
+- `domain`: regras e entidades de negócio.
+- `application`: orquestração da partida e casos de uso.
+- `console`: entrada e saída textual.
+- `infrastructure`: persistência do ranking em arquivo.
 
 ## Compilar
 
@@ -16,7 +16,7 @@ $files = Get-ChildItem -Recurse src -Filter *.java | ForEach-Object FullName
 javac -encoding UTF-8 -d out $files
 ```
 
-Ou use comando unico:
+Ou use comando único:
 
 ```powershell
 .\build.ps1
@@ -28,7 +28,7 @@ Ou use comando unico:
 java -cp out br.edu.unifor.missaomarte.Main
 ```
 
-Para compilar e executar em um unico comando:
+Para compilar e executar em um único comando:
 
 ```powershell
 .\build.ps1 -Run

@@ -1,0 +1,39 @@
+plugins {
+    // Adiciona as tasks run, installDist e distZip e define a classe principal.
+    id 'application'
+}
+
+group = 'br.edu.unifor'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+application {
+    mainClass = 'br.edu.unifor.missaomarte.Main'
+}
+
+// Sem isto o Scanner(System.in) do jogo nao recebe o teclado ao usar "gradlew run".
+run {
+    standardInput = System.in
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    // Exigido pelo Gradle 9; no 8.7 e opcional, mas inofensivo.
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
