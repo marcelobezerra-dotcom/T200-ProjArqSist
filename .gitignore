@@ -4,3 +4,6 @@
 
 # Ignore MaterialApoio folders anywhere
 MaterialApoio/
+
+# Ignore the generated Missao Marte ranking
+/missaoMarteUnifor/projetoExtensaoFinal/exercicio10/ranking.json
