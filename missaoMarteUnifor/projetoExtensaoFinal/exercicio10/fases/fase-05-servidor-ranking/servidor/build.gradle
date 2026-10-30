@@ -24,6 +24,9 @@ dependencies {
     // Traz o Nimbus JOSE, usado para assinar (JwtEncoder) e validar (JwtDecoder) os tokens.
     implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-resource-server'
 
+    // Swagger UI em /swagger-ui.html e OpenAPI em /v3/api-docs (springdoc 3.1.x e 3.2.x servem o Boot 4.1).
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.0'
+
     runtimeOnly 'com.h2database:h2'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'

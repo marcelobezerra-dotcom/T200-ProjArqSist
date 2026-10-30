@@ -363,7 +363,7 @@ cd exercicio10\fases\fase-05-servidor-ranking\cliente
 .\gradlew.bat :lwjgl3:run --console=plain
 ```
 
-Para testar a API sem o jogo, use `servidor/requests.http` (extensão REST Client) ou o PowerShell:
+Para testar a API sem o jogo, use o **Swagger UI** (<http://localhost:8080/swagger-ui.html>, com o servidor no ar), o arquivo `servidor/requests.http` (extensão REST Client) ou o PowerShell:
 
 ```powershell
 Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/usuarios -ContentType application/json `
@@ -372,13 +372,14 @@ Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/usuarios -ContentT
 
 ### 10.2 Testes automatizados
 
-**Servidor (31):** `@SpringBootTest` com `MockMvc` e H2 em memória; cada teste é desfeito ao final (`@Transactional`).
+**Servidor (34):** `@SpringBootTest` com `MockMvc` e H2 em memória; cada teste é desfeito ao final (`@Transactional`).
 
 | Classe | Testes | Cobre |
 | --- | --- | --- |
 | `UsuarioApiTest` | 8 | Cadastro, resposta sem senha, hash BCrypt no banco, sal diferente, nome duplicado (outra caixa), nome e senha inválidos, limite de 72 bytes |
 | `AuthApiTest` | 9 | Login, mesma resposta para senha errada e usuário inexistente, sem token, token inválido, token expirado, token válido |
 | `PartidaApiTest` | 8 | Registro, usuário do corpo ignorado, enums e faixas inválidos, histórico só do dono, ordem e paginação |
+| `DocumentacaoApiTest` | 3 | Descrição OpenAPI pública com as rotas e o esquema `bearer`, página do Swagger UI pública, API continua protegida |
 | `RankingApiTest` | 6 | Uma linha por jogador, derrotas e pontuação não positiva fora, empates, limite de 10, sem dados sensíveis |
 
 **Cliente (97, 31 novos):** `JsonDoServidorTest` (13), `FormularioDeLoginTest` (10), `DadosDoServidorTest` (6) e `HistoricoScreenTest` (2), além dos 66 da Fase 4.

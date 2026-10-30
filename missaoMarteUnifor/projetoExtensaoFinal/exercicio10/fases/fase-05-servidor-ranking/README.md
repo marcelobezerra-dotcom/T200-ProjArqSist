@@ -25,6 +25,7 @@ fase-05-servidor-ranking/
         seguranca/                         BCrypt, token JWT, regras de acesso
         erro/                              respostas de erro (ProblemDetail)
     requests.http               chamadas de exemplo (extensão REST Client do VS Code)
+    (Swagger UI embutido: http://localhost:8080/swagger-ui.html)
   docs/                         planejamento e tutorial
 ```
 
@@ -44,7 +45,7 @@ Abra dois terminais.
 
 ```powershell
 cd exercicio10\fases\fase-05-servidor-ranking\servidor
-.\gradlew.bat test                      # 31 testes
+.\gradlew.bat test                      # 34 testes
 .\gradlew.bat bootRun --console=plain   # sobe a API
 ```
 
@@ -60,38 +61,52 @@ No menu, `4` abre a tela de entrada. Com o servidor desligado o jogo continua em
 
 ### Opções
 
-| Onde | Opção | Efeito |
-| --- | --- | --- |
-| Cliente | `-Dmissaomarte.servidor=http://localhost:8080` | Endereço do servidor |
-| Cliente | `-Dmissaomarte.semente=4` | Cenário reproduzível (como na Fase 4) |
-| Cliente | `-Dmissaomarte.semaudio=true` | Sem áudio |
-| Servidor | variável `MISSAOMARTE_JWT_SEGREDO` | Segredo do token (mínimo 32 bytes). Sem ela, um segredo aleatório é gerado a cada início e os tokens deixam de valer ao reiniciar |
-| Servidor | variável `MISSAOMARTE_DADOS` | Pasta do banco H2 (padrão `servidor\dados`, ignorada pelo git) |
+
+| Onde     | Opção                                        | Efeito                                                                                                                                |
+| ---------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Cliente  | `-Dmissaomarte.servidor=http://localhost:8080` | Endereço do servidor                                                                                                                 |
+| Cliente  | `-Dmissaomarte.semente=4`                      | Cenário reproduzível (como na Fase 4)                                                                                               |
+| Cliente  | `-Dmissaomarte.semaudio=true`                  | Sem áudio                                                                                                                            |
+| Servidor | variável `MISSAOMARTE_JWT_SEGREDO`            | Segredo do token (mínimo 32 bytes). Sem ela, um segredo aleatório é gerado a cada início e os tokens deixam de valer ao reiniciar |
+| Servidor | variável `MISSAOMARTE_DADOS`                  | Pasta do banco H2 (padrão `servidor\dados`, ignorada pelo git)                                                                       |
 
 Exemplo: `.\gradlew.bat :lwjgl3:run -Dmissaomarte.servidor=http://localhost:8080 --console=plain`.
 
 ## Controles
 
-| Tela | Teclas |
-| --- | --- |
-| Menu (convidado) | `1` Jogar, `2` Ranking local, `3` Limpar ranking local, `4` Entrar ou criar conta, `5` Sair |
-| Menu (logado) | `1` Jogar, `2` Ranking global, `3` Meu histórico, `4` Sair da conta, `5` Sair |
-| Entrar / Criar conta | digitar, `Tab` ou setas trocam de campo, `F2` alterna entrar e criar conta, `Enter` confirma, `Esc` volta |
-| Nova partida | convidado digita o nome; logado usa o nome da conta. Setas esquerda/direita mudam a dificuldade, `Enter` decola |
-| Partida | como na Fase 4. Ao terminar logado: `R` tenta enviar de novo se o envio falhar, `Enter` continua |
-| Ranking e histórico | `R` recarrega após erro, `Enter` ou `Esc` voltam |
+
+| Tela                 | Teclas                                                                                                          |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Menu (convidado)     | `1` Jogar, `2` Ranking local, `3` Limpar ranking local, `4` Entrar ou criar conta, `5` Sair                     |
+| Menu (logado)        | `1` Jogar, `2` Ranking global, `3` Meu histórico, `4` Sair da conta, `5` Sair                                  |
+| Entrar / Criar conta | digitar, `Tab` ou setas trocam de campo, `F2` alterna entrar e criar conta, `Enter` confirma, `Esc` volta       |
+| Nova partida         | convidado digita o nome; logado usa o nome da conta. Setas esquerda/direita mudam a dificuldade, `Enter` decola |
+| Partida              | como na Fase 4. Ao terminar logado: `R` tenta enviar de novo se o envio falhar, `Enter` continua                |
+| Ranking e histórico | `R` recarrega após erro, `Enter` ou `Esc` voltam                                                               |
 
 ## API (resumo)
 
-| Método e rota | Exige token | Função |
-| --- | --- | --- |
-| `POST /api/usuarios` | não | Cadastra. 201, 409 (nome já existe) ou 400 |
-| `POST /api/auth/login` | não | Devolve o token. 401 se usuário ou senha estiverem errados |
-| `POST /api/partidas` | sim | Registra uma partida do dono do token |
-| `GET /api/partidas/minhas` | sim | Histórico do jogador, da mais recente para a mais antiga |
-| `GET /api/ranking` | sim | Top 10: a melhor vitória de cada jogador |
+
+| Método e rota             | Exige token | Função                                                    |
+| ---------------------------- | ------------- | ------------------------------------------------------------- |
+| `POST /api/usuarios`       | não        | Cadastra. 201, 409 (nome já existe) ou 400                 |
+| `POST /api/auth/login`     | não        | Devolve o token. 401 se usuário ou senha estiverem errados |
+| `POST /api/partidas`       | sim         | Registra uma partida do dono do token                       |
+| `GET /api/partidas/minhas` | sim         | Histórico do jogador, da mais recente para a mais antiga   |
+| `GET /api/ranking`         | sim         | Top 10: a melhor vitória de cada jogador                   |
 
 Detalhes, exemplos e regras estão no [tutorial](docs/fase-05-tutorial.md) e em `servidor/requests.http`.
+
+### Testar a API no navegador (Swagger UI)
+
+Com o servidor no ar, abra [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) (a descrição OpenAPI está em `/v3/api-docs`).
+
+1. Em **Usuários**, execute `POST /api/usuarios` (Try it out) para criar uma conta.
+2. Em **Autenticação**, execute `POST /api/auth/login` e copie o valor de `token` da resposta.
+3. Clique em **Authorize**, cole o token (sem a palavra `Bearer`) e confirme. Os cadeados passam a valer.
+4. Teste `POST /api/partidas`, `GET /api/partidas/minhas` e `GET /api/ranking`.
+
+A página e a descrição são públicas (só leitura); as rotas da API continuam exigindo o token. Em um servidor exposto, desligue-as com `springdoc.swagger-ui.enabled=false` e `springdoc.api-docs.enabled=false`.
 
 ## Limitações conhecidas
 

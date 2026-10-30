@@ -16,7 +16,7 @@ Plano aprovado em 2026-10-30 ("aprovo as recomendações"), com uma alteração 
 
 **Cliente (libGDX):** tela de entrada e cadastro, envio do resultado de cada partida, ranking global e tela "Meu histórico". Sem login o jogo continua como na Fase 4 (modo convidado, ranking local).
 
-**Fora do escopo:** Android e toque (Fase 6); HTTPS em produção, limite de tentativas de login, renovação de token, papéis e administrador; verificação anti-trapaça (o servidor não executa o jogo); ranking por dificuldade; OpenAPI.
+**Fora do escopo:** Android e toque (Fase 6); HTTPS em produção, limite de tentativas de login, renovação de token, papéis e administrador; verificação anti-trapaça (o servidor não executa o jogo); ranking por dificuldade.
 
 ## 3. Pastas e classes afetadas
 
@@ -85,6 +85,7 @@ O `PROMPT_MESTRE` determina que o `tutorial-api-gradle-libgdx.md` não é base d
 | libGDX | 1.12.1 (mantida) | Sem mudança |
 | Banco | H2 em arquivo | Zero instalação; trocável por PostgreSQL |
 | Hibernate / Tomcat | 7.4.13 / 11.0.27 | Trazidos pelo Boot |
+| springdoc-openapi | 3.2.0 | Swagger UI e OpenAPI (adicionado após a aprovação, a pedido do autor). A matriz oficial liga o Boot 4.1.x às versões 3.1.x e 3.2.x |
 
 **Divergências aprovadas:** (a) dois builds Gradle com versões diferentes de wrapper; (b) o jogo pode ser jogado sem login, ao contrário do `PROMPT_MESTRE` (decisão 6).
 
@@ -133,7 +134,7 @@ O `PROMPT_MESTRE` determina que o `tutorial-api-gradle-libgdx.md` não é base d
 
 ## 11. Estratégia de validação e resultado
 
-1. Testes do servidor (31): cadastro, hash, login, 401, histórico só do próprio usuário, ranking com vários jogadores, empates e limite de 10, validações. **Passaram.**
+1. Testes do servidor (34, 31 da API e 3 da documentação): cadastro, hash, login, 401, histórico só do próprio usuário, ranking com vários jogadores, empates e limite de 10, validações, e Swagger público sem liberar a API. **Passaram.**
 2. Servidor em execução com chamadas reais por PowerShell (cadastro, 409, 400, 401, login, partida, histórico, ranking). **Conforme esperado.**
 3. Testes do cliente (97, dos quais 31 novos): conversão de JSON, formulário, dados e histórico. **Passaram.**
 4. Cliente contra o servidor real com teclas simuladas, semente fixa e capturas de tela da janela:

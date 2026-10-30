@@ -208,7 +208,7 @@ cd cliente
 .\gradlew :lwjgl3:run -Dmissaomarte.servidor=http://localhost:8080 --console=plain
 ```
 
-Inclua no servidor um arquivo de chamadas de exemplo (por exemplo, `requests.http`) para testar a API sem o jogo.
+Inclua no servidor um arquivo de chamadas de exemplo (por exemplo, `requests.http`) para testar a API sem o jogo. Opcionalmente, exponha a documentação interativa (Swagger UI) com a biblioteca springdoc-openapi: nesse caso, libere **só a leitura** da página e da descrição OpenAPI, declare o esquema `bearer` para o botão Authorize e confira por teste que as rotas da API continuam exigindo o token.
 
 ## 6. Pontos de atenção
 
