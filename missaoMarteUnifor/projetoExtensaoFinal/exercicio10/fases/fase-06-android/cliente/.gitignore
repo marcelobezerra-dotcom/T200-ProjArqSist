@@ -1,0 +1,7 @@
+.gradle/
+build/
+out/
+ranking.json
+local.properties
+android/build/
+*.apk

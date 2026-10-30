@@ -1,0 +1,28 @@
+// Plugins vem do Google (AGP) e do Maven Central; o modulo android so entra se o Android SDK for encontrado.
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'missao-marte'
+
+// core: jogo independente de plataforma. lwjgl3: janela desktop.
+include 'core'
+include 'lwjgl3'
+
+// android: app para celular. Entra no build so se o Android SDK existir (local.properties com sdk.dir ou ANDROID_HOME),
+// assim quem so quer o desktop nao precisa do SDK.
+def propriedadesLocais = new Properties()
+def arquivoLocal = new File(rootDir, 'local.properties')
+if (arquivoLocal.exists()) {
+    arquivoLocal.withInputStream { propriedadesLocais.load(it) }
+}
+def sdkAndroid = propriedadesLocais.getProperty('sdk.dir') ?: System.getenv('ANDROID_HOME') ?: System.getenv('ANDROID_SDK_ROOT')
+if (sdkAndroid != null && new File(sdkAndroid).isDirectory()) {
+    include 'android'
+} else {
+    println 'Android SDK nao encontrado: o modulo android foi ignorado (crie local.properties com sdk.dir ou defina ANDROID_HOME).'
+}

@@ -1,0 +1,96 @@
+// App Android: so o ponto de entrada e a configuracao do aparelho. O jogo todo esta em :core.
+plugins {
+    id 'com.android.application' version '8.6.1'
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+// Endereco padrao do servidor embutido no app (o jogador pode trocar na tela Servidor).
+// Padrao http://localhost:8080 funciona com "adb reverse tcp:8080 tcp:8080".
+// Emulador: -PservidorPadrao=http://10.0.2.2:8080   |   Wi-Fi: -PservidorPadrao=http://192.168.0.10:8080
+def servidorPadrao = project.findProperty('servidorPadrao') ?: 'http://localhost:8080'
+if (!(servidorPadrao ==~ /^https?:\/\/[A-Za-z0-9.-]{1,253}(:\d{1,5})?\/?$/)) {
+    throw new GradleException("servidorPadrao invalido: '${servidorPadrao}'. Use http://endereco:porta ou https://endereco.")
+}
+
+android {
+    namespace 'br.edu.unifor.missaomarte.android'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'br.edu.unifor.missaomarte'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+        buildConfigField 'String', 'SERVIDOR_PADRAO', "\"${servidorPadrao}\""
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    buildTypes {
+        debug {
+            // HTTP sem criptografia so no build de teste (rede local, adb reverse ou emulador).
+            manifestPlaceholders = [usaHttpSemCriptografia: 'true']
+        }
+        release {
+            // Publicado, o app so fala HTTPS.
+            manifestPlaceholders = [usaHttpSemCriptografia: 'false']
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main {
+            // Imagens e sons ficam em core/assets (os mesmos do desktop).
+            assets.srcDirs = ['../core/assets']
+            // Bibliotecas nativas do libGDX extraidas dos .jar (ver as tarefas extrairNativas abaixo).
+            jniLibs.srcDirs = ["$buildDir/nativas"]
+        }
+    }
+
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
+}
+
+configurations {
+    natives
+}
+
+dependencies {
+    implementation project(':core')
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+}
+
+// O libGDX entrega as bibliotecas nativas (.so) dentro de .jar; cada tarefa extrai as de uma arquitetura (ABI)
+// para build/nativas/<abi>, pasta que o plugin do Android empacota no APK.
+def tarefasDeNativas = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'].collect { abi ->
+    tasks.register("extrairNativas_${abi}", Sync) {
+        from { configurations.natives.files.findAll { it.name.endsWith("natives-${abi}.jar") }.collect { zipTree(it) } }
+        include '*.so'
+        into "$buildDir/nativas/${abi}"
+    }
+}
+
+tasks.matching { it.name.endsWith('JniLibFolders') }.configureEach {
+    dependsOn tarefasDeNativas
+}

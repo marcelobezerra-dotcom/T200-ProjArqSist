@@ -1,0 +1,38 @@
+### Chamadas de exemplo para testar o servidor sem o jogo (extensao "REST Client" do VS Code).
+### Suba o servidor antes: .\gradlew.bat bootRun --console=plain
+
+@servidor = http://localhost:8080
+
+### 1) Cadastro (201; 409 se o nome ja existe; 400 se o nome ou a senha forem invalidos)
+POST {{servidor}}/api/usuarios
+Content-Type: application/json
+
+{ "nome": "piloto1", "senha": "senha-segura-1" }
+
+### 2) Login: guarda o token na variavel @token
+# @name login
+POST {{servidor}}/api/auth/login
+Content-Type: application/json
+
+{ "nome": "piloto1", "senha": "senha-segura-1" }
+
+###
+@token = {{login.response.body.$.token}}
+
+### 3) Registrar uma partida (o usuario vem do token)
+POST {{servidor}}/api/partidas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "dificuldade": "FACIL", "resultado": "VITORIA", "pontuacao": 120, "duracaoSegundos": 45, "movimentos": 30 }
+
+### 4) Historico do usuario (pagina e tamanho opcionais)
+GET {{servidor}}/api/partidas/minhas?pagina=0&tamanho=10
+Authorization: Bearer {{token}}
+
+### 5) Ranking global (Top 10)
+GET {{servidor}}/api/ranking
+Authorization: Bearer {{token}}
+
+### 6) Sem token: 401
+GET {{servidor}}/api/ranking
