@@ -5,9 +5,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Implementacao de {@link RankingRepository} em arquivo JSON, com leitura e escrita manuais.
+ * <p>SOLID: SRP (so persistencia), LSP (substitui a interface sem quebrar o ConsoleGame).
+ * <p>Limite: falhas de IO sao ignoradas em silencio.
+ */
 public class FileRankingRepository implements RankingRepository {
     private final Path arquivo;
 
@@ -52,13 +56,6 @@ public class FileRankingRepository implements RankingRepository {
         try {
             Files.writeString(arquivo, sb.toString(), StandardCharsets.UTF_8);
         } catch (IOException ignored) {
-        }
-    }
-
-    public static void ordenarEManterTop10(List<RankingEntry> ranking) {
-        ranking.sort(Comparator.comparingInt(RankingEntry::getPontuacao).reversed());
-        while (ranking.size() > 10) {
-            ranking.remove(ranking.size() - 1);
         }
     }
 

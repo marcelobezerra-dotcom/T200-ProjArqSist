@@ -5,6 +5,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Cenario da partida: agrega base, nave, passageiros e perigos e responde perguntas sobre eles.
+ * <p>GRASP: Information Expert (colisao, passageiro na posicao da nave), Creator (cria a Base), High Cohesion.
+ * <p>Low Coupling: nao conhece console nem persistencia. As colecoes sao expostas como somente leitura.
+ */
 public class Missao {
     private final Base base;
     private final Nave nave;
@@ -63,10 +68,6 @@ public class Missao {
 
     public boolean removerPassageiro(Passageiro passageiro) {
         return passageiros.remove(passageiro);
-    }
-
-    public boolean todosPassageirosForamResgatados() {
-        return passageiros.isEmpty();
     }
 
     public boolean houveColisaoComPerigo() {

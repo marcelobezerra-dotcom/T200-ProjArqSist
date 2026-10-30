@@ -9,6 +9,10 @@ import java.nio.file.Paths;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * Composition root: unico lugar que conhece as implementacoes concretas e monta o grafo de objetos.
+ * <p>Padrao: Injecao de Dependencia manual (construtor). SOLID: DIP. Nao contem regra de jogo.
+ */
 public class Main {
     public static void main(String[] args) {
         Path rankingPath = Paths.get("ranking.json");

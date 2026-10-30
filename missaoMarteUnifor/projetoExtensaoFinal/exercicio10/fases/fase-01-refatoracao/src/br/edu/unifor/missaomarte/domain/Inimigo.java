@@ -2,6 +2,7 @@ package br.edu.unifor.missaomarte.domain;
 
 import java.util.Random;
 
+/** Perigo que se move aleatoriamente a cada turno (GRASP Information Expert: ele sabe se mover). */
 public class Inimigo implements Perigo {
     private Posicao posicao;
 

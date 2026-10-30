@@ -1,5 +1,6 @@
 package br.edu.unifor.missaomarte.application;
 
+/** Objeto de valores imutavel com os parametros de uma dificuldade (pontuacao inicial e quantidades). */
 public class ConfiguracaoDificuldade {
     private final int pontuacaoInicial;
     private final int quantidadePassageiros;

@@ -2,6 +2,11 @@ package br.edu.unifor.missaomarte.application;
 
 import br.edu.unifor.missaomarte.domain.Dificuldade;
 
+/**
+ * Tabela de configuracao por dificuldade (switch). Nao e Strategy: nao ha comportamento intercambiavel.
+ * <p>GRASP: Pure Fabrication, Protected Variations (os numeros mudam aqui e nao na fabrica).
+ * <p>Limite OCP: uma nova dificuldade exige editar esta classe e o enum Dificuldade.
+ */
 public final class RegrasDificuldade {
     private RegrasDificuldade() {
     }

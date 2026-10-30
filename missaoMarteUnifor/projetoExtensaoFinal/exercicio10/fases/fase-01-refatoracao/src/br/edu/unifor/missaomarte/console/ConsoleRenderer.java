@@ -13,6 +13,11 @@ import br.edu.unifor.missaomarte.infrastructure.ranking.RankingEntry;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Visao textual: desenha mapa, status, legenda, mensagens e ranking. Nao contem regra de jogo.
+ * <p>SOLID: SRP; OCP (desenha qualquer {@link ObjetoRenderizavel}). GRASP: Low Coupling, High Cohesion.
+ * <p>Limite: legenda obtem simbolos instanciando objetos de exemplo.
+ */
 public class ConsoleRenderer {
     private static final char SIMBOLO_VAZIO = '.';
 
@@ -70,6 +75,7 @@ public class ConsoleRenderer {
         return objetos;
     }
 
+    // Na ordem da lista, o ultimo objeto na mesma celula prevalece (a nave e adicionada por ultimo).
     private char simboloNaPosicao(int x, int y, List<ObjetoRenderizavel> objetos) {
         Posicao alvo = new Posicao(x, y);
         char simbolo = SIMBOLO_VAZIO;

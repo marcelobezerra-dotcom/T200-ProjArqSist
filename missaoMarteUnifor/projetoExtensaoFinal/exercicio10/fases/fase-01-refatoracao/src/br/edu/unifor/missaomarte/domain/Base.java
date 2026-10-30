@@ -1,5 +1,6 @@
 package br.edu.unifor.missaomarte.domain;
 
+/** Ponto de entrega dos passageiros; entidade do dominio para ser renderizada como os demais elementos. */
 public class Base implements ObjetoRenderizavel {
     private final Posicao posicao;
 

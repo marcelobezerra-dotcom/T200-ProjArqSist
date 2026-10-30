@@ -2,6 +2,11 @@ package br.edu.unifor.missaomarte.domain;
 
 import java.util.Objects;
 
+/**
+ * Coordenada imutavel no mapa.
+ * <p>Padrao: Value Object (equals/hashCode por valor; mover devolve nova instancia).
+ * <p>GRASP: Information Expert (sabe se limitar ao mapa). SOLID: SRP.
+ */
 public final class Posicao {
     private final int x;
     private final int y;

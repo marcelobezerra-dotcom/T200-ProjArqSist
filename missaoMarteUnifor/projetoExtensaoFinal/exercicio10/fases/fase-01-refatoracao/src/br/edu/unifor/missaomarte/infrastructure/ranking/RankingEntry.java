@@ -1,5 +1,6 @@
 package br.edu.unifor.missaomarte.infrastructure.ranking;
 
+/** Registro imutavel de uma pontuacao do ranking (objeto de dados). */
 public class RankingEntry {
     private final String nome;
     private final int pontuacao;

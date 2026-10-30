@@ -15,6 +15,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * Fluxo de menu e partida no console: le a entrada, traduz para {@link Acao} e delega a {@link GameSession}.
+ * <p>GRASP: Controller (de interface). SOLID: DIP (usa RankingRepository, nao o arquivo), dependencias injetadas pelo construtor.
+ * <p>Limites: processarVitoria/deveEntrarNoRanking contem regra de ranking que pertenceria a application,
+ * e ConsoleRenderer e MissaoFactory ainda sao classes concretas.
+ */
 public class ConsoleGame {
     private final Scanner scanner;
     private final Random random;

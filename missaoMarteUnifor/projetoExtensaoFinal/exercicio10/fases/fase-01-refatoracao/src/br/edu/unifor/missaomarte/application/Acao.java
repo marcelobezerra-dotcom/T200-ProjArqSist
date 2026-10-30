@@ -1,5 +1,10 @@
 package br.edu.unifor.missaomarte.application;
 
+/**
+ * Comandos do jogador, independentes de teclas.
+ * <p>GRASP: Protected Variations/Indirection (trocar o teclado por outra entrada nao altera GameSession).
+ * <p>fromInput centraliza a traducao de texto para valor tipado.
+ */
 public enum Acao {
     ESQUERDA,
     DIREITA,

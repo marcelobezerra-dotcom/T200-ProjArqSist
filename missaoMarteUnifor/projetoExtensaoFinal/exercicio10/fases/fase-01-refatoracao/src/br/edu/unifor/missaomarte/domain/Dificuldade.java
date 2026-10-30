@@ -1,5 +1,6 @@
 package br.edu.unifor.missaomarte.domain;
 
+/** Niveis de dificuldade; deString converte texto em valor tipado em um unico lugar (factory method estatico). */
 public enum Dificuldade {
     FACIL,
     MEDIO,

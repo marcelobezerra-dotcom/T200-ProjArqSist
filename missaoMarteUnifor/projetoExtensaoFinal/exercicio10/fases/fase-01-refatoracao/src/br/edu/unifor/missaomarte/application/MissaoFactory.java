@@ -13,6 +13,12 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+/**
+ * Monta a Missao conforme a dificuldade, sem sobrepor elementos no mapa.
+ * <p>Padrao: Factory. GRASP: Creator (cria Nave, Passageiros e Perigos), Pure Fabrication, High Cohesion.
+ * <p>SOLID: SRP (so cria). A capacidade da nave acompanha a quantidade de passageiros da dificuldade.
+ * <p>Limite OCP: criarPassageiroAleatorio escolhe o tipo com if.
+ */
 public class MissaoFactory {
     public Missao criarMissao(Dificuldade dificuldade, int min, int max, Random random) {
         ConfiguracaoDificuldade cfg = RegrasDificuldade.obter(dificuldade);
@@ -60,6 +66,7 @@ public class MissaoFactory {
         return new Astronauta("Astro " + sufixo, x, y);
     }
 
+    // Sorteia ate achar uma celula fora do Set de ocupadas (base, passageiros e perigos ja criados).
     private int[] novaPosicaoLivre(int min, int max, Random random, Set<String> ocupadas) {
         int tentativasMaximas = (max - min + 1) * (max - min + 1) * 2;
         for (int tentativa = 0; tentativa < tentativasMaximas; tentativa++) {

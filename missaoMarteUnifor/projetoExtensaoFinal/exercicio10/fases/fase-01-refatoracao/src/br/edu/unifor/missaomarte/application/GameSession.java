@@ -8,6 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Regras de uma partida, turno a turno: movimento, embarque, entrega na base, colisao, pontuacao e vitoria.
+ * <p>GRASP: Controller do caso de uso (camada application), Information Expert do estado da partida, Low Coupling (nao conhece o console).
+ * <p>SOLID: SRP (regra de partida, sem entrada nem saida). Devolve {@link ResultadoTurno} em vez de imprimir.
+ * <p>Limite: recebe Random e min/max diretamente, e o fim por pontuacao zerada e checado antes da vitoria no mesmo turno.
+ */
 public class GameSession {
     private final String piloto;
     private final Dificuldade dificuldade;
@@ -37,6 +43,7 @@ public class GameSession {
         this.estado = EstadoPartida.EM_ANDAMENTO;
     }
 
+    // Ordem do turno: acao do jogador, inimigos se movem, colisao, pontuacao, vitoria.
     public ResultadoTurno processarAcao(Acao acao) {
         List<String> mensagens = new ArrayList<>();
 
@@ -63,7 +70,7 @@ public class GameSession {
         missao.moverInimigosAleatoriamente(min, max, random);
         verificarColisao(mensagens);
         verificarPontuacao(mensagens);
-        verificarVitoria(mensagens);
+        verificarVitoria();
 
         return new ResultadoTurno(estado, mensagens);
     }
@@ -88,6 +95,7 @@ public class GameSession {
         }
     }
 
+    // Ao chegar na base os passageiros desembarcam: libera capacidade e conta como entregues.
     private void processarBase(List<String> mensagens) {
         Nave nave = missao.getNave();
         if (nave.getPosicao().equals(missao.getBase().getPosicao()) && !nave.getPassageiros().isEmpty()) {
@@ -140,7 +148,8 @@ public class GameSession {
         }
     }
 
-    private void verificarVitoria(List<String> mensagens) {
+    // A vitoria exige todos os passageiros entregues na base, nao apenas coletados.
+    private void verificarVitoria() {
         if (resgatados < totalPassageiros || estado != EstadoPartida.EM_ANDAMENTO) {
             return;
         }

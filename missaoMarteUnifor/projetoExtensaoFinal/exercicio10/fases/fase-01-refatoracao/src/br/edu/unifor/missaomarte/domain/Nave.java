@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Nave do jogador: posicao, vidas e passageiros a bordo.
+ * <p>GRASP: Information Expert (estaCheia, embarcar e desembarcarTodos usam a propria lista).
+ * <p>Composicao com {@link Posicao}; a lista de passageiros e exposta somente para leitura.
+ */
 public class Nave implements ObjetoRenderizavel {
     private Posicao posicao;
     private int vidas;
