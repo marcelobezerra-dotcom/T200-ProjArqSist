@@ -1,0 +1,25 @@
+// Versao da libGDX compartilhada pelos modulos.
+ext {
+    gdxVersion = '1.12.1'
+}
+
+// Configuracao comum aos modulos core e lwjgl3 (a raiz nao tem codigo).
+subprojects {
+    apply plugin: 'java'
+
+    group = 'br.edu.unifor'
+    version = '1.0'
+
+    repositories {
+        mavenCentral()
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+}
