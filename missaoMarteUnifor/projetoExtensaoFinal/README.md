@@ -13,7 +13,7 @@ Projeto de ensino de evolução arquitetural de software: o jogo do Exercício 1
 | 4 - Interface gráfica | `exercicio10/fases/fase-04-interface-grafica` | Concluída |
 | 5 - Servidor e ranking global | `exercicio10/fases/fase-05-servidor-ranking` | Concluída |
 | 6 - Android | `exercicio10/fases/fase-06-android` | Concluída (sem teste em aparelho; veja o README da fase) |
-| 7 | `fase-07-evolucao-livre` | Não iniciada |
+| 7 - Evolução livre | `exercicio10/fases/fase-07-evolucao-livre` | Concluída (referência: tempo real, tiro e perseguidor, layout responsivo; sem teste em aparelho) |
 
 Cada fase parte da versão concluída da fase anterior e tem seu próprio tutorial em `docs/fase-XX-tutorial.md`.
 
@@ -87,6 +87,23 @@ cd exercicio10\fases\fase-06-android\cliente
 
 Opções do desktop: `-Dmissaomarte.toque=true` (modo toque com o mouse) e `-Dmissaomarte.servidor=...`. No jogo, a opção `6) Servidor` configura endereço, porta e HTTPS. Detalhes, instalação no celular e limitações no [README da fase](exercicio10/fases/fase-06-android/README.md).
 
+### Fase 7 (evolução livre: tempo real, tiro, perseguidor e layout responsivo)
+
+```powershell
+# servidor (igual ao da Fase 6; opcional, sem ele o jogo funciona como convidado)
+cd exercicio10\fases\fase-07-evolucao-livre\servidor
+.\gradlew.bat bootRun --console=plain
+
+# cliente
+cd exercicio10\fases\fase-07-evolucao-livre\cliente
+.\gradlew.bat clean build
+.\gradlew.bat :lwjgl3:run --console=plain
+.\gradlew.bat :lwjgl3:run -Dmissaomarte.toque=true -Dmissaomarte.janela=540x1000 --console=plain
+.\gradlew.bat :android:assembleDebug
+```
+
+Na tela Nova partida escolha o modo: **dinâmico** (tempo real, padrão) ou **clássico** (por turnos, como na Fase 6). `-Dmissaomarte.janela=LxA` simula telas de celular no desktop. Controles, regras de cada modo e limitações no [README da fase](exercicio10/fases/fase-07-evolucao-livre/README.md).
+
 ## Requisitos
 
 - JDK 17 no PATH e em `JAVA_HOME`.
@@ -105,3 +122,4 @@ Opções do desktop: `-Dmissaomarte.toque=true` (modo toque com o mouse) e `-Dmi
 - Tutorial da Fase 4: [docs/fase-04-tutorial.md](exercicio10/fases/fase-04-interface-grafica/docs/fase-04-tutorial.md)
 - Tutorial da Fase 5: [docs/fase-05-tutorial.md](exercicio10/fases/fase-05-servidor-ranking/docs/fase-05-tutorial.md) (a Fase 5 não usa o tutorial de API, Gradle e libGDX como base)
 - Tutorial da Fase 6: [docs/fase-06-tutorial.md](exercicio10/fases/fase-06-android/docs/fase-06-tutorial.md) (também com fontes oficiais; publicação do servidor em [DEPLOY.md](exercicio10/fases/fase-06-android/servidor/DEPLOY.md))
+- Tutorial da Fase 7: [docs/fase-07-tutorial.md](exercicio10/fases/fase-07-evolucao-livre/docs/fase-07-tutorial.md) e [enunciado para o aluno](exercicio10/fases/fase-07-evolucao-livre/docs/fase-07-enunciado.md)

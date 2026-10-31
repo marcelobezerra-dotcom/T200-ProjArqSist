@@ -1,0 +1,25 @@
+// Versao da libGDX compartilhada pelos modulos.
+ext {
+    gdxVersion = '1.12.1'
+}
+
+// Configuracao comum aos modulos Java (core e lwjgl3). O modulo android usa o plugin do Android e tem a propria configuracao.
+configure(subprojects.findAll { it.name != 'android' }) {
+    apply plugin: 'java'
+
+    group = 'br.edu.unifor'
+    version = '1.0'
+
+    repositories {
+        mavenCentral()
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+}
